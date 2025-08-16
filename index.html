@@ -1017,7 +1017,7 @@
                 <div class="filter-row">
                     <div class="filter-group">
                         <label>브랜드</label>
-                        <select id="brandFilter" onchange="saveFilterSettings(); filterProducts()">
+                        <select id="brandFilter" onchange="filterProducts()">
                             <option value="">전체</option>
                             <option value="SK매직">🔵 SK매직</option>
                             <option value="LG전자">🔴 LG전자</option>
@@ -1039,7 +1039,7 @@
                     </div>
                     <div class="filter-group">
                         <label>정렬</label>
-                        <select id="sortBy" onchange="saveFilterSettings(); sortProducts()">
+                        <select id="sortBy" onchange="sortProducts()">
                             <option value="popular">인기순</option>
                             <option value="name">이름순</option>
                             <option value="brand">브랜드순</option>
@@ -1313,27 +1313,25 @@ https://zero-rental.biz/product-image/51317
         let expandedProducts = new Set();
         let additionalGifts = {};
         
-        // 추가사은품 저장
+        // 추가사은품 저장 (메모리에만 - 1회성)
         function saveAdditionalGift(productId) {
             const input = document.getElementById(`additional-gift-${productId}`);
-            if (input && input.value.trim()) {
-                // 숫자만 추출해서 저장
-                const numberOnly = input.value.replace(/[^0-9]/g, '');
-                if (numberOnly) {
-                    additionalGifts[productId] = Number(numberOnly).toLocaleString();
-                    input.value = additionalGifts[productId];
-                    // localStorage에 저장
-                    localStorage.setItem('additionalGifts', JSON.stringify(additionalGifts));
-                    showToast('추가사은품이 저장되었습니다.');
+            if (input) {
+                const value = input.value.trim();
+                if (value === '') {
+                    // 빈 값이면 삭제
+                    delete additionalGifts[productId];
+                    showToast('추가사은품이 삭제되었습니다.');
+                    filterProducts(); // 화면 갱신
+                } else {
+                    // 숫자만 추출해서 저장
+                    const numberOnly = value.replace(/[^0-9]/g, '');
+                    if (numberOnly) {
+                        additionalGifts[productId] = Number(numberOnly).toLocaleString();
+                        input.value = additionalGifts[productId];
+                        showToast('추가사은품이 저장되었습니다.');
+                    }
                 }
-            }
-        }
-        
-        // 추가사은품 불러오기
-        function loadAdditionalGifts() {
-            const saved = localStorage.getItem('additionalGifts');
-            if (saved) {
-                additionalGifts = JSON.parse(saved);
             }
         }
         
@@ -1646,7 +1644,7 @@ https://zero-rental.biz/product-image/51317
                    upperName.includes('RO 필터');
         }
         
-        // 필터 설정 저장
+        // 필터 설정 저장 (로컬스토리지 - 필터만)
         function saveFilterSettings() {
             const settings = {
                 year3: document.getElementById('year3').checked,
@@ -1659,14 +1657,12 @@ https://zero-rental.biz/product-image/51317
                 hidePackage: document.getElementById('hidePackage').checked,
                 iceOnly: document.getElementById('iceOnly').checked,
                 roOnly: document.getElementById('roOnly').checked,
-                standOnly: document.getElementById('standOnly').checked,
-                brandFilter: document.getElementById('brandFilter').value,
-                sortBy: document.getElementById('sortBy').value
+                standOnly: document.getElementById('standOnly').checked
             };
             localStorage.setItem('rentalFilterSettings', JSON.stringify(settings));
         }
         
-        // 필터 설정 불러오기
+        // 필터 설정 불러오기 (로컬스토리지 - 필터만)
         function loadFilterSettings() {
             const saved = localStorage.getItem('rentalFilterSettings');
             if (saved) {
@@ -1682,8 +1678,6 @@ https://zero-rental.biz/product-image/51317
                 document.getElementById('iceOnly').checked = settings.iceOnly ?? false;
                 document.getElementById('roOnly').checked = settings.roOnly ?? false;
                 document.getElementById('standOnly').checked = settings.standOnly ?? false;
-                document.getElementById('brandFilter').value = settings.brandFilter ?? '';
-                document.getElementById('sortBy').value = settings.sortBy ?? 'popular';
             } else {
                 // 기본값 설정 (3년, 5년만 체크)
                 document.getElementById('year3').checked = true;
@@ -1799,8 +1793,9 @@ https://zero-rental.biz/product-image/51317
                                    placeholder="추가 사은품 입력 (예: 100000)" 
                                    value="${additionalGifts[product.id] || ''}"
                                    class="additional-gift-input"
-                                   onkeyup="formatAdditionalGift(${product.id})">
-                            <button class="additional-gift-btn" onclick="saveAdditionalGift(${product.id})">추가사은품 저장</button>
+                                   onkeyup="formatAdditionalGift(${product.id})"
+                                   title="빈 값으로 저장하면 삭제됩니다">
+                            <button class="additional-gift-btn" onclick="saveAdditionalGift(${product.id})">저장</button>
                         </div>
                     </div>
                 `;
@@ -2550,8 +2545,7 @@ https://zero-rental.biz/product-image/51317
         
         // 초기화
         window.onload = async function() {
-            loadFilterSettings(); // 필터 설정 불러오기
-            loadAdditionalGifts(); // 추가사은품 불러오기
+            loadFilterSettings(); // 필터 설정 불러오기 (로컬스토리지)
             await loadProducts();
             await loadNotes();
             await loadCompetitorRules();
