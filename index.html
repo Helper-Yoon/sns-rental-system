@@ -412,6 +412,7 @@
             transition: all 0.3s;
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
         }
         
         .price-row:hover {
@@ -439,6 +440,21 @@
         .price-row.competitor-option.selected {
             background: rgba(255, 152, 0, 0.18);
             border-left: 4px solid #ff9800;
+        }
+        
+        .price-row.package-option {
+            background: rgba(76, 175, 80, 0.05);
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .price-row.package-option:hover {
+            background: rgba(76, 175, 80, 0.12);
+            border-color: rgba(76, 175, 80, 0.3);
+        }
+        
+        .price-row.package-option.selected {
+            background: rgba(76, 175, 80, 0.18);
+            border-left: 4px solid #4CAF50;
         }
         
         .price-checkbox {
@@ -941,14 +957,14 @@
                         <label>브랜드</label>
                         <select id="brandFilter" onchange="filterProducts()">
                             <option value="">전체</option>
-                            <option value="SK매직">SK매직</option>
-                            <option value="LG전자">LG전자</option>
-                            <option value="코웨이">코웨이</option>
-                            <option value="쿠쿠">쿠쿠</option>
-                            <option value="교원웰스">교원웰스</option>
-                            <option value="청호나이스">청호나이스</option>
-                            <option value="현대큐밍">현대큐밍</option>
-                            <option value="세라젬">세라젬</option>
+                            <option value="SK매직">🔵 SK매직</option>
+                            <option value="LG전자">🔴 LG전자</option>
+                            <option value="코웨이">💧 코웨이</option>
+                            <option value="쿠쿠">🍚 쿠쿠</option>
+                            <option value="교원웰스">📚 교원웰스</option>
+                            <option value="청호나이스">💎 청호나이스</option>
+                            <option value="현대큐밍">🏢 현대큐밍</option>
+                            <option value="세라젬">♨️ 세라젬</option>
                         </select>
                     </div>
                     <div class="filter-group">
@@ -995,6 +1011,10 @@
                             <span>타사보상 옵션 숨기기</span>
                         </label>
                         <label class="checkbox-label">
+                            <input type="checkbox" id="hidePackage" onchange="filterProducts()">
+                            <span>패키지 옵션 숨기기</span>
+                        </label>
+                        <label class="checkbox-label">
                             <input type="checkbox" id="iceOnly" onchange="filterProducts()">
                             <span>얼음정수기만 보기</span>
                         </label>
@@ -1023,11 +1043,15 @@
 * 3년 약정 : 4개월필터발송 12개월관리 / 월 51,900 / 사은품 180,000
 * 5년 약정 : 6M반값_4개월관리 / 월 50,400 / 사은품 330,000
 * 5년 약정 : 타사보상_4개월관리 / 월 42,900 / 사은품 320,000
+* 5년 약정 : 패키지_4개월관리 / 월 39,900 / 사은품 350,000
 * 6년 약정 : 타사보상_4개월관리 / 월 41,400 / 사은품 340,000
 
 상품 안내페이지 : https://zero-rental.biz/product-image/51317
 
-(참고: 6M반값은 '6개월 반값 프로모션 / 4개월관리'로 자동 변환됩니다)"></textarea>
+(참고: 
+- 6M반값은 '6개월 반값 프로모션 / 4개월관리'로 자동 변환
+- 타사보상은 주황색, 패키지는 녹색으로 표시
+- '메인 상담', '고객명' 등의 불필요한 정보는 자동으로 무시됩니다)"></textarea>
                     <button class="btn-primary" onclick="parseAndAdd()">견적 추가/업데이트</button>
                 </div>
                 
@@ -1205,8 +1229,30 @@
         function saveAdditionalGift(productId) {
             const input = document.getElementById(`additional-gift-${productId}`);
             if (input && input.value.trim()) {
-                additionalGifts[productId] = input.value.trim();
-                showToast('추가사은품이 저장되었습니다.');
+                // 숫자만 추출해서 저장
+                const numberOnly = input.value.replace(/[^0-9]/g, '');
+                if (numberOnly) {
+                    additionalGifts[productId] = Number(numberOnly).toLocaleString();
+                    input.value = additionalGifts[productId];
+                    showToast('추가사은품이 저장되었습니다.');
+                }
+            }
+        }
+        
+        // 추가사은품 입력 포맷팅
+        function formatAdditionalGift(productId) {
+            const input = document.getElementById(`additional-gift-${productId}`);
+            if (input) {
+                const numberOnly = input.value.replace(/[^0-9]/g, '');
+                if (numberOnly) {
+                    const cursorPos = input.selectionStart;
+                    const formattedValue = Number(numberOnly).toLocaleString();
+                    input.value = formattedValue;
+                    
+                    // 커서 위치 조정
+                    const newCursorPos = Math.min(cursorPos, formattedValue.length);
+                    input.setSelectionRange(newCursorPos, newCursorPos);
+                }
             }
         }
         
@@ -1240,9 +1286,9 @@
                 output += `* ${option.term.replace('약정', ' 약정')} : ${formattedDetail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
             });
             
-            // 추가사은품이 있으면 포함
+            // 추가사은품이 있으면 포함 (더 자연스러운 포맷)
             if (additionalGifts[productId]) {
-                output += `* 추가사은품 : ${additionalGifts[productId]}\n`;
+                output += `* 추가사은품 : 추가 ${additionalGifts[productId]}\n`;
             }
             
             if (product.image_url) {
@@ -1259,10 +1305,22 @@
                 // 카운트만 업데이트
                 const countElement = document.querySelector(`#product-${productId} .copy-count`);
                 if (countElement) {
-                    countElement.textContent = `복사 ${product.copy_count}회`;
+                    countElement.textContent = `📋 ${product.copy_count}회`;
                 }
             });
         }
+        
+        // 브랜드별 로고 매핑
+        const brandLogos = {
+            'SK매직': '🔵',
+            'LG전자': '🔴',
+            '코웨이': '💧',
+            '쿠쿠': '🍚',
+            '교원웰스': '📚',
+            '청호나이스': '💎',
+            '현대큐밍': '🏢',
+            '세라젬': '♨️'
+        };
         
         // 옵션 선택/해제
         function toggleOption(optionId) {
@@ -1278,6 +1336,18 @@
             }
             
             updateSelectedCount();
+        }
+        
+        // 행 클릭 시 체크박스 토글
+        function toggleOptionByRow(optionId, event) {
+            // 버튼이나 체크박스 클릭은 무시
+            if (event.target.tagName === 'BUTTON' || event.target.type === 'checkbox') {
+                return;
+            }
+            
+            const checkbox = document.getElementById(`check-${optionId}`);
+            checkbox.checked = !checkbox.checked;
+            toggleOption(optionId);
         }
         
         // 선택 개수 업데이트
@@ -1336,9 +1406,9 @@
                     }
                 });
                 
-                // 추가사은품이 있으면 포함
+                // 추가사은품이 있으면 포함 (더 자연스러운 포맷)
                 if (additionalGifts[productId]) {
-                    output += `* 추가사은품 : ${additionalGifts[productId]}\n`;
+                    output += `* 추가사은품 : 추가 ${additionalGifts[productId]}\n`;
                 }
                 
                 if (product.image_url) {
@@ -1421,6 +1491,7 @@
             const showYear5 = document.getElementById('year5').checked;
             const showYear6 = document.getElementById('year6').checked;
             const hideCompetitor = document.getElementById('hideCompetitor').checked;
+            const hidePackage = document.getElementById('hidePackage').checked;
             const iceOnly = document.getElementById('iceOnly').checked;
             
             productsToRender.forEach(product => {
@@ -1433,6 +1504,7 @@
                     if (option.term.includes('5년') && !showYear5) return false;
                     if (option.term.includes('6년') && !showYear6) return false;
                     if (hideCompetitor && option.detail.includes('타사보상')) return false;
+                    if (hidePackage && option.detail.includes('패키지')) return false;
                     return true;
                 });
                 
@@ -1445,8 +1517,10 @@
                 card.className = `product-card ${expandedProducts.has(product.id) ? 'expanded' : ''}`;
                 card.id = `product-${product.id}`;
                 
-                // 얼음정수기 표시
+                // 얼음정수기 및 패키지 표시
                 const isIceWater = product.product_name.includes('얼음');
+                const hasPackage = product.price_options.some(opt => opt.detail.includes('패키지'));
+                const brandLogo = brandLogos[product.brand] || '📦';
                 
                 card.innerHTML = `
                     <div class="product-header" onclick="toggleProductExpand(${product.id}, event)">
@@ -1454,15 +1528,19 @@
                             <div class="product-info">
                                 <h3>${product.model_number} / ${product.product_name}</h3>
                                 <div class="product-meta">
-                                    <span class="brand-badge">${product.brand}</span>
+                                    <span class="brand-badge">
+                                        <span class="brand-logo">${brandLogo}</span>
+                                        ${product.brand}
+                                    </span>
                                     ${isIceWater ? '<span class="ice-badge">❄️ 얼음</span>' : ''}
+                                    ${hasPackage ? '<span class="package-badge">📦 패키지</span>' : ''}
                                 </div>
                             </div>
                         </div>
                         <div class="product-actions">
                             <button class="select-copy-btn" onclick="copySelectedInProduct(${product.id}, event)">선택복사</button>
                             <button class="copy-all-btn" onclick="copyAllOptions(${product.id}, event)">전체복사</button>
-                            <div class="copy-count">복사 ${product.copy_count}회</div>
+                            <div class="copy-count">📋 ${product.copy_count}회</div>
                             <div class="update-date">업데이트: ${dateStr}</div>
                             <div class="expand-icon">▼</div>
                         </div>
@@ -1472,6 +1550,7 @@
                             ${filteredOptions.map((option, index) => {
                                 const originalIndex = product.price_options.indexOf(option);
                                 const isCompetitor = option.detail.includes('타사보상');
+                                const isPackage = option.detail.includes('패키지');
                                 const optionId = `${product.id}-${originalIndex}`;
                                 const isSelected = selectedItems.has(optionId);
                                 let termClass = '';
@@ -1480,8 +1559,15 @@
                                 else if (option.term.includes('5년')) termClass = 'term-5year';
                                 else if (option.term.includes('6년')) termClass = 'term-6year';
                                 
+                                let rowClass = '';
+                                if (isCompetitor) rowClass = 'competitor-option';
+                                else if (isPackage) rowClass = 'package-option';
+                                
                                 return `
-                                <div class="price-row ${isCompetitor ? 'competitor-option' : ''} ${isSelected ? 'selected' : ''}" id="option-${optionId}">
+                                <div class="price-row ${rowClass} ${isSelected ? 'selected' : ''}" 
+                                     id="option-${optionId}"
+                                     onclick="toggleOptionByRow('${optionId}', event)"
+                                     style="cursor: pointer;">
                                     <input type="checkbox" class="price-checkbox" 
                                            id="check-${optionId}"
                                            ${isSelected ? 'checked' : ''}
@@ -1497,9 +1583,10 @@
                         </div>
                         <div class="additional-gift-section">
                             <input type="text" id="additional-gift-${product.id}" 
-                                   placeholder="추가 사은품 입력 (예: 추가 100,000)" 
+                                   placeholder="추가 사은품 입력 (예: 100000)" 
                                    value="${additionalGifts[product.id] || ''}"
-                                   class="additional-gift-input">
+                                   class="additional-gift-input"
+                                   onkeyup="formatAdditionalGift(${product.id})">
                             <button class="additional-gift-btn" onclick="saveAdditionalGift(${product.id})">추가사은품 저장</button>
                         </div>
                     </div>
@@ -1529,9 +1616,9 @@
             const formattedDetail = formatPriceDetail(option.detail);
             output += `* ${option.term.replace('약정', ' 약정')} : ${formattedDetail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
             
-            // 추가사은품이 있으면 포함
+            // 추가사은품이 있으면 포함 (더 자연스러운 포맷)
             if (additionalGifts[productId]) {
-                output += `* 추가사은품 : ${additionalGifts[productId]}\n`;
+                output += `* 추가사은품 : 추가 ${additionalGifts[productId]}\n`;
             }
             
             if (product.image_url) {
@@ -1583,6 +1670,7 @@
             const showYear5 = document.getElementById('year5').checked;
             const showYear6 = document.getElementById('year6').checked;
             const hideCompetitor = document.getElementById('hideCompetitor').checked;
+            const hidePackage = document.getElementById('hidePackage').checked;
             
             let filteredOptions = product.price_options.filter(option => {
                 if (option.term.includes('3년') && !showYear3) return false;
@@ -1590,6 +1678,7 @@
                 if (option.term.includes('5년') && !showYear5) return false;
                 if (option.term.includes('6년') && !showYear6) return false;
                 if (hideCompetitor && option.detail.includes('타사보상')) return false;
+                if (hidePackage && option.detail.includes('패키지')) return false;
                 return true;
             });
             
@@ -1602,9 +1691,9 @@
                 output += `* ${option.term.replace('약정', ' 약정')} : ${formattedDetail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
             });
             
-            // 추가사은품이 있으면 포함
+            // 추가사은품이 있으면 포함 (더 자연스러운 포맷)
             if (additionalGifts[productId]) {
-                output += `* 추가사은품 : ${additionalGifts[productId]}\n`;
+                output += `* 추가사은품 : 추가 ${additionalGifts[productId]}\n`;
             }
             
             if (product.image_url) {
@@ -1738,6 +1827,19 @@
             lines.forEach(line => {
                 line = line.replace(/^[\*\-]\s*/, '').trim();
                 
+                // 불필요한 라인 필터링
+                if (line.includes('메인 상담') || 
+                    line.includes('상담원') || 
+                    line.includes('고객센터') ||
+                    line.includes('추가 문의') ||
+                    line.includes('계약번호') ||
+                    line.includes('고객명') ||
+                    line.includes('주소') ||
+                    line.includes('연락처') ||
+                    line.includes('메모')) {
+                    return; // 해당 라인 무시
+                }
+                
                 if (line.includes('브랜드') && line.includes(':')) {
                     parsedProduct.brand = line.split(':')[1].trim();
                 } else if (line.includes('모델명') && line.includes(':')) {
@@ -1808,15 +1910,20 @@
                 const updateDate = new Date(p.updated_at);
                 const isIceWater = p.product_name.includes('얼음');
                 const competitorCount = p.price_options.filter(opt => opt.detail.includes('타사보상')).length;
+                const packageCount = p.price_options.filter(opt => opt.detail.includes('패키지')).length;
+                const brandLogo = brandLogos[p.brand] || '📦';
+                
                 return `
                 <div style="padding: 10px; border-bottom: 1px solid #333;">
                     <div style="color: var(--primary-blue); font-size: 14px;">
+                        <span style="font-size: 16px; margin-right: 5px;">${brandLogo}</span>
                         ${p.model_number} / ${p.product_name}
                     </div>
                     <div style="color: #666; font-size: 12px; margin-top: 5px;">
                         ${p.brand} | ${p.price_options.length}개 옵션 | 
                         마지막 업데이트: ${updateDate.toLocaleString('ko-KR')}
                         ${competitorCount > 0 ? ` | 타사보상 ${competitorCount}개` : ''}
+                        ${packageCount > 0 ? ` | 패키지 ${packageCount}개` : ''}
                         ${isIceWater ? ' | ❄️ 얼음정수기' : ''}
                     </div>
                 </div>
