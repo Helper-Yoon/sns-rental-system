@@ -1517,9 +1517,8 @@
                 card.className = `product-card ${expandedProducts.has(product.id) ? 'expanded' : ''}`;
                 card.id = `product-${product.id}`;
                 
-                // 얼음정수기 및 패키지 표시
+                // 얼음정수기 표시
                 const isIceWater = product.product_name.includes('얼음');
-                const hasPackage = product.price_options.some(opt => opt.detail.includes('패키지'));
                 const brandLogo = brandLogos[product.brand] || '📦';
                 
                 card.innerHTML = `
@@ -1533,7 +1532,6 @@
                                         ${product.brand}
                                     </span>
                                     ${isIceWater ? '<span class="ice-badge">❄️ 얼음</span>' : ''}
-                                    ${hasPackage ? '<span class="package-badge">📦 패키지</span>' : ''}
                                 </div>
                             </div>
                         </div>
