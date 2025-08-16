@@ -1888,7 +1888,11 @@ https://zero-rental.biz/product-image/51317
                     line.includes('메모') ||
                     line.includes('브랜드/분류') ||
                     line.includes('주방가전') ||
-                    line.includes('렌탈 업체')) {
+                    line.includes('렌탈 업체') ||
+                    line.includes('색명칭') ||
+                    line.includes('조리수설치') ||
+                    line.includes('설치일') ||
+                    line.includes('배송일')) {
                     return; // 해당 라인 무시
                 }
                 
@@ -1930,11 +1934,6 @@ https://zero-rental.biz/product-image/51317
                                 // 타사보상 감지
                                 if (detail.includes('타사보상')) {
                                     parsedProduct.has_competitor = true;
-                                }
-                                
-                                // 패키지 감지
-                                if (detail.includes('패키지')) {
-                                    parsedProduct.has_package = true;
                                 }
                             }
                         }
