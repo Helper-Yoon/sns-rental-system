@@ -1035,7 +1035,6 @@
                     <textarea class="paste-area" id="pasteArea" placeholder="견적 정보를 여기에 붙여넣으세요...
 
 예시:
-* 브랜드 : SK매직
 * 모델명 : WPUIAC425S
 * 제품명 : SK매직 원코크 플러스 얼음물 냉온정수기 (얼음냉온정)
 
@@ -1049,6 +1048,7 @@
 상품 안내페이지 : https://zero-rental.biz/product-image/51317
 
 (참고: 
+- 제품명에서 브랜드 자동 인식 (SK매직, LG, 코웨이 등)
 - 6M반값은 '6개월 반값 프로모션 / 4개월관리'로 자동 변환
 - 타사보상은 주황색, 패키지는 녹색으로 표시
 - '메인 상담', '고객명' 등의 불필요한 정보는 자동으로 무시됩니다)"></textarea>
@@ -1805,6 +1805,35 @@
             return detail;
         }
         
+        // 브랜드 자동 인식 함수
+        function detectBrand(productName) {
+            const brandMap = {
+                'SK매직': 'SK매직',
+                'SK 매직': 'SK매직',
+                'LG': 'LG전자',
+                '엘지': 'LG전자',
+                '코웨이': '코웨이',
+                'COWAY': '코웨이',
+                '쿠쿠': '쿠쿠',
+                'CUCKOO': '쿠쿠',
+                '교원': '교원웰스',
+                '웰스': '교원웰스',
+                '청호': '청호나이스',
+                '청호나이스': '청호나이스',
+                '현대큐밍': '현대큐밍',
+                '현대': '현대큐밍',
+                '세라젬': '세라젬',
+                'CERAGEM': '세라젬'
+            };
+            
+            for (const [keyword, brand] of Object.entries(brandMap)) {
+                if (productName.toUpperCase().includes(keyword.toUpperCase())) {
+                    return brand;
+                }
+            }
+            return null;
+        }
+        
         // 견적 파싱 및 추가
         async function parseAndAdd() {
             const pasteArea = document.getElementById('pasteArea');
@@ -1846,6 +1875,14 @@
                     parsedProduct.model_number = line.split(':')[1].trim();
                 } else if (line.includes('제품명') && line.includes(':')) {
                     parsedProduct.product_name = line.split(':')[1].trim();
+                    
+                    // 제품명에서 브랜드 자동 감지
+                    if (!parsedProduct.brand) {
+                        const detectedBrand = detectBrand(parsedProduct.product_name);
+                        if (detectedBrand) {
+                            parsedProduct.brand = detectedBrand;
+                        }
+                    }
                 } else if (line.includes('약정') && line.includes(':')) {
                     const termMatch = line.match(/(\d+년\s*약정)/);
                     if (termMatch) {
@@ -1877,6 +1914,14 @@
                     parsedProduct.image_url = line.split(':').slice(1).join(':').trim();
                 }
             });
+            
+            // 브랜드가 없으면 제품명에서 한 번 더 시도
+            if (!parsedProduct.brand && parsedProduct.product_name) {
+                const detectedBrand = detectBrand(parsedProduct.product_name);
+                if (detectedBrand) {
+                    parsedProduct.brand = detectedBrand;
+                }
+            }
             
             if (parsedProduct.model_number && parsedProduct.product_name && parsedProduct.brand) {
                 try {
