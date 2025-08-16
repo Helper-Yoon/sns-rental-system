@@ -127,44 +127,6 @@
             display: block;
         }
         
-        .output-header {
-            background: #111;
-            border: 1px solid #222;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .selected-count {
-            color: var(--primary-blue);
-            font-weight: 600;
-        }
-        
-        .copy-selected-btn {
-            background: var(--primary-blue);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        
-        .copy-selected-btn:hover {
-            background: var(--primary-blue-hover);
-            box-shadow: 0 0 20px var(--primary-blue-glow);
-        }
-        
-        .copy-selected-btn:disabled {
-            background: #333;
-            color: #666;
-            cursor: not-allowed;
-        }
-        
         .filters {
             background: #111;
             border: 1px solid #222;
@@ -289,13 +251,6 @@
             flex: 1;
         }
         
-        .product-checkbox {
-            width: 20px;
-            height: 20px;
-            accent-color: var(--primary-blue);
-            cursor: pointer;
-        }
-        
         .product-info {
             flex: 1;
         }
@@ -305,11 +260,6 @@
             font-size: 15px;
             margin-bottom: 5px;
             font-weight: 500;
-        }
-        
-        .product-subtitle {
-            color: var(--primary-blue);
-            font-size: 13px;
         }
         
         .product-meta {
@@ -328,13 +278,6 @@
             padding: 3px 8px;
             border-radius: 6px;
             font-size: 11px;
-        }
-        
-        .brand-logo {
-            height: 14px;
-            width: auto;
-            object-fit: contain;
-            filter: brightness(0.9);
         }
         
         .competitor-badge {
@@ -413,17 +356,6 @@
         .price-row:hover {
             background: rgba(0, 102, 255, 0.1);
             transform: translateX(5px);
-        }
-        
-        .price-row.selected {
-            background: var(--primary-blue-light);
-        }
-        
-        .price-checkbox {
-            width: 16px;
-            height: 16px;
-            accent-color: var(--primary-blue);
-            cursor: pointer;
         }
         
         .term {
@@ -607,10 +539,6 @@
             gap: 10px;
         }
         
-        .note-icon {
-            font-size: 24px;
-        }
-        
         .note-updated {
             color: #666;
             font-size: 12px;
@@ -754,6 +682,103 @@
             padding: 60px;
             color: #666;
         }
+        
+        .competitor-rules-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .competitor-rule-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        
+        .competitor-rule-card:hover {
+            border-color: #333;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .competitor-rule-header {
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), transparent);
+            padding: 15px 20px;
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .competitor-rule-brand {
+            color: #ff9800;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .competitor-rule-content {
+            background: #0a0a0a;
+            border: none;
+            padding: 20px;
+            min-height: 200px;
+            color: #e0e0e0;
+            font-size: 14px;
+            line-height: 1.8;
+            resize: vertical;
+            width: 100%;
+        }
+        
+        .competitor-rule-content:focus {
+            outline: none;
+            background: #0f0f0f;
+        }
+        
+        .competitor-rule-content::placeholder {
+            color: #444;
+        }
+        
+        .save-competitor-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ff9800;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 152, 0, 0.4);
+            transition: all 0.3s;
+            z-index: 50;
+        }
+        
+        .save-competitor-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255, 152, 0, 0.6);
+        }
+        
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .toggle-switch select {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        
+        .toggle-switch select:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
     </style>
 </head>
 <body>
@@ -771,6 +796,7 @@
             <button class="tab active" onclick="switchTab('output')">견적 출력</button>
             <button class="tab" onclick="switchTab('input')">견적 입력</button>
             <button class="tab" onclick="switchTab('notes')">브랜드 유의사항</button>
+            <button class="tab" onclick="switchTab('competitor')">타사보상 규정</button>
         </div>
     </div>
     
@@ -831,11 +857,15 @@
                             <span>6년</span>
                         </label>
                     </div>
-                    <div style="margin-left: 30px; display: flex; gap: 20px;">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="competitorOnly" onchange="filterProducts()">
-                            <span>타사보상만 보기</span>
-                        </label>
+                    <div style="margin-left: 30px; display: flex; gap: 20px; align-items: center;">
+                        <div class="toggle-switch">
+                            <label style="color: #999; font-size: 14px;">타사보상:</label>
+                            <select id="competitorFilter" onchange="filterProducts()">
+                                <option value="all">전체</option>
+                                <option value="show">보기</option>
+                                <option value="hide">안보기</option>
+                            </select>
+                        </div>
                         <label class="checkbox-label">
                             <input type="checkbox" id="iceOnly" onchange="filterProducts()">
                             <span>얼음정수기만 보기</span>
@@ -857,12 +887,19 @@
                     <textarea class="paste-area" id="pasteArea" placeholder="견적 정보를 여기에 붙여넣으세요...
 
 예시:
-* 렌탈 업체: LG전자
-* 브랜드/분류: 주방가전/정수기
-* 모델명: WD721R
-* 제품명: LG 오브제컬렉션 데스크탑 얼음정수기
-* 색명칭: 선택안함(에센스화이트/카밍베이지/블랙)
-* 4년약정: 6M반값_4개월관리 / 월 65,900 / 사은품 170,000"></textarea>
+* 브랜드 : SK매직
+* 모델명 : WPUIAC425S
+* 제품명 : SK매직 원코크 플러스 얼음물 냉온정수기 (얼음냉온정)
+
+* 3년 약정 : 4개월관리 / 월 55,900 / 사은품 180,000
+* 3년 약정 : 4개월필터발송 12개월관리 / 월 51,900 / 사은품 180,000
+* 5년 약정 : 6M반값_4개월관리 / 월 50,400 / 사은품 330,000
+* 5년 약정 : 타사보상_4개월관리 / 월 42,900 / 사은품 320,000
+* 6년 약정 : 타사보상_4개월관리 / 월 41,400 / 사은품 340,000
+
+상품 안내페이지 : https://zero-rental.biz/product-image/51317
+
+(참고: 6M반값은 '6개월 반값 프로모션 / 4개월관리'로 자동 변환됩니다)"></textarea>
                     <button class="btn-primary" onclick="parseAndAdd()">견적 추가/업데이트</button>
                 </div>
                 
@@ -960,6 +997,64 @@
                 <button class="save-notes-btn" onclick="saveNotes()">💾 유의사항 저장</button>
             </div>
         </div>
+        
+        <!-- 타사보상 규정 탭 -->
+        <div id="competitor-panel" class="tab-panel">
+            <div class="competitor-rules-container">
+                <div class="notes-header">
+                    <h2>🔄 브랜드별 타사보상 규정</h2>
+                    <p>각 브랜드의 타사보상 프로모션 규정과 조건을 기록해주세요</p>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">SK매직 타사보상</div>
+                        <div class="note-updated" id="competitor-sk-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-sk" placeholder="SK매직 타사보상 규정을 입력하세요...
+예: 
+- 타사보상 적용 대상 및 조건
+- 필요 서류 및 증빙 자료
+- 위약금 면제 범위
+- 프로모션 기간 및 제한사항"></textarea>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">LG전자 타사보상</div>
+                        <div class="note-updated" id="competitor-lg-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-lg" placeholder="LG전자 타사보상 규정을 입력하세요..."></textarea>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">코웨이 타사보상</div>
+                        <div class="note-updated" id="competitor-coway-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-coway" placeholder="코웨이 타사보상 규정을 입력하세요..."></textarea>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">쿠쿠 타사보상</div>
+                        <div class="note-updated" id="competitor-cuckoo-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-cuckoo" placeholder="쿠쿠 타사보상 규정을 입력하세요..."></textarea>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">교원웰스 타사보상</div>
+                        <div class="note-updated" id="competitor-kyowon-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-kyowon" placeholder="교원웰스 타사보상 규정을 입력하세요..."></textarea>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">청호나이스 타사보상</div>
+                        <div class="note-updated" id="competitor-chungho-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-chungho" placeholder="청호나이스 타사보상 규정을 입력하세요..."></textarea>
+                </div>
+                <button class="save-competitor-btn" onclick="saveCompetitorRules()">💾 타사보상 규정 저장</button>
+            </div>
+        </div>
     </div>
     
     <!-- 미리보기 모달 -->
@@ -991,13 +1086,12 @@
         let selectedItems = new Set();
         let expandedProducts = new Set();
         
-
         // 탭 전환
         function switchTab(tabName) {
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
             
-            const tabIndex = tabName === 'output' ? 0 : tabName === 'input' ? 1 : 2;
+            const tabIndex = tabName === 'output' ? 0 : tabName === 'input' ? 1 : tabName === 'notes' ? 2 : 3;
             document.querySelectorAll('.tab')[tabIndex].classList.add('active');
             document.getElementById(`${tabName}-panel`).classList.add('active');
             
@@ -1039,12 +1133,13 @@
             const showYear4 = document.getElementById('year4').checked;
             const showYear5 = document.getElementById('year5').checked;
             const showYear6 = document.getElementById('year6').checked;
-            const competitorOnly = document.getElementById('competitorOnly').checked;
+            const competitorFilter = document.getElementById('competitorFilter').value;
             const iceOnly = document.getElementById('iceOnly').checked;
             
             productsToRender.forEach(product => {
                 // 타사보상 필터
-                if (competitorOnly && !product.has_competitor) return;
+                if (competitorFilter === 'show' && !product.has_competitor) return;
+                if (competitorFilter === 'hide' && product.has_competitor) return;
                 
                 // 얼음정수기 필터
                 if (iceOnly && !product.product_name.includes('얼음')) return;
@@ -1054,7 +1149,7 @@
                     if (option.term.includes('4년') && !showYear4) return false;
                     if (option.term.includes('5년') && !showYear5) return false;
                     if (option.term.includes('6년') && !showYear6) return false;
-                    if (competitorOnly && !option.detail.includes('타사보상')) return false;
+                    if (competitorFilter === 'hide' && option.detail.includes('타사보상')) return false;
                     return true;
                 });
                 
@@ -1093,8 +1188,8 @@
                         <div class="price-table">
                             ${filteredOptions.map((option, index) => `
                                 <div class="price-row" onclick="quickCopy(${product.id}, ${index}, event)">
-                                    <div class="term">${option.term}</div>
-                                    <div class="management">${option.detail}</div>
+                                    <div class="term">${option.term.replace('약정', ' 약정')}</div>
+                                    <div class="management">${formatPriceDetail(option.detail)}</div>
                                     <div class="price">월 ${option.price}</div>
                                     <div class="gift">사은품 ${option.gift}</div>
                                     <button class="quick-copy-btn" onclick="quickCopy(${product.id}, ${index}, event)">복사</button>
@@ -1118,16 +1213,15 @@
             const option = product.price_options[optionIndex];
             if (!option) return;
             
-            let output = `* 렌탈 업체: ${product.company || product.brand}\n`;
-            output += `* 브랜드/분류: ${product.category || '주방가전/정수기'}\n`;
-            output += `* 모델명: ${product.model_number}\n`;
-            output += `* 제품명: ${product.product_name}\n`;
-            output += `* 색명칭: ${product.color}\n`;
-            output += `* 조리수설치: ${product.installation}\n`;
-            output += `* ${option.term}: ${option.detail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
+            let output = `* 브랜드 : ${product.brand}\n`;
+            output += `* 모델명 : ${product.model_number}\n`;
+            output += `* 제품명 : ${product.product_name}\n\n`;
+            
+            const formattedDetail = formatPriceDetail(option.detail);
+            output += `* ${option.term.replace('약정', ' 약정')} : ${formattedDetail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
             
             if (product.image_url) {
-                output += `${product.image_url}\n`;
+                output += `\n상품 안내페이지 : ${product.image_url}\n`;
             }
             
             navigator.clipboard.writeText(output.trim()).then(async () => {
@@ -1168,30 +1262,28 @@
             const showYear4 = document.getElementById('year4').checked;
             const showYear5 = document.getElementById('year5').checked;
             const showYear6 = document.getElementById('year6').checked;
-            const competitorOnly = document.getElementById('competitorOnly').checked;
+            const competitorFilter = document.getElementById('competitorFilter').value;
             
             let filteredOptions = product.price_options.filter(option => {
                 if (option.term.includes('3년') && !showYear3) return false;
                 if (option.term.includes('4년') && !showYear4) return false;
                 if (option.term.includes('5년') && !showYear5) return false;
                 if (option.term.includes('6년') && !showYear6) return false;
-                if (competitorOnly && !option.detail.includes('타사보상')) return false;
+                if (competitorFilter === 'hide' && option.detail.includes('타사보상')) return false;
                 return true;
             });
             
-            let output = `* 렌탈 업체: ${product.company || product.brand}\n`;
-            output += `* 브랜드/분류: ${product.category || '주방가전/정수기'}\n`;
-            output += `* 모델명: ${product.model_number}\n`;
-            output += `* 제품명: ${product.product_name}\n`;
-            output += `* 색명칭: ${product.color}\n`;
-            output += `* 조리수설치: ${product.installation}\n`;
+            let output = `* 브랜드 : ${product.brand}\n`;
+            output += `* 모델명 : ${product.model_number}\n`;
+            output += `* 제품명 : ${product.product_name}\n\n`;
             
             filteredOptions.forEach(option => {
-                output += `* ${option.term}: ${option.detail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
+                const formattedDetail = formatPriceDetail(option.detail);
+                output += `* ${option.term.replace('약정', ' 약정')} : ${formattedDetail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
             });
             
             if (product.image_url) {
-                output += `${product.image_url}\n`;
+                output += `\n상품 안내페이지 : ${product.image_url}\n`;
             }
             
             navigator.clipboard.writeText(output.trim()).then(async () => {
@@ -1219,114 +1311,6 @@
                 }
                 
                 showToast(`${filteredOptions.length}개 옵션이 모두 복사되었습니다!`);
-            });
-        }
-        
-        // 상품 전체 선택/해제
-        function toggleProduct(productId) {
-            const checkbox = document.getElementById(`product-check-${productId}`);
-            const product = products.find(p => p.id === productId);
-            const card = document.getElementById(`product-${productId}`);
-            
-            if (checkbox.checked) {
-                card.classList.add('selected');
-                product.priceOptions.forEach((option, index) => {
-                    const optionCheckbox = document.getElementById(`price-check-${productId}-${index}`);
-                    if (optionCheckbox) {
-                        optionCheckbox.disabled = false;
-                    }
-                });
-            } else {
-                card.classList.remove('selected');
-                product.priceOptions.forEach((option, index) => {
-                    const optionCheckbox = document.getElementById(`price-check-${productId}-${index}`);
-                    if (optionCheckbox) {
-                        optionCheckbox.checked = false;
-                        optionCheckbox.disabled = true;
-                    }
-                    selectedItems.delete(`${productId}-${index}`);
-                });
-            }
-            
-            updateSelectedCount();
-        }
-        
-        // 옵션 선택/해제
-        function toggleOption(productId, optionIndex) {
-            const key = `${productId}-${optionIndex}`;
-            const checkbox = document.getElementById(`price-check-${productId}-${optionIndex}`);
-            const row = document.getElementById(`option-${productId}-${optionIndex}`);
-            
-            if (checkbox.checked) {
-                selectedItems.add(key);
-                row.classList.add('selected');
-            } else {
-                selectedItems.delete(key);
-                row.classList.remove('selected');
-            }
-            
-            updateSelectedCount();
-        }
-        
-        // 선택 개수 업데이트
-        function updateSelectedCount() {
-            const count = selectedItems.size;
-            document.getElementById('selectedCount').textContent = count;
-            
-            const copyBtn = document.querySelector('.copy-selected-btn');
-            copyBtn.disabled = count === 0;
-        }
-        
-        // 선택된 항목 복사
-        async function copySelected() {
-            if (selectedItems.size === 0) {
-                showToast('선택된 항목이 없습니다.');
-                return;
-            }
-            
-            const grouped = {};
-            selectedItems.forEach(key => {
-                const [productId, optionIndex] = key.split('-').map(Number);
-                if (!grouped[productId]) {
-                    grouped[productId] = [];
-                }
-                grouped[productId].push(optionIndex);
-            });
-            
-            let output = '';
-            
-            for (const productId in grouped) {
-                const product = products.find(p => p.id === Number(productId));
-                if (!product) continue;
-                
-                output += `* 렌탈 업체: ${product.company || product.brand}\n`;
-                output += `* 브랜드/분류: ${product.category || '주방가전/정수기'}\n`;
-                output += `* 모델명: ${product.model_number}\n`;
-                output += `* 제품명: ${product.product_name}\n`;
-                output += `* 색명칭: ${product.color}\n`;
-                output += `* 조리수설치: ${product.installation}\n`;
-                
-                grouped[productId].sort((a, b) => a - b).forEach(optionIndex => {
-                    const option = product.price_options[optionIndex];
-                    if (option) {
-                        output += `* ${option.term}: ${option.detail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
-                    }
-                });
-                
-                if (product.image_url) {
-                    output += `${product.image_url}\n`;
-                }
-                
-                output += '\n';
-                
-                // Supabase에 복사 횟수 업데이트
-                product.copy_count++;
-                await updateProductCopyCount(product.model_number, product.copy_count);
-            }
-            
-            navigator.clipboard.writeText(output.trim()).then(() => {
-                showToast('선택한 견적이 복사되었습니다!');
-                loadProducts(); // 데이터 새로고침
             });
         }
         
@@ -1379,6 +1363,36 @@
             filterProducts();
         }
         
+        // 약정 옵션 텍스트 자동 변환 함수
+        function formatPriceDetail(detail) {
+            // M을 개월로 변환
+            detail = detail.replace(/(\d+)M반값/g, '$1개월 반값');
+            detail = detail.replace(/(\d+)M면제/g, '$1개월 면제');
+            detail = detail.replace(/(\d+)M무료/g, '$1개월 무료');
+            detail = detail.replace(/(\d+)M할인/g, '$1개월 할인');
+            
+            // 프로모션 텍스트 추가 (반값, 면제, 무료, 할인에만 적용)
+            if (!detail.includes('프로모션')) {
+                if (detail.includes('개월 반값') || detail.includes('개월 면제') || 
+                    detail.includes('개월 무료') || detail.includes('개월 할인')) {
+                    // 첫 번째 언더스코어 위치 찾기
+                    const underscoreIndex = detail.indexOf('_');
+                    if (underscoreIndex > -1) {
+                        // 언더스코어 앞 부분에 프로모션 추가
+                        detail = detail.substring(0, underscoreIndex) + ' 프로모션' + detail.substring(underscoreIndex);
+                    } else {
+                        // 언더스코어가 없으면 끝에 프로모션 추가
+                        detail = detail + ' 프로모션';
+                    }
+                }
+            }
+            
+            // 언더스코어를 슬래시로 변환
+            detail = detail.replace(/_/g, ' / ');
+            
+            return detail;
+        }
+        
         // 견적 파싱 및 추가
         async function parseAndAdd() {
             const pasteArea = document.getElementById('pasteArea');
@@ -1393,37 +1407,30 @@
             let parsedProduct = {
                 copy_count: 0,
                 price_options: [],
-                installation: '선택안함(미설치/유상설치)',
                 has_competitor: false
             };
             
             lines.forEach(line => {
-                line = line.replace(/^[\*\-]\s*/, '');
+                line = line.replace(/^[\*\-]\s*/, '').trim();
                 
-                if (line.includes('렌탈 업체:')) {
-                    parsedProduct.company = line.split(':')[1].trim();
-                    parsedProduct.brand = parsedProduct.company;
-                } else if (line.includes('브랜드/분류:')) {
-                    parsedProduct.category = line.split(':')[1].trim();
-                } else if (line.includes('브랜드:')) {
+                if (line.includes('브랜드') && line.includes(':')) {
                     parsedProduct.brand = line.split(':')[1].trim();
-                } else if (line.includes('모델명:')) {
+                } else if (line.includes('모델명') && line.includes(':')) {
                     parsedProduct.model_number = line.split(':')[1].trim();
-                } else if (line.includes('제품명:')) {
+                } else if (line.includes('제품명') && line.includes(':')) {
                     parsedProduct.product_name = line.split(':')[1].trim();
-                } else if (line.includes('색명칭:')) {
-                    parsedProduct.color = line.split(':')[1].trim();
-                } else if (line.includes('조리수설치:')) {
-                    parsedProduct.installation = line.split(':')[1].trim();
-                } else if (line.includes('년약정:')) {
-                    const termMatch = line.match(/(\d년약정):/);
+                } else if (line.includes('약정') && line.includes(':')) {
+                    const termMatch = line.match(/(\d+년\s*약정)/);
                     if (termMatch) {
-                        const term = termMatch[1];
+                        const term = termMatch[1].replace(/\s+/g, '');
                         const parts = line.split(':')[1].split('/');
                         if (parts.length >= 3) {
-                            const detail = parts[0].trim();
+                            let detail = parts[0].trim();
                             const priceMatch = parts[1].match(/월\s*([\d,]+)/);
                             const giftMatch = parts[2].match(/사은품\s*([\d,]+)/);
+                            
+                            // 디테일 텍스트 자동 변환
+                            detail = formatPriceDetail(detail);
                             
                             if (priceMatch && giftMatch) {
                                 parsedProduct.price_options.push({
@@ -1439,8 +1446,8 @@
                             }
                         }
                     }
-                } else if (line.includes('http')) {
-                    parsedProduct.image_url = line.trim();
+                } else if (line.includes('상품 안내페이지') && line.includes(':')) {
+                    parsedProduct.image_url = line.split(':').slice(1).join(':').trim();
                 }
             });
             
@@ -1490,97 +1497,9 @@
             `}).join('');
         }
         
-        // 상품 전체 선택/해제
-        function toggleProduct(productId) {
-            const checkbox = document.getElementById(`product-check-${productId}`);
-            const product = products.find(p => p.id === productId);
-            const card = document.getElementById(`product-${productId}`);
-            
-            if (checkbox.checked) {
-                card.classList.add('selected');
-                product.price_options.forEach((option, index) => {
-                    const optionCheckbox = document.getElementById(`price-check-${productId}-${index}`);
-                    if (optionCheckbox) {
-                        optionCheckbox.disabled = false;
-                    }
-                });
-            } else {
-                card.classList.remove('selected');
-                product.price_options.forEach((option, index) => {
-                    const optionCheckbox = document.getElementById(`price-check-${productId}-${index}`);
-                    if (optionCheckbox) {
-                        optionCheckbox.checked = false;
-                        optionCheckbox.disabled = true;
-                    }
-                    selectedItems.delete(`${productId}-${index}`);
-                });
-            }
-            
-            updateSelectedCount();
-        }
-        
-        // 선택 상태 복원
-        function restoreSelections() {
-            selectedItems.forEach(key => {
-                const [productId, optionIndex] = key.split('-');
-                const checkbox = document.getElementById(`price-check-${productId}-${optionIndex}`);
-                const row = document.getElementById(`option-${productId}-${optionIndex}`);
-                if (checkbox) {
-                    checkbox.checked = true;
-                }
-                if (row) {
-                    row.classList.add('selected');
-                }
-            });
-        }
-        
         // 미리보기 모달
         function openPreviewModal() {
-            if (selectedItems.size === 0) {
-                showToast('선택된 항목이 없습니다.');
-                return;
-            }
-            
-            const modal = document.getElementById('previewModal');
-            const previewText = document.getElementById('previewText');
-            
-            const grouped = {};
-            selectedItems.forEach(key => {
-                const [productId, optionIndex] = key.split('-').map(Number);
-                if (!grouped[productId]) {
-                    grouped[productId] = [];
-                }
-                grouped[productId].push(optionIndex);
-            });
-            
-            let output = '';
-            Object.keys(grouped).forEach(productId => {
-                const product = products.find(p => p.id === Number(productId));
-                if (!product) return;
-                
-                output += `* 렌탈 업체: ${product.company || product.brand}\n`;
-                output += `* 브랜드/분류: ${product.category || '주방가전/정수기'}\n`;
-                output += `* 모델명: ${product.model_number}\n`;
-                output += `* 제품명: ${product.product_name}\n`;
-                output += `* 색명칭: ${product.color}\n`;
-                output += `* 조리수설치: ${product.installation}\n`;
-                
-                grouped[productId].sort((a, b) => a - b).forEach(optionIndex => {
-                    const option = product.price_options[optionIndex];
-                    if (option) {
-                        output += `* ${option.term}: ${option.detail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
-                    }
-                });
-                
-                if (product.image_url) {
-                    output += `${product.image_url}\n`;
-                }
-                
-                output += '\n';
-            });
-            
-            previewText.textContent = output.trim();
-            modal.classList.add('active');
+            showToast('견적을 선택하려면 개별 복사 버튼을 사용해주세요.');
         }
         
         function closePreviewModal() {
@@ -1605,8 +1524,12 @@
                     
                     const { error } = await supabaseClient
                         .from('brand_notes')
-                        .update({ content: content })
-                        .eq('brand_key', brandKey);
+                        .upsert({ 
+                            brand_key: brandKey,
+                            content: content 
+                        }, {
+                            onConflict: 'brand_key'
+                        });
                     
                     if (error) throw error;
                 }
@@ -1619,12 +1542,42 @@
             }
         }
         
+        // 타사보상 규정 저장
+        async function saveCompetitorRules() {
+            const competitorIds = ['sk', 'lg', 'coway', 'cuckoo', 'kyowon', 'chungho'];
+            
+            try {
+                for (const brandKey of competitorIds) {
+                    const content = document.getElementById(`competitor-${brandKey}`).value;
+                    const competitorKey = `competitor-${brandKey}`;
+                    
+                    const { error } = await supabaseClient
+                        .from('brand_notes')
+                        .upsert({ 
+                            brand_key: competitorKey,
+                            content: content 
+                        }, {
+                            onConflict: 'brand_key'
+                        });
+                    
+                    if (error) throw error;
+                }
+                
+                showToast('타사보상 규정이 저장되었습니다!');
+                await loadCompetitorRules(); // 저장 후 다시 로드
+            } catch (error) {
+                console.error('Error saving competitor rules:', error);
+                showToast('타사보상 규정 저장 중 오류가 발생했습니다.');
+            }
+        }
+        
         // 유의사항 불러오기
         async function loadNotes() {
             try {
                 const { data, error } = await supabaseClient
                     .from('brand_notes')
-                    .select('*');
+                    .select('*')
+                    .not('brand_key', 'like', 'competitor-%');
                 
                 if (error) throw error;
                 
@@ -1642,6 +1595,34 @@
                 });
             } catch (error) {
                 console.error('Error loading notes:', error);
+            }
+        }
+        
+        // 타사보상 규정 불러오기
+        async function loadCompetitorRules() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('brand_notes')
+                    .select('*')
+                    .like('brand_key', 'competitor-%');
+                
+                if (error) throw error;
+                
+                data.forEach(note => {
+                    const brandKey = note.brand_key.replace('competitor-', '');
+                    const element = document.getElementById(`competitor-${brandKey}`);
+                    if (element) {
+                        element.value = note.content || '';
+                    }
+                    
+                    const updatedElement = document.getElementById(`competitor-${brandKey}-updated`);
+                    if (updatedElement && note.updated_at) {
+                        const updateTime = new Date(note.updated_at).toLocaleString('ko-KR');
+                        updatedElement.textContent = `최종 수정: ${updateTime}`;
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading competitor rules:', error);
             }
         }
         
@@ -1678,13 +1659,7 @@
                 
                 if (error) throw error;
                 
-                if (data && data.length > 0) {
-                    products = data;
-                } else {
-                    // 초기 데이터가 없으면 삽입
-                    await insertInitialData();
-                }
-                
+                products = data || [];
                 renderProducts();
                 updateProductSummary();
             } catch (error) {
@@ -1693,102 +1668,11 @@
             }
         }
         
-        // 초기 데이터 삽입
-        async function insertInitialData() {
-            const initialProducts = [
-                {
-                    company: 'SK매직',
-                    brand: 'SK매직',
-                    category: '주방가전/정수기',
-                    model_number: 'WPUJAC115S',
-                    product_name: 'SK매직 25년형 초소형 플러스 직수 냉온정수기 (냉온정)',
-                    color: '선택안함(화이트/실버)',
-                    installation: '선택안함(미설치/유상설치)',
-                    copy_count: 0,
-                    image_url: 'https://zero-rental.biz/product-image/51408',
-                    has_competitor: true,
-                    price_options: [
-                        { term: '3년약정', detail: '4개월관리', price: '41,900', gift: '120,000' },
-                        { term: '3년약정', detail: '4개월필터발송 12개월관리', price: '37,900', gift: '120,000' },
-                        { term: '5년약정', detail: '6M반값_4개월관리', price: '37,400', gift: '230,000' },
-                        { term: '5년약정', detail: '6M반값_4개월필터발송 12개월관리', price: '33,400', gift: '220,000' },
-                        { term: '5년약정', detail: '타사보상_4개월관리', price: '32,500', gift: '250,000' },
-                        { term: '6년약정', detail: '12M반값_4개월관리', price: '35,900', gift: '250,000' }
-                    ]
-                },
-                {
-                    company: 'SK매직',
-                    brand: 'SK매직',
-                    category: '주방가전/정수기',
-                    model_number: 'WPUIAC425S',
-                    product_name: 'SK매직 원코크 플러스 얼음물 냉온정수기 (얼음냉온정)',
-                    color: '선택안함(화이트/실버)',
-                    installation: '선택안함(미설치/유상설치)',
-                    copy_count: 0,
-                    image_url: 'https://zero-rental.biz/product-image/51317',
-                    has_competitor: true,
-                    price_options: [
-                        { term: '3년약정', detail: '4개월관리', price: '55,900', gift: '180,000' },
-                        { term: '3년약정', detail: '4개월필터발송 12개월관리', price: '51,900', gift: '180,000' },
-                        { term: '5년약정', detail: '6M반값_4개월관리', price: '50,400', gift: '330,000' },
-                        { term: '5년약정', detail: '타사보상_4개월관리', price: '42,900', gift: '320,000' },
-                        { term: '6년약정', detail: '타사보상_4개월관리', price: '41,400', gift: '340,000' }
-                    ]
-                },
-                {
-                    company: '코웨이',
-                    brand: '코웨이',
-                    category: '주방가전/정수기',
-                    model_number: 'CHP-7212N',
-                    product_name: '코웨이 아이콘 Pro 냉온정수기 (냉온정)',
-                    color: '선택안함(포슬린화이트/아이언실버/브론즈베이지/아이시블루/페블블랙)',
-                    installation: '선택안함(미설치/유상설치)',
-                    copy_count: 0,
-                    image_url: '',
-                    has_competitor: false,
-                    price_options: [
-                        { term: '5년약정', detail: '6M반값_6개월필터발송', price: '32,900', gift: '160,000' }
-                    ]
-                },
-                {
-                    company: 'LG전자',
-                    brand: 'LG전자',
-                    category: '주방가전/정수기',
-                    model_number: 'WD721R',
-                    product_name: 'LG 오브제컬렉션 데스크탑 얼음정수기',
-                    color: '선택안함(에센스화이트(H)/카밍베이지(E)/블랙(K))',
-                    installation: '선택안함(미설치/유상설치)',
-                    copy_count: 0,
-                    image_url: '',
-                    has_competitor: false,
-                    price_options: [
-                        { term: '4년약정', detail: '6M반값_4개월관리', price: '65,900', gift: '170,000' },
-                        { term: '4년약정', detail: '6M반값_6개월관리', price: '63,900', gift: '170,000' },
-                        { term: '5년약정', detail: '6M반값_4개월관리', price: '56,900', gift: '170,000' },
-                        { term: '5년약정', detail: '6M반값_6개월관리', price: '54,900', gift: '190,000' },
-                        { term: '6년약정', detail: '6M반값_4개월관리', price: '52,900', gift: '170,000' },
-                        { term: '6년약정', detail: '6M반값_6개월관리', price: '50,900', gift: '190,000' }
-                    ]
-                }
-            ];
-            
-            try {
-                const { data, error } = await supabaseClient
-                    .from('rental_products')
-                    .insert(initialProducts);
-                
-                if (error) throw error;
-                
-                await loadProducts(); // 다시 로드
-            } catch (error) {
-                console.error('Error inserting initial data:', error);
-            }
-        }
-        
-        // 초기화 - 로컬스토리지 사용 제거
+        // 초기화
         window.onload = async function() {
             await loadProducts();
             await loadNotes();
+            await loadCompetitorRules();
         };
     </script>
 </body>
