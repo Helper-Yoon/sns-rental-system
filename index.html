@@ -996,7 +996,6 @@
                     📋 선택 복사 (<span id="selectedCount">0</span>)
                 </button>
                 <button class="header-btn clear-btn" onclick="clearAllSelections()">🔄 선택 초기화</button>
-                <button class="header-btn clear-btn" onclick="resetFilters()">🔄 필터 초기화</button>
             </div>
         </div>
     </div>
@@ -1051,49 +1050,45 @@
                     <div class="filter-label">약정 기간:</div>
                     <div class="year-filters">
                         <label class="checkbox-label">
-                            <input type="checkbox" id="year3" checked onchange="saveFilterSettings(); filterProducts()">
+                            <input type="checkbox" id="year3" checked onchange="filterProducts()">
                             <span>3년</span>
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" id="year4" onchange="saveFilterSettings(); filterProducts()">
+                            <input type="checkbox" id="year4" checked onchange="filterProducts()">
                             <span>4년</span>
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" id="year5" checked onchange="saveFilterSettings(); filterProducts()">
+                            <input type="checkbox" id="year5" checked onchange="filterProducts()">
                             <span>5년</span>
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" id="year6" onchange="saveFilterSettings(); filterProducts()">
+                            <input type="checkbox" id="year6" checked onchange="filterProducts()">
                             <span>6년</span>
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" id="year7" onchange="saveFilterSettings(); filterProducts()">
+                            <input type="checkbox" id="year7" checked onchange="filterProducts()">
                             <span>7년</span>
                         </label>
                     </div>
                     <div style="margin-left: 30px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center;">
                         <label class="checkbox-label">
-                            <input type="checkbox" id="newSignupHide" onchange="saveFilterSettings(); filterProducts()">
-                            <span>신규가입 숨기기</span>
+                            <input type="checkbox" id="hideCompetitor" onchange="filterProducts()">
+                            <span>타사보상 옵션 숨기기</span>
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" id="hideCompetitor" onchange="saveFilterSettings(); filterProducts()">
-                            <span>타사보상 숨기기</span>
+                            <input type="checkbox" id="hidePackage" onchange="filterProducts()">
+                            <span>패키지 옵션 숨기기</span>
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" id="hidePackage" onchange="saveFilterSettings(); filterProducts()">
-                            <span>패키지 숨기기</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="iceOnly" onchange="saveFilterSettings(); filterProducts()">
+                            <input type="checkbox" id="iceOnly" onchange="filterProducts()">
                             <span>❄️ 얼음정수기만</span>
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" id="roOnly" onchange="saveFilterSettings(); filterProducts()">
+                            <input type="checkbox" id="roOnly" onchange="filterProducts()">
                             <span>💧 RO필터만</span>
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" id="standOnly" onchange="saveFilterSettings(); filterProducts()">
+                            <input type="checkbox" id="standOnly" onchange="filterProducts()">
                             <span>🏢 스탠드형만</span>
                         </label>
                     </div>
@@ -1313,24 +1308,16 @@ https://zero-rental.biz/product-image/51317
         let expandedProducts = new Set();
         let additionalGifts = {};
         
-        // 추가사은품 저장 (메모리에만 - 1회성)
+        // 추가사은품 저장
         function saveAdditionalGift(productId) {
             const input = document.getElementById(`additional-gift-${productId}`);
-            if (input) {
-                const value = input.value.trim();
-                if (value === '') {
-                    // 빈 값이면 삭제
-                    delete additionalGifts[productId];
-                    showToast('추가사은품이 삭제되었습니다.');
-                    filterProducts(); // 화면 갱신
-                } else {
-                    // 숫자만 추출해서 저장
-                    const numberOnly = value.replace(/[^0-9]/g, '');
-                    if (numberOnly) {
-                        additionalGifts[productId] = Number(numberOnly).toLocaleString();
-                        input.value = additionalGifts[productId];
-                        showToast('추가사은품이 저장되었습니다.');
-                    }
+            if (input && input.value.trim()) {
+                // 숫자만 추출해서 저장
+                const numberOnly = input.value.replace(/[^0-9]/g, '');
+                if (numberOnly) {
+                    additionalGifts[productId] = Number(numberOnly).toLocaleString();
+                    input.value = additionalGifts[productId];
+                    showToast('추가사은품이 저장되었습니다.');
                 }
             }
         }
@@ -1523,32 +1510,6 @@ https://zero-rental.biz/product-image/51317
             });
         }
         
-        // 필터 초기화
-        function resetFilters() {
-            // 기본값으로 설정
-            document.getElementById('year3').checked = true;
-            document.getElementById('year4').checked = false;
-            document.getElementById('year5').checked = true;
-            document.getElementById('year6').checked = false;
-            document.getElementById('year7').checked = false;
-            document.getElementById('newSignupHide').checked = false;
-            document.getElementById('hideCompetitor').checked = false;
-            document.getElementById('hidePackage').checked = false;
-            document.getElementById('iceOnly').checked = false;
-            document.getElementById('roOnly').checked = false;
-            document.getElementById('standOnly').checked = false;
-            document.getElementById('brandFilter').value = '';
-            document.getElementById('modelSearch').value = '';
-            document.getElementById('productSearch').value = '';
-            document.getElementById('sortBy').value = 'popular';
-            
-            // localStorage 초기화
-            localStorage.removeItem('rentalFilterSettings');
-            
-            showToast('필터가 초기화되었습니다.');
-            filterProducts();
-        }
-        
         // 전체 선택 초기화
         function clearAllSelections() {
             const hadSelections = selectedItems.size > 0;
@@ -1629,66 +1590,7 @@ https://zero-rental.biz/product-image/51317
             const standOnly = document.getElementById('standOnly').checked;
             
             productsToRender.forEach(product => {
-                // RO 필터 정확한 판별 함수
-        function isROProduct(productName) {
-            const upperName = productName.toUpperCase();
-            // RO가 단독으로 존재하거나 공백/특수문자로 구분된 경우만 인정
-            // Pro, Zero 등은 제외
-            return /\bRO\b/.test(upperName) || 
-                   upperName.includes(' RO ') || 
-                   upperName.includes('(RO') || 
-                   upperName.includes('RO)') ||
-                   upperName.includes('[RO') || 
-                   upperName.includes('RO]') ||
-                   upperName.includes('RO필터') ||
-                   upperName.includes('RO 필터');
-        }
-        
-        // 필터 설정 저장 (로컬스토리지 - 필터만)
-        function saveFilterSettings() {
-            const settings = {
-                year3: document.getElementById('year3').checked,
-                year4: document.getElementById('year4').checked,
-                year5: document.getElementById('year5').checked,
-                year6: document.getElementById('year6').checked,
-                year7: document.getElementById('year7').checked,
-                newSignupHide: document.getElementById('newSignupHide').checked,
-                hideCompetitor: document.getElementById('hideCompetitor').checked,
-                hidePackage: document.getElementById('hidePackage').checked,
-                iceOnly: document.getElementById('iceOnly').checked,
-                roOnly: document.getElementById('roOnly').checked,
-                standOnly: document.getElementById('standOnly').checked
-            };
-            localStorage.setItem('rentalFilterSettings', JSON.stringify(settings));
-        }
-        
-        // 필터 설정 불러오기 (로컬스토리지 - 필터만)
-        function loadFilterSettings() {
-            const saved = localStorage.getItem('rentalFilterSettings');
-            if (saved) {
-                const settings = JSON.parse(saved);
-                document.getElementById('year3').checked = settings.year3 ?? true;
-                document.getElementById('year4').checked = settings.year4 ?? false;
-                document.getElementById('year5').checked = settings.year5 ?? true;
-                document.getElementById('year6').checked = settings.year6 ?? false;
-                document.getElementById('year7').checked = settings.year7 ?? false;
-                document.getElementById('newSignupHide').checked = settings.newSignupHide ?? false;
-                document.getElementById('hideCompetitor').checked = settings.hideCompetitor ?? false;
-                document.getElementById('hidePackage').checked = settings.hidePackage ?? false;
-                document.getElementById('iceOnly').checked = settings.iceOnly ?? false;
-                document.getElementById('roOnly').checked = settings.roOnly ?? false;
-                document.getElementById('standOnly').checked = settings.standOnly ?? false;
-            } else {
-                // 기본값 설정 (3년, 5년만 체크)
-                document.getElementById('year3').checked = true;
-                document.getElementById('year4').checked = false;
-                document.getElementById('year5').checked = true;
-                document.getElementById('year6').checked = false;
-                document.getElementById('year7').checked = false;
-            }
-        }
-        
-        // 필터링
+                // 필터링
                 if (iceOnly && !product.product_name.includes('얼음')) return;
                 if (roOnly && !product.product_name.toUpperCase().includes('RO')) return;
                 if (standOnly && !product.product_name.includes('스탠드')) return;
@@ -1711,7 +1613,7 @@ https://zero-rental.biz/product-image/51317
                 
                 // 특징 표시
                 const isIceWater = product.product_name.includes('얼음');
-                const isRO = isROProduct(product.product_name);
+                const isRO = product.product_name.toUpperCase().includes('RO');
                 const isStand = product.product_name.includes('스탠드');
                 const brandLogo = brandLogos[product.brand] || '📦';
                 const rank = topProductsMap.get(product.id);
@@ -1793,9 +1695,8 @@ https://zero-rental.biz/product-image/51317
                                    placeholder="추가 사은품 입력 (예: 100000)" 
                                    value="${additionalGifts[product.id] || ''}"
                                    class="additional-gift-input"
-                                   onkeyup="formatAdditionalGift(${product.id})"
-                                   title="빈 값으로 저장하면 삭제됩니다">
-                            <button class="additional-gift-btn" onclick="saveAdditionalGift(${product.id})">저장</button>
+                                   onkeyup="formatAdditionalGift(${product.id})">
+                            <button class="additional-gift-btn" onclick="saveAdditionalGift(${product.id})">추가사은품 저장</button>
                         </div>
                     </div>
                 `;
@@ -1878,7 +1779,6 @@ https://zero-rental.biz/product-image/51317
             const showYear5 = document.getElementById('year5').checked;
             const showYear6 = document.getElementById('year6').checked;
             const showYear7 = document.getElementById('year7').checked;
-            const newSignupHide = document.getElementById('newSignupHide').checked;
             const hideCompetitor = document.getElementById('hideCompetitor').checked;
             const hidePackage = document.getElementById('hidePackage').checked;
             
@@ -1888,7 +1788,6 @@ https://zero-rental.biz/product-image/51317
                 if (option.term.includes('5년') && !showYear5) return false;
                 if (option.term.includes('6년') && !showYear6) return false;
                 if (option.term.includes('7년') && !showYear7) return false;
-                if (newSignupHide && !option.detail.includes('타사보상')) return false;
                 if (hideCompetitor && option.detail.includes('타사보상')) return false;
                 if (hidePackage && option.detail.includes('패키지')) return false;
                 return true;
@@ -1964,7 +1863,7 @@ https://zero-rental.biz/product-image/51317
                 filtered = filtered.filter(p => p.product_name.includes('얼음'));
             }
             if (roOnly) {
-                filtered = filtered.filter(p => isROProduct(p.product_name));
+                filtered = filtered.filter(p => p.product_name.toUpperCase().includes('RO'));
             }
             if (standOnly) {
                 filtered = filtered.filter(p => p.product_name.includes('스탠드'));
@@ -2334,7 +2233,7 @@ https://zero-rental.biz/product-image/51317
             summary.innerHTML = products.map(p => {
                 const updateDate = new Date(p.updated_at);
                 const isIceWater = p.product_name.includes('얼음');
-                const isRO = isROProduct(p.product_name);
+                const isRO = p.product_name.toUpperCase().includes('RO');
                 const isStand = p.product_name.includes('스탠드');
                 const competitorCount = p.price_options.filter(opt => opt.detail.includes('타사보상')).length;
                 const packageCount = p.price_options.filter(opt => opt.detail.includes('패키지')).length;
@@ -2545,7 +2444,6 @@ https://zero-rental.biz/product-image/51317
         
         // 초기화
         window.onload = async function() {
-            loadFilterSettings(); // 필터 설정 불러오기 (로컬스토리지)
             await loadProducts();
             await loadNotes();
             await loadCompetitorRules();
