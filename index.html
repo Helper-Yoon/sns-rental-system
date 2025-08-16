@@ -70,6 +70,17 @@
             box-shadow: 0 0 15px rgba(0, 102, 255, 0.3);
         }
         
+        #copySelectedBtn {
+            background: var(--primary-blue);
+            color: white;
+            font-weight: 600;
+        }
+        
+        #copySelectedBtn:hover {
+            background: var(--primary-blue-hover);
+            transform: scale(1.05);
+        }
+        
         .tabs {
             background: #111;
             border-bottom: 1px solid #222;
@@ -249,10 +260,12 @@
             align-items: center;
             gap: 15px;
             flex: 1;
+            min-width: 0;
         }
         
         .product-info {
             flex: 1;
+            min-width: 0;
         }
         
         .product-info h3 {
@@ -260,6 +273,9 @@
             font-size: 15px;
             margin-bottom: 5px;
             font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .product-meta {
@@ -344,7 +360,7 @@
         
         .price-row {
             display: grid;
-            grid-template-columns: 100px 1fr 120px 120px 80px;
+            grid-template-columns: 30px 100px 1fr 120px 120px 80px;
             align-items: center;
             padding: 10px;
             border-radius: 6px;
@@ -356,6 +372,27 @@
         .price-row:hover {
             background: rgba(0, 102, 255, 0.1);
             transform: translateX(5px);
+        }
+        
+        .price-row.selected {
+            background: var(--primary-blue-light);
+            border-left: 3px solid var(--primary-blue);
+        }
+        
+        .price-row.competitor-option {
+            background: rgba(255, 152, 0, 0.05);
+            border-left: 3px solid #ff9800;
+        }
+        
+        .price-row.competitor-option:hover {
+            background: rgba(255, 152, 0, 0.15);
+        }
+        
+        .price-checkbox {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary-blue);
+            cursor: pointer;
         }
         
         .term {
@@ -586,71 +623,6 @@
             box-shadow: 0 8px 30px rgba(0, 102, 255, 0.6);
         }
         
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            padding: 50px;
-        }
-        
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal-content {
-            background: #111;
-            border: 1px solid #222;
-            border-radius: 12px;
-            padding: 30px;
-            max-width: 800px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-        
-        .modal-header h2 {
-            color: var(--primary-blue);
-            font-size: 20px;
-        }
-        
-        .close-btn {
-            background: transparent;
-            border: none;
-            color: #666;
-            font-size: 24px;
-            cursor: pointer;
-        }
-        
-        .close-btn:hover {
-            color: #fff;
-        }
-        
-        .preview-text {
-            background: #0a0a0a;
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 20px;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            line-height: 1.8;
-            white-space: pre-wrap;
-            color: #e0e0e0;
-        }
-        
         .toast {
             position: fixed;
             bottom: 30px;
@@ -758,27 +730,6 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 30px rgba(255, 152, 0, 0.6);
         }
-        
-        .toggle-switch {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .toggle-switch select {
-            background: #1a1a1a;
-            border: 1px solid #333;
-            color: #e0e0e0;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            cursor: pointer;
-        }
-        
-        .toggle-switch select:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-        }
     </style>
 </head>
 <body>
@@ -786,7 +737,10 @@
         <div class="header-content">
             <div class="logo">📋 SNS센터 렌탈견적 시스템</div>
             <div class="header-buttons">
-                <button class="header-btn" onclick="openPreviewModal()">📄 미리보기</button>
+                <button class="header-btn" id="copySelectedBtn" onclick="copySelectedItems()">
+                    선택 복사 (<span id="selectedCount">0</span>)
+                </button>
+                <button class="header-btn" onclick="clearAllSelections()">선택 초기화</button>
             </div>
         </div>
     </div>
@@ -858,14 +812,10 @@
                         </label>
                     </div>
                     <div style="margin-left: 30px; display: flex; gap: 20px; align-items: center;">
-                        <div class="toggle-switch">
-                            <label style="color: #999; font-size: 14px;">타사보상:</label>
-                            <select id="competitorFilter" onchange="filterProducts()">
-                                <option value="all">전체</option>
-                                <option value="show">보기</option>
-                                <option value="hide">안보기</option>
-                            </select>
-                        </div>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="hideCompetitor" onchange="filterProducts()">
+                            <span>타사보상 옵션 숨기기</span>
+                        </label>
                         <label class="checkbox-label">
                             <input type="checkbox" id="iceOnly" onchange="filterProducts()">
                             <span>얼음정수기만 보기</span>
@@ -1057,20 +1007,6 @@
         </div>
     </div>
     
-    <!-- 미리보기 모달 -->
-    <div class="modal" id="previewModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>견적 미리보기</h2>
-                <button class="close-btn" onclick="closePreviewModal()">×</button>
-            </div>
-            <div class="preview-text" id="previewText">
-                선택된 항목이 없습니다.
-            </div>
-            <button class="btn-primary" style="margin-top: 20px;" onclick="copyPreview()">복사하기</button>
-        </div>
-    </div>
-    
     <div class="toast" id="toast"></div>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1085,6 +1021,102 @@
         let products = [];
         let selectedItems = new Set();
         let expandedProducts = new Set();
+        
+        // 옵션 선택/해제
+        function toggleOption(optionId) {
+            const checkbox = document.getElementById(`check-${optionId}`);
+            const row = document.getElementById(`option-${optionId}`);
+            
+            if (checkbox.checked) {
+                selectedItems.add(optionId);
+                row.classList.add('selected');
+            } else {
+                selectedItems.delete(optionId);
+                row.classList.remove('selected');
+            }
+            
+            updateSelectedCount();
+        }
+        
+        // 선택 개수 업데이트
+        function updateSelectedCount() {
+            const count = selectedItems.size;
+            document.getElementById('selectedCount').textContent = count;
+            
+            const copyBtn = document.getElementById('copySelectedBtn');
+            if (count === 0) {
+                copyBtn.style.opacity = '0.5';
+                copyBtn.style.cursor = 'not-allowed';
+            } else {
+                copyBtn.style.opacity = '1';
+                copyBtn.style.cursor = 'pointer';
+            }
+        }
+        
+        // 선택된 항목 복사
+        async function copySelectedItems() {
+            if (selectedItems.size === 0) {
+                showToast('선택된 항목이 없습니다.');
+                return;
+            }
+            
+            // 상품별로 그룹화
+            const grouped = {};
+            selectedItems.forEach(optionId => {
+                const [productId, optionIndex] = optionId.split('-').map(Number);
+                if (!grouped[productId]) {
+                    grouped[productId] = [];
+                }
+                grouped[productId].push(optionIndex);
+            });
+            
+            let output = '';
+            for (const productId in grouped) {
+                const product = products.find(p => p.id === Number(productId));
+                if (!product) continue;
+                
+                output += `* 브랜드 : ${product.brand}\n`;
+                output += `* 모델명 : ${product.model_number}\n`;
+                output += `* 제품명 : ${product.product_name}\n\n`;
+                
+                // 옵션 인덱스 정렬
+                grouped[productId].sort((a, b) => a - b).forEach(optionIndex => {
+                    const option = product.price_options[optionIndex];
+                    if (option) {
+                        const formattedDetail = formatPriceDetail(option.detail);
+                        output += `* ${option.term.replace('약정', ' 약정')} : ${formattedDetail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
+                    }
+                });
+                
+                if (product.image_url) {
+                    output += `\n상품 안내페이지 : ${product.image_url}\n`;
+                }
+                
+                output += '\n---\n\n';
+                
+                // 복사 횟수 업데이트
+                product.copy_count++;
+                await updateProductCopyCount(product.model_number, product.copy_count);
+            }
+            
+            navigator.clipboard.writeText(output.trim()).then(() => {
+                showToast(`${selectedItems.size}개 항목이 복사되었습니다!`);
+                clearAllSelections();
+                loadProducts(); // 데이터 새로고침
+            });
+        }
+        
+        // 전체 선택 초기화
+        function clearAllSelections() {
+            selectedItems.clear();
+            document.querySelectorAll('.price-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            document.querySelectorAll('.price-row.selected').forEach(row => {
+                row.classList.remove('selected');
+            });
+            updateSelectedCount();
+        }
         
         // 탭 전환
         function switchTab(tabName) {
@@ -1133,14 +1165,10 @@
             const showYear4 = document.getElementById('year4').checked;
             const showYear5 = document.getElementById('year5').checked;
             const showYear6 = document.getElementById('year6').checked;
-            const competitorFilter = document.getElementById('competitorFilter').value;
+            const hideCompetitor = document.getElementById('hideCompetitor').checked;
             const iceOnly = document.getElementById('iceOnly').checked;
             
             productsToRender.forEach(product => {
-                // 타사보상 필터
-                if (competitorFilter === 'show' && !product.has_competitor) return;
-                if (competitorFilter === 'hide' && product.has_competitor) return;
-                
                 // 얼음정수기 필터
                 if (iceOnly && !product.product_name.includes('얼음')) return;
                 
@@ -1149,7 +1177,7 @@
                     if (option.term.includes('4년') && !showYear4) return false;
                     if (option.term.includes('5년') && !showYear5) return false;
                     if (option.term.includes('6년') && !showYear6) return false;
-                    if (competitorFilter === 'hide' && option.detail.includes('타사보상')) return false;
+                    if (hideCompetitor && option.detail.includes('타사보상')) return false;
                     return true;
                 });
                 
@@ -1162,7 +1190,7 @@
                 card.className = `product-card ${expandedProducts.has(product.id) ? 'expanded' : ''}`;
                 card.id = `product-${product.id}`;
                 
-                // 얼음정수기 표시 추가
+                // 얼음정수기 표시
                 const isIceWater = product.product_name.includes('얼음');
                 
                 card.innerHTML = `
@@ -1172,7 +1200,6 @@
                                 <h3>${product.model_number} / ${product.product_name}</h3>
                                 <div class="product-meta">
                                     <span class="brand-badge">${product.brand}</span>
-                                    ${product.has_competitor ? '<span class="competitor-badge">타사보상</span>' : ''}
                                     ${isIceWater ? '<span class="ice-badge">❄️ 얼음</span>' : ''}
                                 </div>
                             </div>
@@ -1186,21 +1213,34 @@
                     </div>
                     <div class="product-content">
                         <div class="price-table">
-                            ${filteredOptions.map((option, index) => `
-                                <div class="price-row" onclick="quickCopy(${product.id}, ${index}, event)">
+                            ${filteredOptions.map((option, index) => {
+                                const originalIndex = product.price_options.indexOf(option);
+                                const isCompetitor = option.detail.includes('타사보상');
+                                const optionId = `${product.id}-${originalIndex}`;
+                                const isSelected = selectedItems.has(optionId);
+                                return `
+                                <div class="price-row ${isCompetitor ? 'competitor-option' : ''} ${isSelected ? 'selected' : ''}" id="option-${optionId}">
+                                    <input type="checkbox" class="price-checkbox" 
+                                           id="check-${optionId}"
+                                           ${isSelected ? 'checked' : ''}
+                                           onchange="toggleOption('${optionId}')"
+                                           onclick="event.stopPropagation()">
                                     <div class="term">${option.term.replace('약정', ' 약정')}</div>
                                     <div class="management">${formatPriceDetail(option.detail)}</div>
                                     <div class="price">월 ${option.price}</div>
                                     <div class="gift">사은품 ${option.gift}</div>
-                                    <button class="quick-copy-btn" onclick="quickCopy(${product.id}, ${index}, event)">복사</button>
+                                    <button class="quick-copy-btn" onclick="quickCopy(${product.id}, ${originalIndex}, event)">복사</button>
                                 </div>
-                            `).join('')}
+                            `}).join('')}
                         </div>
                     </div>
                 `;
                 
                 productsList.appendChild(card);
             });
+            
+            // 선택 개수 업데이트
+            updateSelectedCount();
         }
         
         // 빠른 복사 (개별 옵션)
@@ -1225,18 +1265,24 @@
             }
             
             navigator.clipboard.writeText(output.trim()).then(async () => {
-                // 시각적 피드백
-                const button = event.target;
-                const originalText = button.textContent;
-                button.textContent = '✓ 복사됨';
-                button.style.background = '#4caf50';
-                button.style.color = 'white';
+                // 시각적 피드백 - 버튼이 아닌 경우 가장 가까운 버튼 찾기
+                let button = event.target;
+                if (!button.classList.contains('quick-copy-btn')) {
+                    button = event.currentTarget.querySelector('.quick-copy-btn');
+                }
                 
-                setTimeout(() => {
-                    button.textContent = originalText;
-                    button.style.background = '';
-                    button.style.color = '';
-                }, 1000);
+                if (button) {
+                    const originalText = button.textContent;
+                    button.textContent = '✓ 복사됨';
+                    button.style.background = '#4caf50';
+                    button.style.color = 'white';
+                    
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.style.background = '';
+                        button.style.color = '';
+                    }, 1000);
+                }
                 
                 // 복사 횟수 업데이트
                 product.copy_count++;
@@ -1262,14 +1308,14 @@
             const showYear4 = document.getElementById('year4').checked;
             const showYear5 = document.getElementById('year5').checked;
             const showYear6 = document.getElementById('year6').checked;
-            const competitorFilter = document.getElementById('competitorFilter').value;
+            const hideCompetitor = document.getElementById('hideCompetitor').checked;
             
             let filteredOptions = product.price_options.filter(option => {
                 if (option.term.includes('3년') && !showYear3) return false;
                 if (option.term.includes('4년') && !showYear4) return false;
                 if (option.term.includes('5년') && !showYear5) return false;
                 if (option.term.includes('6년') && !showYear6) return false;
-                if (competitorFilter === 'hide' && option.detail.includes('타사보상')) return false;
+                if (hideCompetitor && option.detail.includes('타사보상')) return false;
                 return true;
             });
             
@@ -1482,6 +1528,7 @@
             summary.innerHTML = products.map(p => {
                 const updateDate = new Date(p.updated_at);
                 const isIceWater = p.product_name.includes('얼음');
+                const competitorCount = p.price_options.filter(opt => opt.detail.includes('타사보상')).length;
                 return `
                 <div style="padding: 10px; border-bottom: 1px solid #333;">
                     <div style="color: var(--primary-blue); font-size: 14px;">
@@ -1490,7 +1537,7 @@
                     <div style="color: #666; font-size: 12px; margin-top: 5px;">
                         ${p.brand} | ${p.price_options.length}개 옵션 | 
                         마지막 업데이트: ${updateDate.toLocaleString('ko-KR')}
-                        ${p.has_competitor ? ' | 타사보상 있음' : ''}
+                        ${competitorCount > 0 ? ` | 타사보상 ${competitorCount}개` : ''}
                         ${isIceWater ? ' | ❄️ 얼음정수기' : ''}
                     </div>
                 </div>
