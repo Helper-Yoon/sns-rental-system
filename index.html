@@ -1834,11 +1834,13 @@
                     line.includes('고객명') ||
                     line.includes('주소') ||
                     line.includes('연락처') ||
-                    line.includes('메모')) {
+                    line.includes('메모') ||
+                    line.includes('브랜드/분류') ||
+                    line.includes('주방가전')) {
                     return; // 해당 라인 무시
                 }
                 
-                if (line.includes('브랜드') && line.includes(':')) {
+                if (line.includes('브랜드') && line.includes(':') && !line.includes('브랜드/분류')) {
                     parsedProduct.brand = line.split(':')[1].trim();
                 } else if (line.includes('모델명') && line.includes(':')) {
                     parsedProduct.model_number = line.split(':')[1].trim();
