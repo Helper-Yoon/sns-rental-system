@@ -1,0 +1,8 @@
+{
+  "name": "rental-quote-system",
+  "version": "1.0.0",
+  "description": "SNS센터 렌탈견적 시스템",
+  "scripts": {
+    "dev": "open index.html"
+  }
+}
