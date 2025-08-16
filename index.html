@@ -1214,4 +1214,354 @@
                 output += `* 렌탈 업체: ${product.company || product.brand}\n`;
                 output += `* 브랜드/분류: ${product.category || '주방가전/정수기'}\n`;
                 output += `* 모델명: ${product.modelNumber}\n`;
-                output += `*
+                output += `* 제품명: ${product.productName}\n`;
+                output += `* 색명칭: ${product.color}\n`;
+                output += `* 조리수설치: ${product.installation}\n`;
+                
+                grouped[productId].sort((a, b) => a - b).forEach(optionIndex => {
+                    const option = product.priceOptions[optionIndex];
+                    if (option) {
+                        output += `* ${option.term}: ${option.detail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
+                    }
+                });
+                
+                if (product.imageUrl) {
+                    output += `${product.imageUrl}\n`;
+                }
+                
+                output += '\n';
+                
+                product.copyCount++;
+            });
+            
+            navigator.clipboard.writeText(output.trim()).then(() => {
+                showToast('선택한 견적이 복사되었습니다!');
+                renderProducts();
+            });
+        }
+        
+        // 필터링
+        function filterProducts() {
+            const brand = document.getElementById('brandFilter').value;
+            const model = document.getElementById('modelSearch').value.toLowerCase();
+            const productName = document.getElementById('productSearch').value.toLowerCase();
+            
+            let filtered = products;
+            
+            if (brand) {
+                filtered = filtered.filter(p => p.brand === brand);
+            }
+            if (model) {
+                filtered = filtered.filter(p => p.modelNumber.toLowerCase().includes(model));
+            }
+            if (productName) {
+                filtered = filtered.filter(p => p.productName.toLowerCase().includes(productName));
+            }
+            
+            renderProducts(filtered);
+        }
+        
+        // 정렬
+        function sortProducts() {
+            const sortBy = document.getElementById('sortBy').value;
+            let sorted = [...products];
+            
+            switch(sortBy) {
+                case 'popular':
+                    sorted.sort((a, b) => b.copyCount - a.copyCount);
+                    break;
+                case 'name':
+                    sorted.sort((a, b) => a.productName.localeCompare(b.productName));
+                    break;
+                case 'brand':
+                    sorted.sort((a, b) => a.brand.localeCompare(b.brand));
+                    break;
+                case 'recent':
+                    sorted.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+                    break;
+            }
+            
+            products = sorted;
+            filterProducts();
+        }
+        
+        // 견적 파싱 및 추가
+        function parseAndAdd() {
+            const pasteArea = document.getElementById('pasteArea');
+            const text = pasteArea.value;
+            
+            if (!text.trim()) {
+                showToast('견적 정보를 입력해주세요.');
+                return;
+            }
+            
+            const lines = text.split('\n');
+            let parsedProduct = {
+                id: Date.now(),
+                copyCount: 0,
+                priceOptions: [],
+                installation: '선택안함(미설치/유상설치)',
+                updatedAt: new Date().toISOString(),
+                hasCompetitor: false
+            };
+            
+            lines.forEach(line => {
+                line = line.replace(/^[\*\-]\s*/, '');
+                
+                if (line.includes('렌탈 업체:')) {
+                    parsedProduct.company = line.split(':')[1].trim();
+                    parsedProduct.brand = parsedProduct.company;
+                } else if (line.includes('브랜드/분류:')) {
+                    parsedProduct.category = line.split(':')[1].trim();
+                } else if (line.includes('브랜드:')) {
+                    parsedProduct.brand = line.split(':')[1].trim();
+                } else if (line.includes('모델명:')) {
+                    parsedProduct.modelNumber = line.split(':')[1].trim();
+                } else if (line.includes('제품명:')) {
+                    parsedProduct.productName = line.split(':')[1].trim();
+                } else if (line.includes('색명칭:')) {
+                    parsedProduct.color = line.split(':')[1].trim();
+                } else if (line.includes('조리수설치:')) {
+                    parsedProduct.installation = line.split(':')[1].trim();
+                } else if (line.includes('년약정:')) {
+                    const termMatch = line.match(/(\d년약정):/);
+                    if (termMatch) {
+                        const term = termMatch[1];
+                        const parts = line.split(':')[1].split('/');
+                        if (parts.length >= 3) {
+                            const detail = parts[0].trim();
+                            const priceMatch = parts[1].match(/월\s*([\d,]+)/);
+                            const giftMatch = parts[2].match(/사은품\s*([\d,]+)/);
+                            
+                            if (priceMatch && giftMatch) {
+                                parsedProduct.priceOptions.push({
+                                    term: term,
+                                    detail: detail,
+                                    price: priceMatch[1],
+                                    gift: giftMatch[1]
+                                });
+                                
+                                if (detail.includes('타사보상')) {
+                                    parsedProduct.hasCompetitor = true;
+                                }
+                            }
+                        }
+                    }
+                } else if (line.includes('http')) {
+                    parsedProduct.imageUrl = line.trim();
+                }
+            });
+            
+            if (parsedProduct.modelNumber && parsedProduct.productName && parsedProduct.brand) {
+                const existingIndex = products.findIndex(p => p.modelNumber === parsedProduct.modelNumber);
+                
+                if (existingIndex !== -1) {
+                    parsedProduct.id = products[existingIndex].id;
+                    parsedProduct.copyCount = products[existingIndex].copyCount;
+                    products[existingIndex] = parsedProduct;
+                    showToast('기존 상품이 최신 데이터로 업데이트되었습니다!');
+                } else {
+                    products.unshift(parsedProduct);
+                    showToast('새 상품이 추가되었습니다!');
+                }
+                
+                pasteArea.value = '';
+                renderProducts();
+                updateProductSummary();
+                saveToLocalStorage();
+            } else {
+                showToast('필수 정보(모델명, 제품명, 브랜드)를 확인해주세요.');
+            }
+        }
+        
+        // 제품 요약 업데이트
+        function updateProductSummary() {
+            const summary = document.getElementById('productSummary');
+            summary.innerHTML = products.map(p => {
+                const updateDate = new Date(p.updatedAt);
+                return `
+                <div style="padding: 10px; border-bottom: 1px solid #333;">
+                    <div style="color: var(--primary-blue); font-size: 14px;">
+                        ${p.modelNumber} / ${p.productName}
+                    </div>
+                    <div style="color: #666; font-size: 12px; margin-top: 5px;">
+                        ${p.brand} | ${p.priceOptions.length}개 옵션 | 
+                        마지막 업데이트: ${updateDate.toLocaleString('ko-KR')}
+                        ${p.hasCompetitor ? ' | 타사보상 있음' : ''}
+                    </div>
+                </div>
+            `}).join('');
+        }
+        
+        // 선택 상태 복원
+        function restoreSelections() {
+            selectedItems.forEach(key => {
+                const [productId, optionIndex] = key.split('-');
+                const checkbox = document.getElementById(`price-check-${productId}-${optionIndex}`);
+                const row = document.getElementById(`option-${productId}-${optionIndex}`);
+                if (checkbox) {
+                    checkbox.checked = true;
+                }
+                if (row) {
+                    row.classList.add('selected');
+                }
+            });
+        }
+        
+        // 미리보기 모달
+        function openPreviewModal() {
+            if (selectedItems.size === 0) {
+                showToast('선택된 항목이 없습니다.');
+                return;
+            }
+            
+            const modal = document.getElementById('previewModal');
+            const previewText = document.getElementById('previewText');
+            
+            const grouped = {};
+            selectedItems.forEach(key => {
+                const [productId, optionIndex] = key.split('-').map(Number);
+                if (!grouped[productId]) {
+                    grouped[productId] = [];
+                }
+                grouped[productId].push(optionIndex);
+            });
+            
+            let output = '';
+            Object.keys(grouped).forEach(productId => {
+                const product = products.find(p => p.id === Number(productId));
+                if (!product) return;
+                
+                output += `* 렌탈 업체: ${product.company || product.brand}\n`;
+                output += `* 브랜드/분류: ${product.category || '주방가전/정수기'}\n`;
+                output += `* 모델명: ${product.modelNumber}\n`;
+                output += `* 제품명: ${product.productName}\n`;
+                output += `* 색명칭: ${product.color}\n`;
+                output += `* 조리수설치: ${product.installation}\n`;
+                
+                grouped[productId].sort((a, b) => a - b).forEach(optionIndex => {
+                    const option = product.priceOptions[optionIndex];
+                    if (option) {
+                        output += `* ${option.term}: ${option.detail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
+                    }
+                });
+                
+                if (product.imageUrl) {
+                    output += `${product.imageUrl}\n`;
+                }
+                
+                output += '\n';
+            });
+            
+            previewText.textContent = output.trim();
+            modal.classList.add('active');
+        }
+        
+        function closePreviewModal() {
+            document.getElementById('previewModal').classList.remove('active');
+        }
+        
+        function copyPreview() {
+            const previewText = document.getElementById('previewText').textContent;
+            navigator.clipboard.writeText(previewText).then(() => {
+                showToast('견적이 복사되었습니다!');
+                closePreviewModal();
+            });
+        }
+        
+        // 유의사항 저장
+        function saveNotes() {
+            const notes = {
+                sk: document.getElementById('note-sk').value,
+                lg: document.getElementById('note-lg').value,
+                coway: document.getElementById('note-coway').value,
+                cuckoo: document.getElementById('note-cuckoo').value,
+                kyowon: document.getElementById('note-kyowon').value,
+                chungho: document.getElementById('note-chungho').value,
+                hyundai: document.getElementById('note-hyundai').value,
+                ceragem: document.getElementById('note-ceragem').value,
+                updated: new Date().toISOString()
+            };
+            
+            localStorage.setItem('brandNotes', JSON.stringify(notes));
+            
+            const updateTime = new Date().toLocaleString('ko-KR');
+            document.getElementById('note-sk-updated').textContent = `최종 수정: ${updateTime}`;
+            document.getElementById('note-lg-updated').textContent = `최종 수정: ${updateTime}`;
+            document.getElementById('note-coway-updated').textContent = `최종 수정: ${updateTime}`;
+            document.getElementById('note-cuckoo-updated').textContent = `최종 수정: ${updateTime}`;
+            document.getElementById('note-kyowon-updated').textContent = `최종 수정: ${updateTime}`;
+            document.getElementById('note-chungho-updated').textContent = `최종 수정: ${updateTime}`;
+            document.getElementById('note-hyundai-updated').textContent = `최종 수정: ${updateTime}`;
+            document.getElementById('note-ceragem-updated').textContent = `최종 수정: ${updateTime}`;
+            
+            showToast('유의사항이 저장되었습니다!');
+        }
+        
+        // 유의사항 불러오기
+        function loadNotes() {
+            const saved = localStorage.getItem('brandNotes');
+            if (saved) {
+                const notes = JSON.parse(saved);
+                if (document.getElementById('note-sk')) document.getElementById('note-sk').value = notes.sk || '';
+                if (document.getElementById('note-lg')) document.getElementById('note-lg').value = notes.lg || '';
+                if (document.getElementById('note-coway')) document.getElementById('note-coway').value = notes.coway || '';
+                if (document.getElementById('note-cuckoo')) document.getElementById('note-cuckoo').value = notes.cuckoo || '';
+                if (document.getElementById('note-kyowon')) document.getElementById('note-kyowon').value = notes.kyowon || '';
+                if (document.getElementById('note-chungho')) document.getElementById('note-chungho').value = notes.chungho || '';
+                if (document.getElementById('note-hyundai')) document.getElementById('note-hyundai').value = notes.hyundai || '';
+                if (document.getElementById('note-ceragem')) document.getElementById('note-ceragem').value = notes.ceragem || '';
+                
+                if (notes.updated) {
+                    const updateTime = new Date(notes.updated).toLocaleString('ko-KR');
+                    document.getElementById('note-sk-updated').textContent = `최종 수정: ${updateTime}`;
+                    document.getElementById('note-lg-updated').textContent = `최종 수정: ${updateTime}`;
+                    document.getElementById('note-coway-updated').textContent = `최종 수정: ${updateTime}`;
+                    document.getElementById('note-cuckoo-updated').textContent = `최종 수정: ${updateTime}`;
+                    document.getElementById('note-kyowon-updated').textContent = `최종 수정: ${updateTime}`;
+                    document.getElementById('note-chungho-updated').textContent = `최종 수정: ${updateTime}`;
+                    document.getElementById('note-hyundai-updated').textContent = `최종 수정: ${updateTime}`;
+                    document.getElementById('note-ceragem-updated').textContent = `최종 수정: ${updateTime}`;
+                }
+            }
+        }
+        
+        // Toast 메시지
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+        
+        // 로컬 스토리지 저장
+        function saveToLocalStorage() {
+            localStorage.setItem('rentalProducts', JSON.stringify(products));
+        }
+        
+        // 로컬 스토리지에서 불러오기
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('rentalProducts');
+            if (saved) {
+                try {
+                    products = JSON.parse(saved);
+                } catch (e) {
+                    console.error('Failed to load products:', e);
+                    initializeData();
+                }
+            } else {
+                initializeData();
+            }
+        }
+        
+        // 초기화
+        window.onload = function() {
+            loadFromLocalStorage();
+            renderProducts();
+            loadNotes();
+        };
+    </script>
+</body>
+</html>
