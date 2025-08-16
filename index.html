@@ -244,6 +244,11 @@
             font-weight: 600;
         }
         
+        .year-filters .checkbox-label:nth-child(5) input:checked ~ span {
+            color: var(--year7-color);
+            font-weight: 600;
+        }
+        
         .checkbox-label {
             display: flex;
             align-items: center;
@@ -1049,19 +1054,21 @@
 * 제품명 : SK매직 원코크 플러스 얼음물 냉온정수기 (얼음냉온정)
 
 * 3년 약정 : 4개월관리 / 월 55,900 / 사은품 180,000
-* 3년 약정 : 4개월필터발송 12개월관리 / 월 51,900 / 사은품 180,000
+* 4년 약정 : 4개월필터발송 12개월관리 / 월 51,900 / 사은품 200,000
 * 5년 약정 : 6M반값_4개월관리 / 월 50,400 / 사은품 330,000
 * 5년 약정 : 타사보상_4개월관리 / 월 42,900 / 사은품 320,000
 * 5년 약정 : 패키지_4개월관리 / 월 39,900 / 사은품 350,000
 * 6년 약정 : 타사보상_4개월관리 / 월 41,400 / 사은품 340,000
+* 7년 약정 : 프리미엄_4개월관리 / 월 38,900 / 사은품 380,000
 
-상품 안내페이지 : https://zero-rental.biz/product-image/51317
+https://zero-rental.biz/product-image/51317
 
 (참고: 
 - 제품명에서 브랜드 자동 인식 (SK매직, LG, 코웨이 등)
 - 6M반값은 '6개월 반값 프로모션 / 4개월관리'로 자동 변환
 - 타사보상은 주황색, 패키지는 녹색으로 표시
-- '메인 상담', '고객명' 등의 불필요한 정보는 자동으로 무시됩니다)"></textarea>
+- URL은 그냥 붙여넣기만 해도 자동 인식
+- '상품 안내페이지', '안내페이지', 'URL', '링크' 등 다양한 형식 인식)"></textarea>
                     <button class="btn-primary" onclick="parseAndAdd()">견적 추가/업데이트</button>
                 </div>
                 
@@ -1880,7 +1887,8 @@
                     line.includes('연락처') ||
                     line.includes('메모') ||
                     line.includes('브랜드/분류') ||
-                    line.includes('주방가전')) {
+                    line.includes('주방가전') ||
+                    line.includes('렌탈 업체')) {
                     return; // 해당 라인 무시
                 }
                 
@@ -1919,14 +1927,29 @@
                                     gift: giftMatch[1]
                                 });
                                 
+                                // 타사보상 감지
                                 if (detail.includes('타사보상')) {
                                     parsedProduct.has_competitor = true;
+                                }
+                                
+                                // 패키지 감지
+                                if (detail.includes('패키지')) {
+                                    parsedProduct.has_package = true;
                                 }
                             }
                         }
                     }
                 } else if (line.includes('상품 안내페이지') && line.includes(':')) {
                     parsedProduct.image_url = line.split(':').slice(1).join(':').trim();
+                } else if (line.includes('안내페이지') && line.includes(':')) {
+                    parsedProduct.image_url = line.split(':').slice(1).join(':').trim();
+                } else if (line.includes('URL') && line.includes(':')) {
+                    parsedProduct.image_url = line.split(':').slice(1).join(':').trim();
+                } else if (line.includes('링크') && line.includes(':')) {
+                    parsedProduct.image_url = line.split(':').slice(1).join(':').trim();
+                } else if (line.includes('http://') || line.includes('https://')) {
+                    // URL만 있는 경우도 인식
+                    parsedProduct.image_url = line.trim();
                 }
             });
             
@@ -2152,7 +2175,18 @@
                 
                 if (error) throw error;
                 
-                products = data || [];
+                // category와 company 필드 제거 및 brand로 통일
+                products = (data || []).map(product => {
+                    // company가 있고 brand가 없으면 company를 brand로 사용
+                    if (!product.brand && product.company) {
+                        product.brand = product.company;
+                    }
+                    // category와 company 필드 삭제
+                    delete product.category;
+                    delete product.company;
+                    return product;
+                });
+                
                 renderProducts();
                 updateProductSummary();
             } catch (error) {
