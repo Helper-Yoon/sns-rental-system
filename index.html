@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SNS센터 렌탈견적 시스템</title>
+    <title>SNS센터 렌탈견적 시스템 - 정수기 편</title>
     <style>
         * {
             margin: 0;
@@ -327,6 +327,20 @@
             word-break: keep-all;
         }
         
+        .product-card.popular {
+            border-color: rgba(255, 215, 0, 0.3);
+            background: linear-gradient(145deg, #111, #0f0f0f);
+        }
+        
+        .product-card.popular .product-header {
+            background: linear-gradient(to right, rgba(255, 215, 0, 0.05), transparent);
+        }
+        
+        .product-card.popular .product-info h3 {
+            color: #ffd700;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+        }
+        
         .product-meta {
             display: flex;
             gap: 10px;
@@ -356,6 +370,22 @@
         .ice-badge {
             background: rgba(0, 188, 212, 0.1);
             color: #00bcd4;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+        }
+        
+        .ro-badge {
+            background: rgba(96, 165, 250, 0.1);
+            color: #60a5fa;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+        }
+        
+        .stand-badge {
+            background: rgba(147, 51, 234, 0.1);
+            color: #9333ea;
             padding: 3px 8px;
             border-radius: 6px;
             font-size: 11px;
@@ -960,7 +990,7 @@
 <body>
     <div class="header">
         <div class="header-content">
-            <div class="logo">📋 SNS센터 렌탈견적 시스템</div>
+            <div class="logo">📋 SNS센터 렌탈견적 시스템 - 정수기 편</div>
             <div class="header-buttons">
                 <button class="header-btn" id="copySelectedBtn" onclick="copySelectedItems()">
                     📋 선택 복사 (<span id="selectedCount">0</span>)
@@ -1040,7 +1070,7 @@
                             <span>7년</span>
                         </label>
                     </div>
-                    <div style="margin-left: 30px; display: flex; gap: 20px; align-items: center;">
+                    <div style="margin-left: 30px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center;">
                         <label class="checkbox-label">
                             <input type="checkbox" id="hideCompetitor" onchange="filterProducts()">
                             <span>타사보상 옵션 숨기기</span>
@@ -1051,7 +1081,15 @@
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" id="iceOnly" onchange="filterProducts()">
-                            <span>얼음정수기만 보기</span>
+                            <span>❄️ 얼음정수기만</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="roOnly" onchange="filterProducts()">
+                            <span>💧 RO필터만</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="standOnly" onchange="filterProducts()">
+                            <span>🏢 스탠드형만</span>
                         </label>
                     </div>
                 </div>
@@ -1331,9 +1369,9 @@ https://zero-rental.biz/product-image/51317
                 output += `* ${option.term.replace('약정', ' 약정')} : ${formattedDetail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
             });
             
-            // 추가사은품이 있으면 포함 (더 자연스러운 포맷)
+            // 추가사은품이 있으면 포함
             if (additionalGifts[productId]) {
-                output += `* 추가사은품 : 추가 ${additionalGifts[productId]}\n`;
+                output += `* 추가사은품 : ${additionalGifts[productId]}\n`;
             }
             
             if (product.image_url) {
@@ -1451,9 +1489,9 @@ https://zero-rental.biz/product-image/51317
                     }
                 });
                 
-                // 추가사은품이 있으면 포함 (더 자연스러운 포맷)
+                // 추가사은품이 있으면 포함
                 if (additionalGifts[productId]) {
-                    output += `* 추가사은품 : 추가 ${additionalGifts[productId]}\n`;
+                    output += `* 추가사은품 : ${additionalGifts[productId]}\n`;
                 }
                 
                 if (product.image_url) {
@@ -1531,6 +1569,15 @@ https://zero-rental.biz/product-image/51317
                 return;
             }
             
+            // Top 10 인기 상품 찾기 (전체 products 기준)
+            const topProductsMap = new Map();
+            [...products]
+                .sort((a, b) => b.copy_count - a.copy_count)
+                .slice(0, 10)
+                .forEach((p, index) => {
+                    topProductsMap.set(p.id, index + 1);
+                });
+            
             const showYear3 = document.getElementById('year3').checked;
             const showYear4 = document.getElementById('year4').checked;
             const showYear5 = document.getElementById('year5').checked;
@@ -1539,10 +1586,14 @@ https://zero-rental.biz/product-image/51317
             const hideCompetitor = document.getElementById('hideCompetitor').checked;
             const hidePackage = document.getElementById('hidePackage').checked;
             const iceOnly = document.getElementById('iceOnly').checked;
+            const roOnly = document.getElementById('roOnly').checked;
+            const standOnly = document.getElementById('standOnly').checked;
             
             productsToRender.forEach(product => {
-                // 얼음정수기 필터
+                // 필터링
                 if (iceOnly && !product.product_name.includes('얼음')) return;
+                if (roOnly && !product.product_name.toUpperCase().includes('RO')) return;
+                if (standOnly && !product.product_name.includes('스탠드')) return;
                 
                 let filteredOptions = product.price_options.filter(option => {
                     if (option.term.includes('3년') && !showYear3) return false;
@@ -1560,25 +1611,36 @@ https://zero-rental.biz/product-image/51317
                 const updateDate = new Date(product.updated_at);
                 const dateStr = `${updateDate.getMonth() + 1}/${updateDate.getDate()}`;
                 
-                const card = document.createElement('div');
-                card.className = `product-card ${expandedProducts.has(product.id) ? 'expanded' : ''}`;
-                card.id = `product-${product.id}`;
-                
-                // 얼음정수기 표시
+                // 특징 표시
                 const isIceWater = product.product_name.includes('얼음');
+                const isRO = product.product_name.toUpperCase().includes('RO');
+                const isStand = product.product_name.includes('스탠드');
                 const brandLogo = brandLogos[product.brand] || '📦';
+                const rank = topProductsMap.get(product.id);
+                const isTop10 = !!rank;
+                let popularMark = '';
+                if (rank === 1) popularMark = '🥇 ';
+                else if (rank === 2) popularMark = '🥈 ';
+                else if (rank === 3) popularMark = '🥉 ';
+                else if (rank) popularMark = `⭐${rank}위 `;
+                
+                const card = document.createElement('div');
+                card.className = `product-card ${expandedProducts.has(product.id) ? 'expanded' : ''} ${isTop10 ? 'popular' : ''}`;
+                card.id = `product-${product.id}`;
                 
                 card.innerHTML = `
                     <div class="product-header" onclick="toggleProductExpand(${product.id}, event)">
                         <div class="product-left">
                             <div class="product-info">
-                                <h3>${product.model_number} / ${product.product_name}</h3>
+                                <h3>${popularMark}${product.model_number} / ${product.product_name}</h3>
                                 <div class="product-meta">
                                     <span class="brand-badge">
                                         <span class="brand-logo">${brandLogo}</span>
                                         ${product.brand}
                                     </span>
                                     ${isIceWater ? '<span class="ice-badge">❄️ 얼음</span>' : ''}
+                                    ${isRO ? '<span class="ro-badge">💧 RO</span>' : ''}
+                                    ${isStand ? '<span class="stand-badge">🏢 스탠드</span>' : ''}
                                     ${product.image_url ? '<span class="url-success">🔗 URL</span>' : '<span class="url-warning">⚠️ URL 없음</span>'}
                                 </div>
                             </div>
@@ -1663,9 +1725,9 @@ https://zero-rental.biz/product-image/51317
             const formattedDetail = formatPriceDetail(option.detail);
             output += `* ${option.term.replace('약정', ' 약정')} : ${formattedDetail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
             
-            // 추가사은품이 있으면 포함 (더 자연스러운 포맷)
+            // 추가사은품이 있으면 포함
             if (additionalGifts[productId]) {
-                output += `* 추가사은품 : 추가 ${additionalGifts[productId]}\n`;
+                output += `* 추가사은품 : ${additionalGifts[productId]}\n`;
             }
             
             if (product.image_url) {
@@ -1740,9 +1802,9 @@ https://zero-rental.biz/product-image/51317
                 output += `* ${option.term.replace('약정', ' 약정')} : ${formattedDetail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
             });
             
-            // 추가사은품이 있으면 포함 (더 자연스러운 포맷)
+            // 추가사은품이 있으면 포함
             if (additionalGifts[productId]) {
-                output += `* 추가사은품 : 추가 ${additionalGifts[productId]}\n`;
+                output += `* 추가사은품 : ${additionalGifts[productId]}\n`;
             }
             
             if (product.image_url) {
@@ -1783,6 +1845,8 @@ https://zero-rental.biz/product-image/51317
             const model = document.getElementById('modelSearch').value.toLowerCase();
             const productName = document.getElementById('productSearch').value.toLowerCase();
             const iceOnly = document.getElementById('iceOnly').checked;
+            const roOnly = document.getElementById('roOnly').checked;
+            const standOnly = document.getElementById('standOnly').checked;
             
             let filtered = products;
             
@@ -1797,6 +1861,12 @@ https://zero-rental.biz/product-image/51317
             }
             if (iceOnly) {
                 filtered = filtered.filter(p => p.product_name.includes('얼음'));
+            }
+            if (roOnly) {
+                filtered = filtered.filter(p => p.product_name.toUpperCase().includes('RO'));
+            }
+            if (standOnly) {
+                filtered = filtered.filter(p => p.product_name.includes('스탠드'));
             }
             
             renderProducts(filtered);
@@ -2163,6 +2233,8 @@ https://zero-rental.biz/product-image/51317
             summary.innerHTML = products.map(p => {
                 const updateDate = new Date(p.updated_at);
                 const isIceWater = p.product_name.includes('얼음');
+                const isRO = p.product_name.toUpperCase().includes('RO');
+                const isStand = p.product_name.includes('스탠드');
                 const competitorCount = p.price_options.filter(opt => opt.detail.includes('타사보상')).length;
                 const packageCount = p.price_options.filter(opt => opt.detail.includes('패키지')).length;
                 const brandLogo = brandLogos[p.brand] || '📦';
@@ -2179,7 +2251,9 @@ https://zero-rental.biz/product-image/51317
                         마지막 업데이트: ${updateDate.toLocaleString('ko-KR')}
                         ${competitorCount > 0 ? ` | 타사보상 ${competitorCount}개` : ''}
                         ${packageCount > 0 ? ` | 패키지 ${packageCount}개` : ''}
-                        ${isIceWater ? ' | ❄️ 얼음정수기' : ''}
+                        ${isIceWater ? ' | ❄️ 얼음' : ''}
+                        ${isRO ? ' | 💧 RO' : ''}
+                        ${isStand ? ' | 🏢 스탠드' : ''}
                         ${hasURL ? ' | 🔗 URL 있음' : ' | ⚠️ URL 없음'}
                     </div>
                 </div>
