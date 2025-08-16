@@ -361,6 +361,26 @@
             font-size: 11px;
         }
         
+        .url-warning {
+            background: rgba(255, 152, 0, 0.1);
+            border: 1px solid #ff9800;
+            color: #ff9800;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-left: 5px;
+        }
+        
+        .url-success {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid #4caf50;
+            color: #4caf50;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-left: 5px;
+        }
+        
         .product-stats {
             display: flex;
             gap: 20px;
@@ -1062,13 +1082,21 @@
 * 7년 약정 : 프리미엄_4개월관리 / 월 38,900 / 사은품 380,000
 
 https://zero-rental.biz/product-image/51317
+또는
+상품 안내페이지 : https://zero-rental.biz/product-image/51317
 
 (참고: 
 - 제품명에서 브랜드 자동 인식 (SK매직, LG, 코웨이 등)
 - 6M반값은 '6개월 반값 프로모션 / 4개월관리'로 자동 변환
 - 타사보상은 주황색, 패키지는 녹색으로 표시
-- URL은 그냥 붙여넣기만 해도 자동 인식
-- '상품 안내페이지', '안내페이지', 'URL', '링크' 등 다양한 형식 인식)"></textarea>
+- URL은 다양한 형식 모두 인식:
+  • 그냥 URL만 붙여넣기 (https://...)
+  • 상품 안내페이지 : URL
+  • 안내페이지 : URL
+  • 링크 : URL
+  • 상세페이지 : URL
+  • zero-rental.biz/... (http 없어도 인식)
+  • bit.ly/... 등 짧은 URL도 인식)"></textarea>
                     <button class="btn-primary" onclick="parseAndAdd()">견적 추가/업데이트</button>
                 </div>
                 
@@ -1551,6 +1579,7 @@ https://zero-rental.biz/product-image/51317
                                         ${product.brand}
                                     </span>
                                     ${isIceWater ? '<span class="ice-badge">❄️ 얼음</span>' : ''}
+                                    ${product.image_url ? '<span class="url-success">🔗 URL</span>' : '<span class="url-warning">⚠️ URL 없음</span>'}
                                 </div>
                             </div>
                         </div>
@@ -1856,6 +1885,86 @@ https://zero-rental.biz/product-image/51317
             return null;
         }
         
+        // URL 추출 헬퍼 함수 (개선된 버전)
+        function extractURL(text) {
+            // 텍스트 정리
+            text = text.trim();
+            
+            // 다양한 URL 패턴 매칭 (우선순위 순)
+            const urlPatterns = [
+                // 1. 표준 URL 패턴 (http/https)
+                /https?:\/\/[^\s<>"{}|\\^`\[\]]+/gi,
+                
+                // 2. www로 시작하는 패턴
+                /www\.[^\s<>"{}|\\^`\[\]]+/gi,
+                
+                // 3. zero-rental.biz 등 특정 도메인 직접 매칭
+                /zero-rental\.biz\/[^\s<>"{}|\\^`\[\]]*/gi,
+                
+                // 4. 일반적인 도메인 패턴
+                /[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]\.(com|net|org|biz|co\.kr|kr|io|app|site|shop|store|link|me|info|tv)\/[^\s<>"{}|\\^`\[\]]*/gi,
+                
+                // 5. 짧은 URL 서비스
+                /(bit\.ly|tinyurl\.com|goo\.gl|ow\.ly|is\.gd|buff\.ly|t\.co|short\.link)\/[A-Za-z0-9\-_]+/gi,
+                
+                // 6. 숫자로 끝나는 패턴 (product-image/51317 등)
+                /[a-zA-Z0-9-]+\.(biz|com|net|org|co\.kr|kr)\/[a-zA-Z0-9\-_\/]+\/\d+/gi
+            ];
+            
+            for (const pattern of urlPatterns) {
+                const matches = text.match(pattern);
+                if (matches && matches.length > 0) {
+                    let url = matches[0].trim();
+                    
+                    // URL 끝의 불필요한 문자 제거 (구두점 등)
+                    url = url.replace(/[.,;:!?)\]}>'"]+$/, '');
+                    
+                    // 괄호나 따옴표로 시작하는 경우 제거
+                    url = url.replace(/^[(\[{<'"]+/, '');
+                    
+                    // www로 시작하면 https:// 추가
+                    if (url.startsWith('www.')) {
+                        url = 'https://' + url;
+                    }
+                    
+                    // 도메인만 있는 경우 https:// 추가
+                    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                        // zero-rental.biz 같은 경우 처리
+                        if (url.includes('.') && url.includes('/')) {
+                            url = 'https://' + url;
+                        }
+                    }
+                    
+                    // URL 유효성 간단 체크
+                    try {
+                        new URL(url);
+                        return url;
+                    } catch {
+                        // URL이 유효하지 않으면 다음 패턴 시도
+                        continue;
+                    }
+                }
+            }
+            
+            // 마지막 시도: 공백으로 분리하여 각 단어에서 URL 찾기
+            const words = text.split(/\s+/);
+            for (const word of words) {
+                if (word.includes('http://') || word.includes('https://')) {
+                    let url = word.trim();
+                    url = url.replace(/[.,;:!?)\]}>'"]+$/, '');
+                    url = url.replace(/^[(\[{<'"]+/, '');
+                    try {
+                        new URL(url);
+                        return url;
+                    } catch {
+                        continue;
+                    }
+                }
+            }
+            
+            return null;
+        }
+        
         // 견적 파싱 및 추가
         async function parseAndAdd() {
             const pasteArea = document.getElementById('pasteArea');
@@ -1873,7 +1982,11 @@ https://zero-rental.biz/product-image/51317
                 has_competitor: false
             };
             
+            // URL을 먼저 전체 텍스트에서 찾기
+            let foundURL = null;
+            
             lines.forEach(line => {
+                const originalLine = line; // 원본 라인 보존
                 line = line.replace(/^[\*\-]\s*/, '').trim();
                 
                 // 불필요한 라인 필터링
@@ -1896,6 +2009,52 @@ https://zero-rental.biz/product-image/51317
                     return; // 해당 라인 무시
                 }
                 
+                // URL 감지 (우선순위 높음)
+                if (!foundURL) {
+                    // 다양한 URL 키워드 체크
+                    const urlKeywords = [
+                        '상품 안내페이지', '안내페이지', '상품안내페이지', 
+                        '안내 페이지', '상품페이지', '페이지',
+                        'URL', 'url', '링크', 'link', '주소', '사이트',
+                        '상세페이지', '상세 페이지', '이미지', '사진'
+                    ];
+                    
+                    let hasURLKeyword = false;
+                    for (const keyword of urlKeywords) {
+                        if (line.toLowerCase().includes(keyword.toLowerCase())) {
+                            hasURLKeyword = true;
+                            break;
+                        }
+                    }
+                    
+                    // URL 키워드가 있는 경우
+                    if (hasURLKeyword) {
+                        // 콜론이 있으면 콜론 뒤의 내용 추출
+                        if (line.includes(':')) {
+                            const urlPart = line.split(':').slice(1).join(':').trim();
+                            const extractedURL = extractURL(urlPart);
+                            if (extractedURL) {
+                                foundURL = extractedURL;
+                            }
+                        } else {
+                            // 콜론이 없어도 URL 추출 시도
+                            const extractedURL = extractURL(line);
+                            if (extractedURL) {
+                                foundURL = extractedURL;
+                            }
+                        }
+                    }
+                    
+                    // URL 키워드가 없어도 URL 패턴이 있는지 체크
+                    if (!foundURL) {
+                        const extractedURL = extractURL(originalLine);
+                        if (extractedURL) {
+                            foundURL = extractedURL;
+                        }
+                    }
+                }
+                
+                // 기존 파싱 로직
                 if (line.includes('브랜드') && line.includes(':') && !line.includes('브랜드/분류')) {
                     parsedProduct.brand = line.split(':')[1].trim();
                 } else if (line.includes('모델명') && line.includes(':')) {
@@ -1938,25 +2097,32 @@ https://zero-rental.biz/product-image/51317
                             }
                         }
                     }
-                } else if (line.includes('상품 안내페이지') && line.includes(':')) {
-                    parsedProduct.image_url = line.split(':').slice(1).join(':').trim();
-                } else if (line.includes('안내페이지') && line.includes(':')) {
-                    parsedProduct.image_url = line.split(':').slice(1).join(':').trim();
-                } else if (line.includes('URL') && line.includes(':')) {
-                    parsedProduct.image_url = line.split(':').slice(1).join(':').trim();
-                } else if (line.includes('링크') && line.includes(':')) {
-                    parsedProduct.image_url = line.split(':').slice(1).join(':').trim();
-                } else if (line.includes('http://') || line.includes('https://')) {
-                    // URL만 있는 경우도 인식
-                    parsedProduct.image_url = line.trim();
                 }
             });
+            
+            // 찾은 URL을 parsedProduct에 할당
+            if (foundURL) {
+                parsedProduct.image_url = foundURL;
+            }
             
             // 브랜드가 없으면 제품명에서 한 번 더 시도
             if (!parsedProduct.brand && parsedProduct.product_name) {
                 const detectedBrand = detectBrand(parsedProduct.product_name);
                 if (detectedBrand) {
                     parsedProduct.brand = detectedBrand;
+                }
+            }
+            
+            // URL 검증 로그 (디버깅용)
+            if (parsedProduct.image_url) {
+                console.log('URL 인식 성공:', parsedProduct.image_url);
+            } else {
+                console.log('URL을 찾을 수 없음');
+                // 전체 텍스트에서 한 번 더 URL 찾기 시도
+                const lastAttemptURL = extractURL(text);
+                if (lastAttemptURL) {
+                    parsedProduct.image_url = lastAttemptURL;
+                    console.log('최종 시도로 URL 발견:', lastAttemptURL);
                 }
             }
             
@@ -1974,7 +2140,13 @@ https://zero-rental.biz/product-image/51317
                     if (error) throw error;
                     
                     pasteArea.value = '';
-                    showToast('상품이 추가/업데이트되었습니다!');
+                    
+                    // URL 포함 여부에 따른 메시지
+                    if (parsedProduct.image_url) {
+                        showToast('상품과 URL이 저장되었습니다!');
+                    } else {
+                        showToast('상품이 저장되었습니다! (URL 없음)');
+                    }
                     await loadProducts(); // 데이터 새로고침
                 } catch (error) {
                     console.error('Error saving product:', error);
@@ -1994,6 +2166,7 @@ https://zero-rental.biz/product-image/51317
                 const competitorCount = p.price_options.filter(opt => opt.detail.includes('타사보상')).length;
                 const packageCount = p.price_options.filter(opt => opt.detail.includes('패키지')).length;
                 const brandLogo = brandLogos[p.brand] || '📦';
+                const hasURL = !!p.image_url;
                 
                 return `
                 <div style="padding: 10px; border-bottom: 1px solid #333;">
@@ -2007,6 +2180,7 @@ https://zero-rental.biz/product-image/51317
                         ${competitorCount > 0 ? ` | 타사보상 ${competitorCount}개` : ''}
                         ${packageCount > 0 ? ` | 패키지 ${packageCount}개` : ''}
                         ${isIceWater ? ' | ❄️ 얼음정수기' : ''}
+                        ${hasURL ? ' | 🔗 URL 있음' : ' | ⚠️ URL 없음'}
                     </div>
                 </div>
             `}).join('');
