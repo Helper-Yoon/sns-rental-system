@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SNS센터 렌탈견적 시스템</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -128,7 +127,6 @@
             display: block;
         }
         
-        /* 견적 출력 탭 스타일 */
         .output-header {
             background: #111;
             border: 1px solid #222;
@@ -440,7 +438,6 @@
             font-size: 13px;
         }
         
-        /* 견적 입력 탭 스타일 */
         .input-container {
             display: grid;
             grid-template-columns: 1fr 2fr;
@@ -497,7 +494,6 @@
             box-shadow: 0 0 20px var(--primary-blue-glow);
         }
         
-        /* 브랜드 유의사항 탭 스타일 */
         .notes-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -610,7 +606,6 @@
             box-shadow: 0 8px 30px rgba(0, 102, 255, 0.6);
         }
         
-        /* 모달 스타일 */
         .modal {
             display: none;
             position: fixed;
@@ -707,3 +702,516 @@
             padding: 60px;
             color: #666;
         }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">📋 SNS센터 렌탈견적 시스템</div>
+            <div class="header-buttons">
+                <button class="header-btn" onclick="openPreviewModal()">📄 미리보기</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tabs">
+        <div class="tabs-container">
+            <button class="tab active" onclick="switchTab('output')">견적 출력</button>
+            <button class="tab" onclick="switchTab('input')">견적 입력</button>
+            <button class="tab" onclick="switchTab('notes')">브랜드 유의사항</button>
+        </div>
+    </div>
+    
+    <div class="content">
+        <!-- 견적 출력 탭 -->
+        <div id="output-panel" class="tab-panel active">
+            <div class="output-header">
+                <div class="selected-count">선택된 항목: <span id="selectedCount">0</span>개</div>
+                <button class="copy-selected-btn" onclick="copySelected()" disabled>선택 항목 복사</button>
+            </div>
+            
+            <div class="filters">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label>브랜드</label>
+                        <select id="brandFilter" onchange="filterProducts()">
+                            <option value="">전체</option>
+                            <option value="SK매직">SK매직</option>
+                            <option value="LG전자">LG전자</option>
+                            <option value="코웨이">코웨이</option>
+                            <option value="쿠쿠">쿠쿠</option>
+                            <option value="교원웰스">교원웰스</option>
+                            <option value="청호나이스">청호나이스</option>
+                            <option value="현대큐밍">현대큐밍</option>
+                            <option value="세라젬">세라젬</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>모델명</label>
+                        <input type="text" id="modelSearch" placeholder="모델명 검색..." onkeyup="filterProducts()">
+                    </div>
+                    <div class="filter-group">
+                        <label>제품명</label>
+                        <input type="text" id="productSearch" placeholder="제품명 검색..." onkeyup="filterProducts()">
+                    </div>
+                    <div class="filter-group">
+                        <label>정렬</label>
+                        <select id="sortBy" onchange="sortProducts()">
+                            <option value="popular">인기순</option>
+                            <option value="name">이름순</option>
+                            <option value="brand">브랜드순</option>
+                            <option value="recent">최신순</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-options">
+                    <div class="filter-label">약정 기간:</div>
+                    <div class="year-filters">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="year3" checked onchange="filterProducts()">
+                            <span>3년</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="year4" checked onchange="filterProducts()">
+                            <span>4년</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="year5" checked onchange="filterProducts()">
+                            <span>5년</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="year6" checked onchange="filterProducts()">
+                            <span>6년</span>
+                        </label>
+                    </div>
+                    <div style="margin-left: 30px;">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="competitorOnly" onchange="filterProducts()">
+                            <span>타사보상만 보기</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="products-grid" id="productsList">
+                <!-- 상품 카드들이 여기에 동적으로 생성됩니다 -->
+            </div>
+        </div>
+        
+        <!-- 견적 입력 탭 -->
+        <div id="input-panel" class="tab-panel">
+            <div class="input-container">
+                <div class="input-panel">
+                    <h3>📝 견적 입력</h3>
+                    <textarea class="paste-area" id="pasteArea" placeholder="견적 정보를 여기에 붙여넣으세요...
+
+예시:
+* 렌탈 업체: LG전자
+* 브랜드/분류: 주방가전/정수기
+* 모델명: WD721R
+* 제품명: LG 오브제컬렉션 데스크탑 얼음정수기
+* 색명칭: 선택안함(에센스화이트/카밍베이지/블랙)
+* 4년약정: 6M반값_4개월관리 / 월 65,900 / 사은품 170,000"></textarea>
+                    <button class="btn-primary" onclick="parseAndAdd()">견적 추가/업데이트</button>
+                </div>
+                
+                <div class="input-panel">
+                    <h3>📊 등록된 상품 목록</h3>
+                    <div id="productSummary" style="max-height: 400px; overflow-y: auto;">
+                        <!-- 등록된 상품 목록이 표시됩니다 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 브랜드 유의사항 탭 -->
+        <div id="notes-panel" class="tab-panel">
+            <div class="notes-container">
+                <div class="notes-header">
+                    <h2>📌 브랜드별 유의사항</h2>
+                    <p>각 브랜드의 렌탈 진행 시 주의사항을 기록해주세요</p>
+                </div>
+                <div class="notes-grid">
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>SK매직</span>
+                            </div>
+                            <div class="note-updated" id="note-sk-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-sk" placeholder="SK매직 관련 유의사항을 입력하세요...
+예: 설치비, 프로모션 정보, 특별 조건 등"></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>LG전자</span>
+                            </div>
+                            <div class="note-updated" id="note-lg-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-lg" placeholder="LG전자 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>코웨이</span>
+                            </div>
+                            <div class="note-updated" id="note-coway-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-coway" placeholder="코웨이 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>교원웰스</span>
+                            </div>
+                            <div class="note-updated" id="note-kyowon-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-kyowon" placeholder="교원웰스 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>청호나이스</span>
+                            </div>
+                            <div class="note-updated" id="note-chungho-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-chungho" placeholder="청호나이스 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>현대큐밍</span>
+                            </div>
+                            <div class="note-updated" id="note-hyundai-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-hyundai" placeholder="현대큐밍 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>세라젬</span>
+                            </div>
+                            <div class="note-updated" id="note-ceragem-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-ceragem" placeholder="세라젬 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>쿠쿠</span>
+                            </div>
+                            <div class="note-updated" id="note-cuckoo-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-cuckoo" placeholder="쿠쿠 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                </div>
+                <button class="save-notes-btn" onclick="saveNotes()">💾 유의사항 저장</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 미리보기 모달 -->
+    <div class="modal" id="previewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>견적 미리보기</h2>
+                <button class="close-btn" onclick="closePreviewModal()">×</button>
+            </div>
+            <div class="preview-text" id="previewText">
+                선택된 항목이 없습니다.
+            </div>
+            <button class="btn-primary" style="margin-top: 20px;" onclick="copyPreview()">복사하기</button>
+        </div>
+    </div>
+    
+    <div class="toast" id="toast"></div>
+    
+    <script>
+        // 전역 변수
+        let products = [];
+        let selectedItems = new Set();
+        let expandedProducts = new Set();
+        
+        // 초기 데이터
+        function initializeData() {
+            products = [
+                {
+                    id: 1,
+                    company: 'SK매직',
+                    brand: 'SK매직',
+                    category: '주방가전/정수기',
+                    modelNumber: 'WPUJAC115S',
+                    productName: 'SK매직 25년형 초소형 플러스 직수 냉온정수기 (냉온정)',
+                    color: '선택안함(화이트/실버)',
+                    installation: '선택안함(미설치/유상설치)',
+                    copyCount: 15,
+                    imageUrl: 'https://zero-rental.biz/product-image/51408',
+                    hasCompetitor: true,
+                    priceOptions: [
+                        { term: '3년약정', detail: '4개월관리', price: '41,900', gift: '120,000' },
+                        { term: '3년약정', detail: '4개월필터발송 12개월관리', price: '37,900', gift: '120,000' },
+                        { term: '5년약정', detail: '6M반값_4개월관리', price: '37,400', gift: '230,000' },
+                        { term: '5년약정', detail: '6M반값_4개월필터발송 12개월관리', price: '33,400', gift: '220,000' },
+                        { term: '5년약정', detail: '타사보상_4개월관리', price: '32,500', gift: '250,000' },
+                        { term: '6년약정', detail: '12M반값_4개월관리', price: '35,900', gift: '250,000' }
+                    ],
+                    updatedAt: new Date('2025-01-15').toISOString()
+                },
+                {
+                    id: 2,
+                    company: 'SK매직',
+                    brand: 'SK매직',
+                    category: '주방가전/정수기',
+                    modelNumber: 'WPUIAC425S',
+                    productName: 'SK매직 원코크 플러스 얼음물 냉온정수기 (얼음냉온정)',
+                    color: '선택안함(화이트/실버)',
+                    installation: '선택안함(미설치/유상설치)',
+                    copyCount: 23,
+                    imageUrl: 'https://zero-rental.biz/product-image/51317',
+                    hasCompetitor: true,
+                    priceOptions: [
+                        { term: '3년약정', detail: '4개월관리', price: '55,900', gift: '180,000' },
+                        { term: '3년약정', detail: '4개월필터발송 12개월관리', price: '51,900', gift: '180,000' },
+                        { term: '5년약정', detail: '6M반값_4개월관리', price: '50,400', gift: '330,000' },
+                        { term: '5년약정', detail: '타사보상_4개월관리', price: '42,900', gift: '320,000' },
+                        { term: '6년약정', detail: '타사보상_4개월관리', price: '41,400', gift: '340,000' }
+                    ],
+                    updatedAt: new Date('2025-01-14').toISOString()
+                },
+                {
+                    id: 3,
+                    company: '코웨이',
+                    brand: '코웨이',
+                    category: '주방가전/정수기',
+                    modelNumber: 'CHP-7212N',
+                    productName: '코웨이 아이콘 Pro 냉온정수기 (냉온정)',
+                    color: '선택안함(포슬린화이트/아이언실버/브론즈베이지/아이시블루/페블블랙)',
+                    installation: '선택안함(미설치/유상설치)',
+                    copyCount: 8,
+                    imageUrl: '',
+                    hasCompetitor: false,
+                    priceOptions: [
+                        { term: '5년약정', detail: '6M반값_6개월필터발송', price: '32,900', gift: '160,000' }
+                    ],
+                    updatedAt: new Date('2025-01-13').toISOString()
+                },
+                {
+                    id: 4,
+                    company: 'LG전자',
+                    brand: 'LG전자',
+                    category: '주방가전/정수기',
+                    modelNumber: 'WD721R',
+                    productName: 'LG 오브제컬렉션 데스크탑 얼음정수기',
+                    color: '선택안함(에센스화이트(H)/카밍베이지(E)/블랙(K))',
+                    installation: '선택안함(미설치/유상설치)',
+                    copyCount: 5,
+                    imageUrl: '',
+                    hasCompetitor: false,
+                    priceOptions: [
+                        { term: '4년약정', detail: '6M반값_4개월관리', price: '65,900', gift: '170,000' },
+                        { term: '4년약정', detail: '6M반값_6개월관리', price: '63,900', gift: '170,000' },
+                        { term: '5년약정', detail: '6M반값_4개월관리', price: '56,900', gift: '170,000' },
+                        { term: '5년약정', detail: '6M반값_6개월관리', price: '54,900', gift: '190,000' },
+                        { term: '6년약정', detail: '6M반값_4개월관리', price: '52,900', gift: '170,000' },
+                        { term: '6년약정', detail: '6M반값_6개월관리', price: '50,900', gift: '190,000' }
+                    ],
+                    updatedAt: new Date().toISOString()
+                }
+            ];
+        }
+        
+        // 탭 전환
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+            
+            const tabIndex = tabName === 'output' ? 0 : tabName === 'input' ? 1 : 2;
+            document.querySelectorAll('.tab')[tabIndex].classList.add('active');
+            document.getElementById(`${tabName}-panel`).classList.add('active');
+            
+            if (tabName === 'input') {
+                updateProductSummary();
+            }
+        }
+        
+        // 제품 클릭 시 펼치기/접기
+        function toggleProductExpand(productId, event) {
+            if (event.target.type === 'checkbox') return;
+            
+            const card = document.getElementById(`product-${productId}`);
+            
+            if (expandedProducts.has(productId)) {
+                expandedProducts.delete(productId);
+                card.classList.remove('expanded');
+            } else {
+                expandedProducts.add(productId);
+                card.classList.add('expanded');
+            }
+        }
+        
+        // 상품 렌더링
+        function renderProducts(productsToRender = products) {
+            const productsList = document.getElementById('productsList');
+            productsList.innerHTML = '';
+            
+            if (productsToRender.length === 0) {
+                productsList.innerHTML = `
+                    <div class="empty-state">
+                        <p>검색 결과가 없습니다</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const showYear3 = document.getElementById('year3').checked;
+            const showYear4 = document.getElementById('year4').checked;
+            const showYear5 = document.getElementById('year5').checked;
+            const showYear6 = document.getElementById('year6').checked;
+            const competitorOnly = document.getElementById('competitorOnly').checked;
+            
+            productsToRender.forEach(product => {
+                if (competitorOnly && !product.hasCompetitor) return;
+                
+                let filteredOptions = product.priceOptions.filter(option => {
+                    if (option.term.includes('3년') && !showYear3) return false;
+                    if (option.term.includes('4년') && !showYear4) return false;
+                    if (option.term.includes('5년') && !showYear5) return false;
+                    if (option.term.includes('6년') && !showYear6) return false;
+                    if (competitorOnly && !option.detail.includes('타사보상')) return false;
+                    return true;
+                });
+                
+                if (filteredOptions.length === 0) return;
+                
+                const updateDate = new Date(product.updatedAt);
+                const dateStr = `${updateDate.getMonth() + 1}/${updateDate.getDate()}`;
+                
+                const card = document.createElement('div');
+                card.className = `product-card ${expandedProducts.has(product.id) ? 'expanded' : ''}`;
+                card.id = `product-${product.id}`;
+                
+                card.innerHTML = `
+                    <div class="product-header" onclick="toggleProductExpand(${product.id}, event)">
+                        <div class="product-left">
+                            <input type="checkbox" class="product-checkbox" id="product-check-${product.id}" 
+                                onchange="toggleProduct(${product.id})" onclick="event.stopPropagation()">
+                            <div class="product-info">
+                                <h3>${product.modelNumber} / ${product.productName}</h3>
+                                <div class="product-meta">
+                                    <span class="brand-badge">${product.brand}</span>
+                                    ${product.hasCompetitor ? '<span class="competitor-badge">타사보상</span>' : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-stats">
+                            <div class="copy-count">복사 ${product.copyCount}회</div>
+                            <div class="update-date">업데이트: ${dateStr}</div>
+                            <div class="expand-icon">▼</div>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <div class="price-table">
+                            ${filteredOptions.map((option, index) => `
+                                <div class="price-row" id="option-${product.id}-${index}">
+                                    <input type="checkbox" class="price-checkbox" 
+                                        id="price-check-${product.id}-${index}"
+                                        onchange="toggleOption(${product.id}, ${index})"
+                                        disabled>
+                                    <div class="term">${option.term}</div>
+                                    <div class="management">${option.detail}</div>
+                                    <div class="price">월 ${option.price}</div>
+                                    <div class="gift">사은품 ${option.gift}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                productsList.appendChild(card);
+            });
+            
+            restoreSelections();
+        }
+        
+        // 상품 전체 선택/해제
+        function toggleProduct(productId) {
+            const checkbox = document.getElementById(`product-check-${productId}`);
+            const product = products.find(p => p.id === productId);
+            const card = document.getElementById(`product-${productId}`);
+            
+            if (checkbox.checked) {
+                card.classList.add('selected');
+                product.priceOptions.forEach((option, index) => {
+                    const optionCheckbox = document.getElementById(`price-check-${productId}-${index}`);
+                    if (optionCheckbox) {
+                        optionCheckbox.disabled = false;
+                    }
+                });
+            } else {
+                card.classList.remove('selected');
+                product.priceOptions.forEach((option, index) => {
+                    const optionCheckbox = document.getElementById(`price-check-${productId}-${index}`);
+                    if (optionCheckbox) {
+                        optionCheckbox.checked = false;
+                        optionCheckbox.disabled = true;
+                    }
+                    selectedItems.delete(`${productId}-${index}`);
+                });
+            }
+            
+            updateSelectedCount();
+        }
+        
+        // 옵션 선택/해제
+        function toggleOption(productId, optionIndex) {
+            const key = `${productId}-${optionIndex}`;
+            const checkbox = document.getElementById(`price-check-${productId}-${optionIndex}`);
+            const row = document.getElementById(`option-${productId}-${optionIndex}`);
+            
+            if (checkbox.checked) {
+                selectedItems.add(key);
+                row.classList.add('selected');
+            } else {
+                selectedItems.delete(key);
+                row.classList.remove('selected');
+            }
+            
+            updateSelectedCount();
+        }
+        
+        // 선택 개수 업데이트
+        function updateSelectedCount() {
+            const count = selectedItems.size;
+            document.getElementById('selectedCount').textContent = count;
+            
+            const copyBtn = document.querySelector('.copy-selected-btn');
+            copyBtn.disabled = count === 0;
+        }
+        
+        // 선택된 항목 복사
+        function copySelected() {
+            if (selectedItems.size === 0) {
+                showToast('선택된 항목이 없습니다.');
+                return;
+            }
+            
+            const grouped = {};
+            selectedItems.forEach(key => {
+                const [productId, optionIndex] = key.split('-').map(Number);
+                if (!grouped[productId]) {
+                    grouped[productId] = [];
+                }
+                grouped[productId].push(optionIndex);
+            });
+            
+            let output = '';
+            
+            Object.keys(grouped).forEach(productId => {
+                const product = products.find(p => p.id === Number(productId));
+                if (!product) return;
+                
+                output += `* 렌탈 업체: ${product.company || product.brand}\n`;
+                output += `* 브랜드/분류: ${product.category || '주방가전/정수기'}\n`;
+                output += `* 모델명: ${product.modelNumber}\n`;
+                output += `*
