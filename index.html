@@ -27,6 +27,7 @@
             --year4-color: #2196F3;
             --year5-color: #9C27B0;
             --year6-color: #FF9800;
+            --year7-color: #E91E63;
         }
         
         .header {
@@ -491,6 +492,11 @@
         .term-6year {
             background: rgba(255, 152, 0, 0.15);
             color: var(--year6-color);
+        }
+        
+        .term-7year {
+            background: rgba(233, 30, 99, 0.15);
+            color: var(--year7-color);
         }
         
         .management {
@@ -1004,6 +1010,10 @@
                             <input type="checkbox" id="year6" checked onchange="filterProducts()">
                             <span>6년</span>
                         </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="year7" checked onchange="filterProducts()">
+                            <span>7년</span>
+                        </label>
                     </div>
                     <div style="margin-left: 30px; display: flex; gap: 20px; align-items: center;">
                         <label class="checkbox-label">
@@ -1490,6 +1500,7 @@
             const showYear4 = document.getElementById('year4').checked;
             const showYear5 = document.getElementById('year5').checked;
             const showYear6 = document.getElementById('year6').checked;
+            const showYear7 = document.getElementById('year7').checked;
             const hideCompetitor = document.getElementById('hideCompetitor').checked;
             const hidePackage = document.getElementById('hidePackage').checked;
             const iceOnly = document.getElementById('iceOnly').checked;
@@ -1503,6 +1514,7 @@
                     if (option.term.includes('4년') && !showYear4) return false;
                     if (option.term.includes('5년') && !showYear5) return false;
                     if (option.term.includes('6년') && !showYear6) return false;
+                    if (option.term.includes('7년') && !showYear7) return false;
                     if (hideCompetitor && option.detail.includes('타사보상')) return false;
                     if (hidePackage && option.detail.includes('패키지')) return false;
                     return true;
@@ -1556,6 +1568,7 @@
                                 else if (option.term.includes('4년')) termClass = 'term-4year';
                                 else if (option.term.includes('5년')) termClass = 'term-5year';
                                 else if (option.term.includes('6년')) termClass = 'term-6year';
+                                else if (option.term.includes('7년')) termClass = 'term-7year';
                                 
                                 let rowClass = '';
                                 if (isCompetitor) rowClass = 'competitor-option';
@@ -1667,6 +1680,7 @@
             const showYear4 = document.getElementById('year4').checked;
             const showYear5 = document.getElementById('year5').checked;
             const showYear6 = document.getElementById('year6').checked;
+            const showYear7 = document.getElementById('year7').checked;
             const hideCompetitor = document.getElementById('hideCompetitor').checked;
             const hidePackage = document.getElementById('hidePackage').checked;
             
@@ -1675,6 +1689,7 @@
                 if (option.term.includes('4년') && !showYear4) return false;
                 if (option.term.includes('5년') && !showYear5) return false;
                 if (option.term.includes('6년') && !showYear6) return false;
+                if (option.term.includes('7년') && !showYear7) return false;
                 if (hideCompetitor && option.detail.includes('타사보상')) return false;
                 if (hidePackage && option.detail.includes('패키지')) return false;
                 return true;
