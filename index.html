@@ -165,11 +165,101 @@
             margin-bottom: 30px;
         }
         
+        .filter-section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #222;
+        }
+        
+        .filter-section:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .filter-section-title {
+            color: var(--primary-blue);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .year-filters {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .year-filters .checkbox-label span {
+            transition: all 0.3s;
+        }
+        
+        .year-filters .checkbox-label:nth-child(1) input:checked ~ span {
+            color: var(--year3-color);
+            font-weight: 600;
+        }
+        
+        .year-filters .checkbox-label:nth-child(2) input:checked ~ span {
+            color: var(--year4-color);
+            font-weight: 600;
+        }
+        
+        .year-filters .checkbox-label:nth-child(3) input:checked ~ span {
+            color: var(--year5-color);
+            font-weight: 600;
+        }
+        
+        .year-filters .checkbox-label:nth-child(4) input:checked ~ span {
+            color: var(--year6-color);
+            font-weight: 600;
+        }
+        
+        .year-filters .checkbox-label:nth-child(5) input:checked ~ span {
+            color: var(--year7-color);
+            font-weight: 600;
+        }
+        
+        .management-filters {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .additional-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        
+        .radio-label input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-blue);
+            cursor: pointer;
+        }
+        
+        .radio-label span {
+            color: #e0e0e0;
+            font-size: 14px;
+        }
+        
         .filter-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #222;
         }
         
         .filter-group {
@@ -200,18 +290,6 @@
             outline: none;
             border-color: var(--primary-blue);
             box-shadow: 0 0 0 2px var(--primary-blue-light);
-        }
-        
-        .filter-options {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            margin-top: 15px;
-        }
-        
-        .filter-label {
-            color: #999;
-            font-size: 14px;
         }
         
         .year-filters {
@@ -325,6 +403,20 @@
             font-weight: 500;
             line-height: 1.4;
             word-break: keep-all;
+        }
+        
+        .product-card.popular {
+            border-color: rgba(255, 215, 0, 0.3);
+            background: linear-gradient(145deg, #111, #0f0f0f);
+        }
+        
+        .product-card.popular .product-header {
+            background: linear-gradient(to right, rgba(255, 215, 0, 0.05), transparent);
+        }
+        
+        .product-card.popular .product-info h3 {
+            color: #ffd700;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
         }
         
         .product-card.popular {
@@ -476,7 +568,7 @@
         
         .price-row {
             display: grid;
-            grid-template-columns: 40px 110px 1fr 130px 140px 80px;
+            grid-template-columns: 40px 110px 80px 1fr 130px 140px 80px;
             align-items: center;
             padding: 12px;
             border-radius: 8px;
@@ -535,6 +627,23 @@
             accent-color: var(--primary-blue);
             cursor: pointer;
             margin-right: 8px;
+        }
+        
+        .management-badge {
+            font-size: 11px;
+            padding: 3px 6px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+        
+        .management-self {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+        }
+        
+        .management-visit {
+            background: rgba(168, 85, 247, 0.15);
+            color: #a855f7;
         }
         
         .term {
@@ -885,13 +994,28 @@
             }
         }
         
+        @media (min-width: 1400px) {
+            .filter-main-row {
+                justify-content: space-between;
+            }
+            
+            .filter-section-inline {
+                flex: 1;
+                justify-content: center;
+            }
+            
+            .filter-additional-row {
+                justify-content: center;
+            }
+        }
+        
         @media (max-width: 768px) {
             .product-info h3 {
                 font-size: 14px;
             }
             
             .price-row {
-                grid-template-columns: 35px 80px 1fr;
+                grid-template-columns: 35px 80px 60px 1fr;
                 grid-template-rows: auto auto;
                 gap: 8px;
             }
@@ -909,6 +1033,33 @@
             
             .filter-row {
                 grid-template-columns: 1fr;
+            }
+            
+            .filter-main-row {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+            
+            .filter-section-inline {
+                width: 100%;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .filter-divider {
+                display: none;
+            }
+            
+            .year-filters,
+            .management-filters {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .filter-additional-row {
+                gap: 15px;
             }
         }
         
@@ -1063,56 +1214,80 @@
                         </select>
                     </div>
                 </div>
-                <div class="filter-options">
-                    <div class="filter-label">약정 기간:</div>
-                    <div class="year-filters">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="year3" checked onchange="saveFilterSettings(); filterProducts()">
-                            <span>3년</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="year4" onchange="saveFilterSettings(); filterProducts()">
-                            <span>4년</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="year5" checked onchange="saveFilterSettings(); filterProducts()">
-                            <span>5년</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="year6" onchange="saveFilterSettings(); filterProducts()">
-                            <span>6년</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="year7" onchange="saveFilterSettings(); filterProducts()">
-                            <span>7년</span>
-                        </label>
+                
+                <div class="filter-main-row">
+                    <div class="filter-section-inline">
+                        <div class="filter-section-title">📅 약정기간</div>
+                        <div class="year-filters">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="year3" checked onchange="saveFilterSettings(); filterProducts()">
+                                <span>3년</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="year4" onchange="saveFilterSettings(); filterProducts()">
+                                <span>4년</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="year5" checked onchange="saveFilterSettings(); filterProducts()">
+                                <span>5년</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="year6" onchange="saveFilterSettings(); filterProducts()">
+                                <span>6년</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="year7" onchange="saveFilterSettings(); filterProducts()">
+                                <span>7년</span>
+                            </label>
+                        </div>
                     </div>
-                    <div style="margin-left: 30px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center;">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="newSignupHide" onchange="saveFilterSettings(); filterProducts()">
-                            <span>신규가입 숨기기</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="hideCompetitor" onchange="saveFilterSettings(); filterProducts()">
-                            <span>타사보상 숨기기</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="hidePackage" onchange="saveFilterSettings(); filterProducts()">
-                            <span>패키지 숨기기</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="iceOnly" onchange="saveFilterSettings(); filterProducts()">
-                            <span>❄️ 얼음정수기만</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="roOnly" onchange="saveFilterSettings(); filterProducts()">
-                            <span>💧 RO필터만</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="standOnly" onchange="saveFilterSettings(); filterProducts()">
-                            <span>🏢 스탠드형만</span>
-                        </label>
+                    
+                    <div class="filter-divider"></div>
+                    
+                    <div class="filter-section-inline">
+                        <div class="filter-section-title">🔧 관리방식</div>
+                        <div class="management-filters">
+                            <label class="radio-label">
+                                <input type="radio" name="managementType" value="all" checked onchange="saveFilterSettings(); filterProducts()">
+                                <span>전체</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="managementType" value="self" onchange="saveFilterSettings(); filterProducts()">
+                                <span>🏠 자가관리</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="managementType" value="visit" onchange="saveFilterSettings(); filterProducts()">
+                                <span>🚐 방문관리</span>
+                            </label>
+                        </div>
                     </div>
+                </div>
+                
+                <div class="filter-additional-row">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="newSignupHide" onchange="saveFilterSettings(); filterProducts()">
+                        <span>신규가입 숨기기</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="hideCompetitor" onchange="saveFilterSettings(); filterProducts()">
+                        <span>타사보상 숨기기</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="hidePackage" onchange="saveFilterSettings(); filterProducts()">
+                        <span>패키지 숨기기</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="iceOnly" onchange="saveFilterSettings(); filterProducts()">
+                        <span>❄️ 얼음정수기만</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="roOnly" onchange="saveFilterSettings(); filterProducts()">
+                        <span>💧 RO필터만</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="standOnly" onchange="saveFilterSettings(); filterProducts()">
+                        <span>🏢 스탠드형만</span>
+                    </label>
                 </div>
             </div>
             
@@ -1422,6 +1597,19 @@ https://zero-rental.biz/product-image/51317
             });
         }
         
+        // 관리방식 판별 함수
+        function getManagementType(detail) {
+            // 필터발송이 포함되면 자가관리
+            if (detail.includes('필터발송')) {
+                return 'self';
+            }
+            // 관리만 있으면 방문관리
+            if (detail.includes('관리')) {
+                return 'visit';
+            }
+            return 'unknown';
+        }
+        
         // RO 필터 정확한 판별 함수
         function isROProduct(productName) {
             const upperName = productName.toUpperCase();
@@ -1439,12 +1627,22 @@ https://zero-rental.biz/product-image/51317
         
         // 필터 설정 저장 (로컬스토리지)
         function saveFilterSettings() {
+            const managementRadios = document.getElementsByName('managementType');
+            let managementType = 'all';
+            for (const radio of managementRadios) {
+                if (radio.checked) {
+                    managementType = radio.value;
+                    break;
+                }
+            }
+            
             const settings = {
                 year3: document.getElementById('year3').checked,
                 year4: document.getElementById('year4').checked,
                 year5: document.getElementById('year5').checked,
                 year6: document.getElementById('year6').checked,
                 year7: document.getElementById('year7').checked,
+                managementType: managementType,
                 newSignupHide: document.getElementById('newSignupHide').checked,
                 hideCompetitor: document.getElementById('hideCompetitor').checked,
                 hidePackage: document.getElementById('hidePackage').checked,
@@ -1465,6 +1663,17 @@ https://zero-rental.biz/product-image/51317
                 document.getElementById('year5').checked = settings.year5 ?? true;
                 document.getElementById('year6').checked = settings.year6 ?? false;
                 document.getElementById('year7').checked = settings.year7 ?? false;
+                
+                // 관리방식 설정
+                const managementType = settings.managementType || 'all';
+                const managementRadios = document.getElementsByName('managementType');
+                for (const radio of managementRadios) {
+                    if (radio.value === managementType) {
+                        radio.checked = true;
+                        break;
+                    }
+                }
+                
                 document.getElementById('newSignupHide').checked = settings.newSignupHide ?? false;
                 document.getElementById('hideCompetitor').checked = settings.hideCompetitor ?? false;
                 document.getElementById('hidePackage').checked = settings.hidePackage ?? false;
@@ -1596,6 +1805,42 @@ https://zero-rental.biz/product-image/51317
                 // 선택 상태 유지하면서 데이터만 새로고침
                 loadProducts();
             });
+        }
+        
+        // 필터 초기화
+        function resetFilters() {
+            // 기본값으로 설정
+            document.getElementById('year3').checked = true;
+            document.getElementById('year4').checked = false;
+            document.getElementById('year5').checked = true;
+            document.getElementById('year6').checked = false;
+            document.getElementById('year7').checked = false;
+            
+            // 관리방식 초기화
+            const managementRadios = document.getElementsByName('managementType');
+            for (const radio of managementRadios) {
+                if (radio.value === 'all') {
+                    radio.checked = true;
+                    break;
+                }
+            }
+            
+            document.getElementById('newSignupHide').checked = false;
+            document.getElementById('hideCompetitor').checked = false;
+            document.getElementById('hidePackage').checked = false;
+            document.getElementById('iceOnly').checked = false;
+            document.getElementById('roOnly').checked = false;
+            document.getElementById('standOnly').checked = false;
+            document.getElementById('brandFilter').value = '';
+            document.getElementById('modelSearch').value = '';
+            document.getElementById('productSearch').value = '';
+            document.getElementById('sortBy').value = 'popular';
+            
+            // localStorage 초기화
+            localStorage.removeItem('rentalFilterSettings');
+            
+            showToast('필터가 초기화되었습니다.');
+            filterProducts();
         }
         
         // 필터 초기화
@@ -1834,6 +2079,8 @@ https://zero-rental.biz/product-image/51317
                                 const isPackage = option.detail.includes('패키지');
                                 const optionId = `${product.id}-${originalIndex}`;
                                 const isSelected = selectedItems.has(optionId);
+                                const managementType = getManagementType(option.detail);
+                                
                                 let termClass = '';
                                 if (option.term.includes('3년')) termClass = 'term-3year';
                                 else if (option.term.includes('4년')) termClass = 'term-4year';
@@ -1844,6 +2091,13 @@ https://zero-rental.biz/product-image/51317
                                 let rowClass = '';
                                 if (isCompetitor) rowClass = 'competitor-option';
                                 else if (isPackage) rowClass = 'package-option';
+                                
+                                let managementBadge = '';
+                                if (managementType === 'self') {
+                                    managementBadge = '<div class="management-badge management-self">🏠 자가</div>';
+                                } else if (managementType === 'visit') {
+                                    managementBadge = '<div class="management-badge management-visit">🚐 방문</div>';
+                                }
                                 
                                 return `
                                 <div class="price-row ${rowClass} ${isSelected ? 'selected' : ''}" 
@@ -1856,6 +2110,7 @@ https://zero-rental.biz/product-image/51317
                                            onchange="toggleOption('${optionId}')"
                                            onclick="event.stopPropagation()">
                                     <div class="term ${termClass}">${option.term.replace('약정', ' 약정')}</div>
+                                    ${managementBadge}
                                     <div class="management">${formatPriceDetail(option.detail)}</div>
                                     <div class="price">월 ${Number(option.price.replace(/,/g, '')).toLocaleString()}</div>
                                     <div class="gift">사은품 ${Number(option.gift.replace(/,/g, '')).toLocaleString()}</div>
@@ -1957,12 +2212,30 @@ https://zero-rental.biz/product-image/51317
             const hideCompetitor = document.getElementById('hideCompetitor').checked;
             const hidePackage = document.getElementById('hidePackage').checked;
             
+            // 관리방식 필터 가져오기
+            let managementFilter = 'all';
+            const managementRadios = document.getElementsByName('managementType');
+            for (const radio of managementRadios) {
+                if (radio.checked) {
+                    managementFilter = radio.value;
+                    break;
+                }
+            }
+            
             let filteredOptions = product.price_options.filter(option => {
                 if (option.term.includes('3년') && !showYear3) return false;
                 if (option.term.includes('4년') && !showYear4) return false;
                 if (option.term.includes('5년') && !showYear5) return false;
                 if (option.term.includes('6년') && !showYear6) return false;
                 if (option.term.includes('7년') && !showYear7) return false;
+                
+                // 관리방식 필터
+                if (managementFilter !== 'all') {
+                    const optionManagementType = getManagementType(option.detail);
+                    if (managementFilter === 'self' && optionManagementType !== 'self') return false;
+                    if (managementFilter === 'visit' && optionManagementType !== 'visit') return false;
+                }
+                
                 if (newSignupHide && !option.detail.includes('타사보상')) return false;
                 if (hideCompetitor && option.detail.includes('타사보상')) return false;
                 if (hidePackage && option.detail.includes('패키지')) return false;
@@ -2333,7 +2606,8 @@ https://zero-rental.biz/product-image/51317
                                     term: term,
                                     detail: detail,
                                     price: priceMatch[1],
-                                    gift: giftMatch[1]
+                                    gift: giftMatch[1],
+                                    management_type: getManagementType(detail)
                                 });
                                 
                                 // 타사보상 감지
@@ -2413,6 +2687,8 @@ https://zero-rental.biz/product-image/51317
                 const isStand = p.product_name.includes('스탠드');
                 const competitorCount = p.price_options.filter(opt => opt.detail.includes('타사보상')).length;
                 const packageCount = p.price_options.filter(opt => opt.detail.includes('패키지')).length;
+                const selfCount = p.price_options.filter(opt => getManagementType(opt.detail) === 'self').length;
+                const visitCount = p.price_options.filter(opt => getManagementType(opt.detail) === 'visit').length;
                 const brandLogo = brandLogos[p.brand] || '📦';
                 const hasURL = !!p.image_url;
                 
@@ -2425,6 +2701,8 @@ https://zero-rental.biz/product-image/51317
                     <div style="color: #666; font-size: 12px; margin-top: 5px;">
                         ${p.brand} | ${p.price_options.length}개 옵션 | 
                         마지막 업데이트: ${updateDate.toLocaleString('ko-KR')}
+                        ${selfCount > 0 ? ` | 🏠 자가 ${selfCount}개` : ''}
+                        ${visitCount > 0 ? ` | 🚐 방문 ${visitCount}개` : ''}
                         ${competitorCount > 0 ? ` | 타사보상 ${competitorCount}개` : ''}
                         ${packageCount > 0 ? ` | 패키지 ${packageCount}개` : ''}
                         ${isIceWater ? ' | ❄️ 얼음' : ''}
@@ -2562,6 +2840,43 @@ https://zero-rental.biz/product-image/51317
                 });
             } catch (error) {
                 console.error('Error loading competitor rules:', error);
+            }
+        }
+        
+        // Supabase 데이터 관리방식 업데이트
+        async function updateManagementTypes() {
+            try {
+                const { data: allProducts, error: fetchError } = await supabaseClient
+                    .from('rental_products')
+                    .select('*');
+                
+                if (fetchError) throw fetchError;
+                
+                for (const product of allProducts) {
+                    let hasUpdated = false;
+                    const updatedOptions = product.price_options.map(option => {
+                        if (!option.management_type) {
+                            option.management_type = getManagementType(option.detail);
+                            hasUpdated = true;
+                        }
+                        return option;
+                    });
+                    
+                    if (hasUpdated) {
+                        const { error: updateError } = await supabaseClient
+                            .from('rental_products')
+                            .update({ price_options: updatedOptions })
+                            .eq('id', product.id);
+                        
+                        if (updateError) {
+                            console.error('Error updating product:', product.model_number, updateError);
+                        }
+                    }
+                }
+                
+                console.log('Management types update completed');
+            } catch (error) {
+                console.error('Error updating management types:', error);
             }
         }
         
