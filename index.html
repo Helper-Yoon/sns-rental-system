@@ -575,9 +575,49 @@
             font-weight: 600;
         }
         
+        .month-end-warning {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 15px;
+            border-bottom: 2px solid #ff0000;
+            box-shadow: 0 2px 10px rgba(255, 0, 0, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.9; }
+            100% { opacity: 1; }
+        }
+        
+        .month-end-warning-icon {
+            display: inline-block;
+            margin: 0 5px;
+            animation: blink 1.5s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
         .update-date {
             color: #666;
             font-size: 12px;
+        }
+        
+        .update-date.warning-data {
+            color: #ff9800;
+            font-weight: 600;
+        }
+        
+        .update-date.old-data {
+            color: #ff0000;
+            font-weight: 600;
+            animation: blink 2s infinite;
         }
         
         .expand-icon {
@@ -1184,6 +1224,13 @@
     </style>
 </head>
 <body>
+    <div id="monthEndWarning" class="month-end-warning" style="display: none;">
+        <span class="month-end-warning-icon">※</span>
+        월말월초입니다.
+        <span class="month-end-warning-icon">★</span>
+        수수료 변동 및 프로모션 변경 가능성에 대해 고객에게 고지하고 진행 부탁드립니다.
+    </div>
+    
     <div class="header">
         <div class="header-content">
             <div class="logo">📋 SNS센터 렌탈견적 시스템 - 정수기 편</div>
@@ -1532,6 +1579,49 @@ https://zero-rental.biz/product-image/51317
         let selectedItems = new Set();
         let expandedProducts = new Set();
         let additionalGifts = {};
+        
+        // 월말월초 체크 함수 (26일~익월 5일)
+        function isMonthEnd() {
+            const today = new Date();
+            const day = today.getDate();
+            return day >= 26 || day <= 5;
+        }
+        
+        // 데이터 상태 체크 함수 (29일: 주황색, 30일: 빨간색)
+        function getDataStatus(updateDate) {
+            const today = new Date();
+            const update = new Date(updateDate);
+            const todayDay = today.getDate();
+            const todayMonth = today.getMonth();
+            const todayYear = today.getFullYear();
+            const updateMonth = update.getMonth();
+            const updateYear = update.getFullYear();
+            
+            // 같은 년월에 업데이트된 경우 정상
+            if (updateMonth === todayMonth && updateYear === todayYear) {
+                return 'normal';
+            }
+            
+            // 오늘이 29일이고, 이번 달 업데이트가 아닌 경우
+            if (todayDay === 29) {
+                return 'warning';
+            }
+            
+            // 오늘이 30일 이상이고, 이번 달 업데이트가 아닌 경우
+            if (todayDay >= 30 || todayDay <= 5) {
+                return 'old';
+            }
+            
+            return 'normal';
+        }
+        
+        // 월말월초 경고 표시
+        function showMonthEndWarning() {
+            if (isMonthEnd()) {
+                document.getElementById('monthEndWarning').style.display = 'block';
+                document.querySelector('.header').classList.add('with-warning');
+            }
+        }
         
         // 추가사은품 저장 (메모리에만 - 1회성)
         function saveAdditionalGift(productId) {
@@ -1992,6 +2082,9 @@ https://zero-rental.biz/product-image/51317
                 
                 const updateDate = new Date(product.updated_at);
                 const dateStr = `${updateDate.getMonth() + 1}/${updateDate.getDate()}`;
+                const dataStatus = getDataStatus(product.updated_at);
+                const statusClass = dataStatus === 'warning' ? 'warning-data' : dataStatus === 'old' ? 'old-data' : '';
+                const statusIcon = dataStatus === 'warning' ? ' 🟠' : dataStatus === 'old' ? ' 🔴' : '';
                 
                 // 특징 표시
                 const isIceWater = product.product_name.includes('얼음');
@@ -2031,7 +2124,7 @@ https://zero-rental.biz/product-image/51317
                             <button class="select-copy-btn" onclick="copySelectedInProduct(${product.id}, event)">선택복사</button>
                             <button class="copy-all-btn" onclick="copyAllOptions(${product.id}, event)">전체복사</button>
                             <div class="copy-count">📋 ${product.copy_count}회</div>
-                            <div class="update-date">업데이트: ${dateStr}</div>
+                            <div class="update-date ${statusClass}">업데이트: ${dateStr}${statusIcon}</div>
                             <div class="expand-icon">▼</div>
                         </div>
                     </div>
@@ -2646,6 +2739,7 @@ https://zero-rental.biz/product-image/51317
             const summary = document.getElementById('productSummary');
             summary.innerHTML = products.map(p => {
                 const updateDate = new Date(p.updated_at);
+                const dataStatus = getDataStatus(p.updated_at);
                 const isIceWater = p.product_name.includes('얼음');
                 const isRO = isROProduct(p.product_name);
                 const isStand = p.product_name.includes('스탠드');
@@ -2656,6 +2750,16 @@ https://zero-rental.biz/product-image/51317
                 const brandLogo = brandLogos[p.brand] || '📦';
                 const hasURL = !!p.image_url;
                 
+                let updateStyle = '';
+                let updateText = '';
+                if (dataStatus === 'warning') {
+                    updateStyle = 'color: #ff9800; font-weight: 600;';
+                    updateText = ' 🟠 업데이트 필요';
+                } else if (dataStatus === 'old') {
+                    updateStyle = 'color: #ff0000; font-weight: 600;';
+                    updateText = ' 🔴 시급! 업데이트 필요';
+                }
+                
                 return `
                 <div style="padding: 10px; border-bottom: 1px solid #333;">
                     <div style="color: var(--primary-blue); font-size: 14px;">
@@ -2664,7 +2768,9 @@ https://zero-rental.biz/product-image/51317
                     </div>
                     <div style="color: #666; font-size: 12px; margin-top: 5px;">
                         ${p.brand} | ${p.price_options.length}개 옵션 | 
-                        마지막 업데이트: ${updateDate.toLocaleString('ko-KR')}
+                        <span style="${updateStyle}">
+                            마지막 업데이트: ${updateDate.toLocaleString('ko-KR')}${updateText}
+                        </span>
                         ${selfCount > 0 ? ` | 🏠 자가 ${selfCount}개` : ''}
                         ${visitCount > 0 ? ` | 🚐 방문 ${visitCount}개` : ''}
                         ${competitorCount > 0 ? ` | 타사보상 ${competitorCount}개` : ''}
@@ -2899,6 +3005,7 @@ https://zero-rental.biz/product-image/51317
         
         // 초기화
         window.onload = async function() {
+            showMonthEndWarning(); // 월말월초 경고 표시
             loadFilterSettings(); // 필터 설정 불러오기 (로컬스토리지)
             await loadProducts();
             await loadNotes();
