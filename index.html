@@ -166,12 +166,6 @@
         }
         
         .filter-section {
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #222;
-        }
-        
-        .filter-section:last-child {
             margin-bottom: 0;
             padding-bottom: 0;
             border-bottom: none;
@@ -179,20 +173,97 @@
         
         .filter-section-title {
             color: var(--primary-blue);
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
         
+        .filter-main-row {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #222;
+        }
+        
+        .filter-section-inline {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .filter-divider {
+            width: 1px;
+            background: #333;
+            margin: 0;
+            align-self: stretch;
+        }
+        
+        .filter-additional-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding: 8px 0;
+            margin-top: -5px;
+        }
+        
+        .filter-additional-row .checkbox-label {
+            background: transparent;
+            border-color: #333;
+            font-size: 13px;
+            padding: 5px 10px;
+        }
+        
+        .filter-additional-row .checkbox-label:hover {
+            background: rgba(0, 102, 255, 0.08);
+            border-color: rgba(0, 102, 255, 0.3);
+        }
+        
+        .filter-additional-row .checkbox-label input:checked {
+            accent-color: var(--primary-blue);
+        }
+        
+        .filter-additional-row .checkbox-label input:checked ~ span {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+        
+        .filter-additional-row::-webkit-scrollbar {
+            height: 6px;
+        }
+        
+        .filter-additional-row::-webkit-scrollbar-track {
+            background: #1a1a1a;
+            border-radius: 3px;
+        }
+        
+        .filter-additional-row::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+        }
+        
+        .filter-additional-row::-webkit-scrollbar-thumb:hover {
+            background: #444;
+        }
+        
         .year-filters {
             display: flex;
-            gap: 15px;
+            gap: 8px;
             align-items: center;
         }
         
-        .year-filters .checkbox-label span {
+        .management-filters {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .year-filters .checkbox-label input:checked ~ span {
             transition: all 0.3s;
         }
         
@@ -201,9 +272,17 @@
             font-weight: 600;
         }
         
+        .year-filters .checkbox-label:nth-child(1) input:checked {
+            accent-color: var(--year3-color);
+        }
+        
         .year-filters .checkbox-label:nth-child(2) input:checked ~ span {
             color: var(--year4-color);
             font-weight: 600;
+        }
+        
+        .year-filters .checkbox-label:nth-child(2) input:checked {
+            accent-color: var(--year4-color);
         }
         
         .year-filters .checkbox-label:nth-child(3) input:checked ~ span {
@@ -211,9 +290,17 @@
             font-weight: 600;
         }
         
+        .year-filters .checkbox-label:nth-child(3) input:checked {
+            accent-color: var(--year5-color);
+        }
+        
         .year-filters .checkbox-label:nth-child(4) input:checked ~ span {
             color: var(--year6-color);
             font-weight: 600;
+        }
+        
+        .year-filters .checkbox-label:nth-child(4) input:checked {
+            accent-color: var(--year6-color);
         }
         
         .year-filters .checkbox-label:nth-child(5) input:checked ~ span {
@@ -221,24 +308,25 @@
             font-weight: 600;
         }
         
-        .management-filters {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-        
-        .additional-filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            align-items: center;
+        .year-filters .checkbox-label:nth-child(5) input:checked {
+            accent-color: var(--year7-color);
         }
         
         .radio-label {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
             cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid transparent;
+        }
+        
+        .radio-label:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
         }
         
         .radio-label input[type="radio"] {
@@ -248,9 +336,15 @@
             cursor: pointer;
         }
         
+        .radio-label input[type="radio"]:checked + span {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+        
         .radio-label span {
             color: #e0e0e0;
             font-size: 14px;
+            font-weight: 500;
         }
         
         .filter-row {
@@ -292,46 +386,22 @@
             box-shadow: 0 0 0 2px var(--primary-blue-light);
         }
         
-        .year-filters {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-        
-        .year-filters .checkbox-label span {
-            transition: all 0.3s;
-        }
-        
-        .year-filters .checkbox-label:nth-child(1) input:checked ~ span {
-            color: var(--year3-color);
-            font-weight: 600;
-        }
-        
-        .year-filters .checkbox-label:nth-child(2) input:checked ~ span {
-            color: var(--year4-color);
-            font-weight: 600;
-        }
-        
-        .year-filters .checkbox-label:nth-child(3) input:checked ~ span {
-            color: var(--year5-color);
-            font-weight: 600;
-        }
-        
-        .year-filters .checkbox-label:nth-child(4) input:checked ~ span {
-            color: var(--year6-color);
-            font-weight: 600;
-        }
-        
-        .year-filters .checkbox-label:nth-child(5) input:checked ~ span {
-            color: var(--year7-color);
-            font-weight: 600;
-        }
-        
         .checkbox-label {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
             cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid transparent;
+            white-space: nowrap;
+        }
+        
+        .checkbox-label:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
         }
         
         .checkbox-label input[type="checkbox"] {
@@ -344,6 +414,7 @@
         .checkbox-label span {
             color: #e0e0e0;
             font-size: 14px;
+            font-weight: 500;
         }
         
         .products-grid {
@@ -419,20 +490,6 @@
             text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
         }
         
-        .product-card.popular {
-            border-color: rgba(255, 215, 0, 0.3);
-            background: linear-gradient(145deg, #111, #0f0f0f);
-        }
-        
-        .product-card.popular .product-header {
-            background: linear-gradient(to right, rgba(255, 215, 0, 0.05), transparent);
-        }
-        
-        .product-card.popular .product-info h3 {
-            color: #ffd700;
-            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
-        }
-        
         .product-meta {
             display: flex;
             gap: 10px;
@@ -462,22 +519,6 @@
         .ice-badge {
             background: rgba(0, 188, 212, 0.1);
             color: #00bcd4;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-        }
-        
-        .ro-badge {
-            background: rgba(96, 165, 250, 0.1);
-            color: #60a5fa;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-        }
-        
-        .stand-badge {
-            background: rgba(147, 51, 234, 0.1);
-            color: #9333ea;
             padding: 3px 8px;
             border-radius: 6px;
             font-size: 11px;
@@ -994,21 +1035,6 @@
             }
         }
         
-        @media (min-width: 1400px) {
-            .filter-main-row {
-                justify-content: space-between;
-            }
-            
-            .filter-section-inline {
-                flex: 1;
-                justify-content: center;
-            }
-            
-            .filter-additional-row {
-                justify-content: center;
-            }
-        }
-        
         @media (max-width: 768px) {
             .product-info h3 {
                 font-size: 14px;
@@ -1038,14 +1064,11 @@
             .filter-main-row {
                 flex-direction: column;
                 gap: 20px;
-                align-items: flex-start;
+                align-items: stretch;
             }
             
             .filter-section-inline {
                 width: 100%;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
             }
             
             .filter-divider {
@@ -1060,6 +1083,12 @@
             
             .filter-additional-row {
                 gap: 15px;
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+            
+            .checkbox-label {
+                white-space: nowrap;
             }
         }
         
@@ -1843,32 +1872,6 @@ https://zero-rental.biz/product-image/51317
             filterProducts();
         }
         
-        // 필터 초기화
-        function resetFilters() {
-            // 기본값으로 설정
-            document.getElementById('year3').checked = true;
-            document.getElementById('year4').checked = false;
-            document.getElementById('year5').checked = true;
-            document.getElementById('year6').checked = false;
-            document.getElementById('year7').checked = false;
-            document.getElementById('newSignupHide').checked = false;
-            document.getElementById('hideCompetitor').checked = false;
-            document.getElementById('hidePackage').checked = false;
-            document.getElementById('iceOnly').checked = false;
-            document.getElementById('roOnly').checked = false;
-            document.getElementById('standOnly').checked = false;
-            document.getElementById('brandFilter').value = '';
-            document.getElementById('modelSearch').value = '';
-            document.getElementById('productSearch').value = '';
-            document.getElementById('sortBy').value = 'popular';
-            
-            // localStorage 초기화
-            localStorage.removeItem('rentalFilterSettings');
-            
-            showToast('필터가 초기화되었습니다.');
-            filterProducts();
-        }
-        
         // 전체 선택 초기화
         function clearAllSelections() {
             const hadSelections = selectedItems.size > 0;
@@ -1942,75 +1945,27 @@ https://zero-rental.biz/product-image/51317
             const showYear5 = document.getElementById('year5').checked;
             const showYear6 = document.getElementById('year6').checked;
             const showYear7 = document.getElementById('year7').checked;
+            const newSignupHide = document.getElementById('newSignupHide').checked;
             const hideCompetitor = document.getElementById('hideCompetitor').checked;
             const hidePackage = document.getElementById('hidePackage').checked;
             const iceOnly = document.getElementById('iceOnly').checked;
             const roOnly = document.getElementById('roOnly').checked;
             const standOnly = document.getElementById('standOnly').checked;
             
-            productsToRender.forEach(product => {
-                // RO 필터 정확한 판별 함수
-        function isROProduct(productName) {
-            const upperName = productName.toUpperCase();
-            // RO가 단독으로 존재하거나 공백/특수문자로 구분된 경우만 인정
-            // Pro, Zero 등은 제외
-            return /\bRO\b/.test(upperName) || 
-                   upperName.includes(' RO ') || 
-                   upperName.includes('(RO') || 
-                   upperName.includes('RO)') ||
-                   upperName.includes('[RO') || 
-                   upperName.includes('RO]') ||
-                   upperName.includes('RO필터') ||
-                   upperName.includes('RO 필터');
-        }
-        
-        // 필터 설정 저장 (로컬스토리지 - 필터만)
-        function saveFilterSettings() {
-            const settings = {
-                year3: document.getElementById('year3').checked,
-                year4: document.getElementById('year4').checked,
-                year5: document.getElementById('year5').checked,
-                year6: document.getElementById('year6').checked,
-                year7: document.getElementById('year7').checked,
-                newSignupHide: document.getElementById('newSignupHide').checked,
-                hideCompetitor: document.getElementById('hideCompetitor').checked,
-                hidePackage: document.getElementById('hidePackage').checked,
-                iceOnly: document.getElementById('iceOnly').checked,
-                roOnly: document.getElementById('roOnly').checked,
-                standOnly: document.getElementById('standOnly').checked
-            };
-            localStorage.setItem('rentalFilterSettings', JSON.stringify(settings));
-        }
-        
-        // 필터 설정 불러오기 (로컬스토리지 - 필터만)
-        function loadFilterSettings() {
-            const saved = localStorage.getItem('rentalFilterSettings');
-            if (saved) {
-                const settings = JSON.parse(saved);
-                document.getElementById('year3').checked = settings.year3 ?? true;
-                document.getElementById('year4').checked = settings.year4 ?? false;
-                document.getElementById('year5').checked = settings.year5 ?? true;
-                document.getElementById('year6').checked = settings.year6 ?? false;
-                document.getElementById('year7').checked = settings.year7 ?? false;
-                document.getElementById('newSignupHide').checked = settings.newSignupHide ?? false;
-                document.getElementById('hideCompetitor').checked = settings.hideCompetitor ?? false;
-                document.getElementById('hidePackage').checked = settings.hidePackage ?? false;
-                document.getElementById('iceOnly').checked = settings.iceOnly ?? false;
-                document.getElementById('roOnly').checked = settings.roOnly ?? false;
-                document.getElementById('standOnly').checked = settings.standOnly ?? false;
-            } else {
-                // 기본값 설정 (3년, 5년만 체크)
-                document.getElementById('year3').checked = true;
-                document.getElementById('year4').checked = false;
-                document.getElementById('year5').checked = true;
-                document.getElementById('year6').checked = false;
-                document.getElementById('year7').checked = false;
+            // 관리방식 필터 가져오기
+            let managementFilter = 'all';
+            const managementRadios = document.getElementsByName('managementType');
+            for (const radio of managementRadios) {
+                if (radio.checked) {
+                    managementFilter = radio.value;
+                    break;
+                }
             }
-        }
-        
-        // 필터링
+            
+            productsToRender.forEach(product => {
+                // 제품 필터링
                 if (iceOnly && !product.product_name.includes('얼음')) return;
-                if (roOnly && !product.product_name.toUpperCase().includes('RO')) return;
+                if (roOnly && !isROProduct(product.product_name)) return;
                 if (standOnly && !product.product_name.includes('스탠드')) return;
                 
                 let filteredOptions = product.price_options.filter(option => {
@@ -2019,6 +1974,15 @@ https://zero-rental.biz/product-image/51317
                     if (option.term.includes('5년') && !showYear5) return false;
                     if (option.term.includes('6년') && !showYear6) return false;
                     if (option.term.includes('7년') && !showYear7) return false;
+                    
+                    // 관리방식 필터
+                    if (managementFilter !== 'all') {
+                        const optionManagementType = getManagementType(option.detail);
+                        if (managementFilter === 'self' && optionManagementType !== 'self') return false;
+                        if (managementFilter === 'visit' && optionManagementType !== 'visit') return false;
+                    }
+                    
+                    if (newSignupHide && !option.detail.includes('타사보상')) return false;
                     if (hideCompetitor && option.detail.includes('타사보상')) return false;
                     if (hidePackage && option.detail.includes('패키지')) return false;
                     return true;
