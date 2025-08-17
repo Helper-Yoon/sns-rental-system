@@ -2013,7 +2013,7 @@ https://zero-rental.biz/product-image/51317"></textarea>
             }
             
             // 기존 태그 배열 초기화
-            if (!selectedProductForTag.custom_tags || !Array.isArray(selectedProductForTag.custom_tags)) {
+            if (!selectedProductForTag.custom_tags) {
                 selectedProductForTag.custom_tags = [];
             }
             
@@ -2028,17 +2028,20 @@ https://zero-rental.biz/product-image/51317"></textarea>
             
             try {
                 // Supabase 업데이트
-                const { data, error } = await supabaseClient
+                const { error } = await supabaseClient
                     .from('rental_products')
                     .update({ 
                         custom_tags: selectedProductForTag.custom_tags
                     })
-                    .eq('model_number', selectedProductForTag.model_number)
-                    .select();
+                    .eq('model_number', selectedProductForTag.model_number);
                 
                 if (error) {
                     console.error('Update error:', error);
-                    showToast('태그 추가 실패. 데이터베이스 설정을 확인하세요.', 'error');
+                    if (error.code === '42703') {
+                        showToast('데이터베이스에 custom_tags 컬럼이 없습니다. 관리자에게 문의하세요.', 'error');
+                    } else {
+                        showToast('태그 추가 실패: ' + error.message, 'error');
+                    }
                     // 실패 시 태그 롤백
                     selectedProductForTag.custom_tags.pop();
                     return;
@@ -3685,14 +3688,6 @@ https://zero-rental.biz/product-image/51317"></textarea>
         window.onload = async function() {
             showMonthEndWarning(); // 월말월초 경고 표시
             loadFilterSettings(); // 필터 설정 불러오기 (로컬스토리지)
-            
-            // 첫 실행 시 custom_tags 컬럼 초기화
-            const isInitialized = localStorage.getItem('customTagsInitialized');
-            if (!isInitialized) {
-                await initializeCustomTagsColumn();
-                localStorage.setItem('customTagsInitialized', 'true');
-            }
-            
             await loadProducts();
             await loadNotes();
             await loadCompetitorRules();
