@@ -901,7 +901,7 @@
         
         .input-container {
             display: grid;
-            grid-template-columns: 1fr 2fr;
+            grid-template-columns: 2fr 1.5fr;
             gap: 30px;
         }
         
@@ -920,7 +920,7 @@
         
         .paste-area {
             width: 100%;
-            min-height: 300px;
+            min-height: 400px;
             background: #0a0a0a;
             border: 1px solid #333;
             color: #e0e0e0;
@@ -1419,7 +1419,7 @@
             <div class="input-container">
                 <div class="input-panel">
                     <h3>📝 견적 입력</h3>
-                    <textarea class="paste-area" id="pasteArea" placeholder="견적 정보를 여기에 붙여넣으세요...
+                    <textarea class="paste-area" id="pasteArea" placeholder="💡 CRM에서 복사한 데이터를 여기에 붙여넣으세요...
 
 예시:
 * 모델명 : WPUIAC425S
@@ -1434,22 +1434,34 @@
 * 6년 약정 : 타사보상_4개월관리 / 월 41,400 / 사은품 340,000
 * 7년 약정 : 프리미엄_4개월관리 / 월 38,900 / 사은품 380,000
 
-https://zero-rental.biz/product-image/51317
-또는
-상품 안내페이지 : https://zero-rental.biz/product-image/51317
-
-(참고: 
-- 제품명에서 브랜드 자동 인식 (SK매직, LG, 코웨이 등)
-- 색명칭 정보는 괄호 안의 내용을 추출하여 정리
-- 6M반값은 '6개월 반값 프로모션 / 4개월관리'로 자동 변환
-- 타사보상은 주황색, 패키지는 녹색으로 표시
-- URL은 다양한 형식 모두 인식)"></textarea>
+https://zero-rental.biz/product-image/51317"></textarea>
                     <button class="btn-primary" onclick="parseAndAdd()">견적 추가/업데이트</button>
+                    <div style="background: rgba(0, 102, 255, 0.05); border: 1px solid rgba(0, 102, 255, 0.2); border-radius: 8px; padding: 12px; margin-top: 15px;">
+                        <div style="color: var(--primary-blue); font-weight: 600; margin-bottom: 8px; font-size: 13px;">
+                            💡 입력 가이드
+                        </div>
+                        <div style="color: #e0e0e0; font-size: 12px; line-height: 1.6;">
+                            <div style="display: flex; gap: 15px;">
+                                <div style="flex: 1;">
+                                    <span style="color: #4CAF50; font-weight: 600;">① CRM 상품정보 복사</span><br>
+                                    📋 CRM에서 상품 선택 → <span style="background: rgba(255, 255, 255, 0.1); padding: 1px 4px; border-radius: 3px; font-size: 11px;">상품 요약 정보</span> 복사
+                                </div>
+                                <div style="flex: 1;">
+                                    <span style="color: #2196F3; font-weight: 600;">② URL 추가 (선택)</span><br>
+                                    🔗 CRM <span style="background: rgba(255, 255, 255, 0.1); padding: 1px 4px; border-radius: 3px; font-size: 11px;">상세</span> → 이미지 URL 복사
+                                </div>
+                                <div style="flex: 1;">
+                                    <span style="color: #FF9800; font-weight: 600;">⚡ 자동 인식</span><br>
+                                    <span style="color: #999; font-size: 11px;">브랜드/색상/프로모션 자동 변환</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="input-panel">
                     <h3>📊 등록된 상품 목록</h3>
-                    <div id="productSummary" style="max-height: 400px; overflow-y: auto;">
+                    <div id="productSummary" style="max-height: 600px; overflow-y: auto;">
                         <!-- 등록된 상품 목록이 표시됩니다 -->
                     </div>
                 </div>
