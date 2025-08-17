@@ -607,6 +607,7 @@
         .update-date {
             color: #666;
             font-size: 12px;
+            transition: all 0.3s;
         }
         
         .update-date.warning-data {
@@ -2021,11 +2022,11 @@ https://zero-rental.biz/product-image/51317
                 return;
             }
             
-            // Top 10 인기 상품 찾기 (전체 products 기준)
+            // Top 3 인기 상품 찾기 (전체 products 기준)
             const topProductsMap = new Map();
             [...products]
                 .sort((a, b) => b.copy_count - a.copy_count)
-                .slice(0, 10)
+                .slice(0, 3)
                 .forEach((p, index) => {
                     topProductsMap.set(p.id, index + 1);
                 });
@@ -2092,15 +2093,14 @@ https://zero-rental.biz/product-image/51317
                 const isStand = product.product_name.includes('스탠드');
                 const brandLogo = brandLogos[product.brand] || '📦';
                 const rank = topProductsMap.get(product.id);
-                const isTop10 = !!rank;
+                const isTop3 = !!rank;
                 let popularMark = '';
                 if (rank === 1) popularMark = '🥇 ';
                 else if (rank === 2) popularMark = '🥈 ';
                 else if (rank === 3) popularMark = '🥉 ';
-                else if (rank) popularMark = `⭐${rank}위 `;
                 
                 const card = document.createElement('div');
-                card.className = `product-card ${expandedProducts.has(product.id) ? 'expanded' : ''} ${isTop10 ? 'popular' : ''}`;
+                card.className = `product-card ${expandedProducts.has(product.id) ? 'expanded' : ''} ${isTop3 ? 'popular' : ''}`;
                 card.id = `product-${product.id}`;
                 
                 card.innerHTML = `
