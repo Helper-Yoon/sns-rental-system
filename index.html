@@ -570,39 +570,25 @@
             letter-spacing: -0.1px;
         }
         
-        .color-badge {
-            background: rgba(218, 165, 32, 0.1);
-            border: 1px solid #daa520;
-            color: #daa520;
-            padding: 4px 8px;
-            border-radius: 4px;
+        .water-only-badge {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            padding: 3px 8px;
+            border-radius: 6px;
             font-size: 11px;
             font-weight: 500;
             letter-spacing: -0.1px;
         }
         
-        .url-warning {
-            background: rgba(255, 152, 0, 0.1);
-            border: 1px solid #ff9800;
-            color: #ff9800;
-            padding: 4px 8px;
-            border-radius: 4px;
+        .custom-tag-badge {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 152, 0, 0.1));
+            color: #ffd700;
+            padding: 3px 8px;
+            border-radius: 6px;
             font-size: 11px;
-            margin-left: 5px;
-            font-weight: 500;
+            font-weight: 600;
             letter-spacing: -0.1px;
-        }
-        
-        .url-success {
-            background: rgba(76, 175, 80, 0.1);
-            border: 1px solid #4caf50;
-            color: #4caf50;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            margin-left: 5px;
-            font-weight: 500;
-            letter-spacing: -0.1px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
         }
         
         .product-stats {
@@ -1011,6 +997,203 @@
             box-shadow: 0 0 20px var(--primary-blue-glow);
         }
         
+        /* 태그 관리 스타일 */
+        .tags-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .tags-header {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .tags-header h2 {
+            color: var(--primary-blue);
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+        
+        .tags-header p {
+            color: #666;
+            font-size: 14px;
+            letter-spacing: -0.2px;
+        }
+        
+        .tag-input-section {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .tag-input-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 15px;
+            align-items: end;
+        }
+        
+        .tag-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .tag-input-group label {
+            color: #999;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: -0.2px;
+        }
+        
+        .tag-input-group input {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: -0.2px;
+        }
+        
+        .tag-input-group input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 2px var(--primary-blue-light);
+        }
+        
+        .tag-add-btn {
+            background: linear-gradient(135deg, #ffd700, #ff9800);
+            border: none;
+            color: #111;
+            padding: 10px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            letter-spacing: -0.2px;
+            height: 42px;
+        }
+        
+        .tag-add-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+        
+        .product-tags-list {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .product-tags-list h3 {
+            color: #ffd700;
+            font-size: 16px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+        
+        .tagged-product {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .tagged-product-info {
+            flex: 1;
+        }
+        
+        .tagged-product-name {
+            color: #e0e0e0;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            letter-spacing: -0.2px;
+        }
+        
+        .tagged-product-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .tag-item {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 152, 0, 0.15));
+            color: #ffd700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: -0.1px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .tag-remove-btn {
+            background: none;
+            border: none;
+            color: #ff6b6b;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0 2px;
+            transition: all 0.2s;
+        }
+        
+        .tag-remove-btn:hover {
+            color: #ff0000;
+            transform: scale(1.2);
+        }
+        
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            margin-top: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+        }
+        
+        .search-suggestion-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 13px;
+            border-bottom: 1px solid #222;
+            transition: all 0.2s;
+        }
+        
+        .search-suggestion-item:hover {
+            background: rgba(0, 102, 255, 0.1);
+        }
+        
+        .search-suggestion-item:last-child {
+            border-bottom: none;
+        }
+        
         .notes-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -1243,6 +1426,15 @@
             .checkbox-label {
                 white-space: nowrap;
             }
+            
+            .tag-input-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .tag-add-btn {
+                width: 100%;
+            }
         }
         
         .empty-state {
@@ -1366,10 +1558,11 @@
     
     <div class="tabs">
         <div class="tabs-container">
-            <button class="tab active" onclick="switchTab('output')">견적 출력</button>
-            <button class="tab" onclick="switchTab('input')">견적 입력</button>
-            <button class="tab" onclick="switchTab('notes')">브랜드 유의사항</button>
-            <button class="tab" onclick="switchTab('competitor')">타사보상 규정</button>
+            <button class="tab active" onclick="switchTab('output')">📋 견적 출력</button>
+            <button class="tab" onclick="switchTab('input')">✏️ 견적 입력</button>
+            <button class="tab" onclick="switchTab('tags')">🏷️ 태그 관리</button>
+            <button class="tab" onclick="switchTab('notes')">📌 브랜드 유의사항</button>
+            <button class="tab" onclick="switchTab('competitor')">🔄 타사보상 규정</button>
         </div>
     </div>
     
@@ -1380,7 +1573,7 @@
                 <div class="filter-row">
                     <div class="filter-group" style="flex: 3;">
                         <label>🔍 통합 검색</label>
-                        <input type="text" id="unifiedSearch" placeholder="검색어를 입력하세요... (모델명, 제품명, 브랜드)" 
+                        <input type="text" id="unifiedSearch" placeholder="검색어를 입력하세요... (모델명, 제품명, 브랜드, 태그)" 
                                onkeyup="handleUnifiedSearch()">
                     </div>
                     <div class="filter-group" style="flex: 1;">
@@ -1481,6 +1674,10 @@
                         <input type="checkbox" id="standOnly" onchange="saveFilterSettings(); filterProducts()">
                         <span>🏢 스탠드형만</span>
                     </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="waterOnly" onchange="saveFilterSettings(); filterProducts()">
+                        <span>💧 정수전용만</span>
+                    </label>
                 </div>
             </div>
             
@@ -1538,6 +1735,39 @@ https://zero-rental.biz/product-image/51317"></textarea>
                     <h3>📊 등록된 상품 목록</h3>
                     <div id="productSummary" style="max-height: 600px; overflow-y: auto;">
                         <!-- 등록된 상품 목록이 표시됩니다 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 태그 관리 탭 -->
+        <div id="tags-panel" class="tab-panel">
+            <div class="tags-container">
+                <div class="tags-header">
+                    <h2>🏷️ 태그 관리 시스템</h2>
+                    <p>상품에 커스텀 태그를 추가하여 분류하고 검색할 수 있습니다</p>
+                </div>
+                
+                <div class="tag-input-section">
+                    <div class="tag-input-grid">
+                        <div class="tag-input-group" style="position: relative;">
+                            <label>모델명/상품명 입력해서 선택하고</label>
+                            <input type="text" id="productSearchInput" placeholder="모델명 또는 상품명 검색..." 
+                                   onkeyup="searchProductsForTag()" onfocus="searchProductsForTag()">
+                            <div id="productSearchSuggestions" class="search-suggestions"></div>
+                        </div>
+                        <div class="tag-input-group">
+                            <label>붙이고 싶은 태그(예: 가성비)를 붙여주세요</label>
+                            <input type="text" id="tagInput" placeholder="태그명 입력...">
+                        </div>
+                        <button class="tag-add-btn" onclick="addTagToProduct()">✨ 태그 추가</button>
+                    </div>
+                </div>
+                
+                <div class="product-tags-list">
+                    <h3>📌 태그가 붙은 상품들</h3>
+                    <div id="taggedProductsList">
+                        <!-- 태그가 붙은 상품 목록이 여기에 표시됩니다 -->
                     </div>
                 </div>
             </div>
@@ -1703,6 +1933,190 @@ https://zero-rental.biz/product-image/51317"></textarea>
         let selectedItems = new Set();
         let expandedProducts = new Set();
         let additionalGifts = {};
+        let selectedProductForTag = null;
+        
+        // 정수전용 판별 함수
+        function isWaterOnlyProduct(productName) {
+            // 제품명 뒤 괄호 안의 내용 추출
+            const bracketMatch = productName.match(/\(([^)]+)\)$/);
+            if (bracketMatch) {
+                const bracketContent = bracketMatch[1];
+                // 정수 또는 정수전용 키워드 확인
+                if (bracketContent === '정수' || bracketContent === '정수전용' || 
+                    bracketContent.includes('정수전용') || bracketContent === '상온정수') {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        // 태그 관련 함수들
+        function searchProductsForTag() {
+            const searchInput = document.getElementById('productSearchInput');
+            const searchTerm = searchInput.value.toLowerCase();
+            const suggestionsDiv = document.getElementById('productSearchSuggestions');
+            
+            if (searchTerm.length === 0) {
+                suggestionsDiv.style.display = 'none';
+                return;
+            }
+            
+            const matches = products.filter(p => 
+                p.model_number.toLowerCase().includes(searchTerm) ||
+                p.product_name.toLowerCase().includes(searchTerm)
+            ).slice(0, 5);
+            
+            if (matches.length === 0) {
+                suggestionsDiv.style.display = 'none';
+                return;
+            }
+            
+            let html = '';
+            matches.forEach(product => {
+                const brandLogo = brandLogos[product.brand] || '📦';
+                html += `
+                    <div class="search-suggestion-item" onclick="selectProductForTag('${product.model_number}')">
+                        <span style="color: #999; font-size: 11px;">${brandLogo} ${product.brand}</span><br>
+                        <span>${product.model_number} / ${product.product_name}</span>
+                    </div>
+                `;
+            });
+            
+            suggestionsDiv.innerHTML = html;
+            suggestionsDiv.style.display = 'block';
+        }
+        
+        function selectProductForTag(modelNumber) {
+            const product = products.find(p => p.model_number === modelNumber);
+            if (product) {
+                selectedProductForTag = product;
+                document.getElementById('productSearchInput').value = `${product.model_number} / ${product.product_name}`;
+                document.getElementById('productSearchSuggestions').style.display = 'none';
+            }
+        }
+        
+        async function addTagToProduct() {
+            if (!selectedProductForTag) {
+                showToast('상품을 먼저 선택해주세요.', 'warning');
+                return;
+            }
+            
+            const tagInput = document.getElementById('tagInput');
+            const tagName = tagInput.value.trim();
+            
+            if (!tagName) {
+                showToast('태그명을 입력해주세요.', 'warning');
+                return;
+            }
+            
+            // 기존 태그 배열 초기화
+            if (!selectedProductForTag.custom_tags) {
+                selectedProductForTag.custom_tags = [];
+            }
+            
+            // 중복 체크
+            if (selectedProductForTag.custom_tags.includes(tagName)) {
+                showToast('이미 존재하는 태그입니다.', 'warning');
+                return;
+            }
+            
+            // 태그 추가
+            selectedProductForTag.custom_tags.push(tagName);
+            
+            try {
+                // Supabase 업데이트
+                const { error } = await supabaseClient
+                    .from('rental_products')
+                    .update({ custom_tags: selectedProductForTag.custom_tags })
+                    .eq('model_number', selectedProductForTag.model_number);
+                
+                if (error) throw error;
+                
+                showToast(`'${tagName}' 태그가 추가되었습니다!`, 'success');
+                
+                // 입력 필드 초기화
+                document.getElementById('productSearchInput').value = '';
+                tagInput.value = '';
+                selectedProductForTag = null;
+                
+                // 목록 업데이트
+                await loadProducts();
+                updateTaggedProductsList();
+                
+            } catch (error) {
+                console.error('Error adding tag:', error);
+                showToast('태그 추가 중 오류가 발생했습니다.', 'error');
+            }
+        }
+        
+        async function removeTagFromProduct(modelNumber, tagName) {
+            const product = products.find(p => p.model_number === modelNumber);
+            if (!product) return;
+            
+            // 태그 제거
+            product.custom_tags = product.custom_tags.filter(t => t !== tagName);
+            
+            try {
+                // Supabase 업데이트
+                const { error } = await supabaseClient
+                    .from('rental_products')
+                    .update({ custom_tags: product.custom_tags })
+                    .eq('model_number', modelNumber);
+                
+                if (error) throw error;
+                
+                showToast(`'${tagName}' 태그가 제거되었습니다.`, 'success');
+                
+                // 목록 업데이트
+                await loadProducts();
+                updateTaggedProductsList();
+                
+            } catch (error) {
+                console.error('Error removing tag:', error);
+                showToast('태그 제거 중 오류가 발생했습니다.', 'error');
+            }
+        }
+        
+        function updateTaggedProductsList() {
+            const listDiv = document.getElementById('taggedProductsList');
+            const taggedProducts = products.filter(p => p.custom_tags && p.custom_tags.length > 0);
+            
+            if (taggedProducts.length === 0) {
+                listDiv.innerHTML = '<div style="text-align: center; color: #666; padding: 30px;">태그가 붙은 상품이 없습니다.</div>';
+                return;
+            }
+            
+            let html = '';
+            taggedProducts.forEach(product => {
+                const brandLogo = brandLogos[product.brand] || '📦';
+                html += `
+                    <div class="tagged-product">
+                        <div class="tagged-product-info">
+                            <div class="tagged-product-name">
+                                ${brandLogo} ${product.model_number} / ${product.product_name}
+                            </div>
+                            <div class="tagged-product-tags">
+                                ${product.custom_tags.map(tag => `
+                                    <span class="tag-item">
+                                        ${tag}
+                                        <button class="tag-remove-btn" onclick="removeTagFromProduct('${product.model_number}', '${tag}')">×</button>
+                                    </span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            listDiv.innerHTML = html;
+        }
+        
+        // 전역 클릭 이벤트로 제안 숨기기
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#productSearchInput') && !e.target.closest('#productSearchSuggestions')) {
+                document.getElementById('productSearchSuggestions').style.display = 'none';
+            }
+        });
         
         // 복사 히스토리 저장
         function saveToCopyHistory(text) {
@@ -1762,162 +2176,6 @@ https://zero-rental.biz/product-image/51317"></textarea>
                 }
             }, 300)();
         }
-        
-        // 빠른 필터 기능
-        function quickFilter(type) {
-            // 필터 초기화
-            resetFilters();
-            
-            switch(type) {
-                case 'today':
-                    // 오늘 업데이트된 제품만 표시
-                    const today = new Date();
-                    const todayStr = today.toDateString();
-                    const filtered = products.filter(p => {
-                        const updateDate = new Date(p.updated_at);
-                        return updateDate.toDateString() === todayStr;
-                    });
-                    renderProducts(filtered);
-                    if (filtered.length === 0) {
-                        showToast('오늘 업데이트된 제품이 없습니다.', 'warning');
-                    } else {
-                        showToast(`오늘 업데이트된 ${filtered.length}개 제품을 표시합니다.`, 'success');
-                    }
-                    break;
-                    
-                case 'url':
-                    // URL이 있는 제품만 표시
-                    const withUrl = products.filter(p => p.image_url);
-                    renderProducts(withUrl);
-                    showToast(`URL이 있는 ${withUrl.length}개 제품을 표시합니다.`, 'success');
-                    break;
-                    
-                case 'competitor':
-                    // 타사보상이 있는 제품만 표시
-                    const withCompetitor = products.filter(p => 
-                        p.price_options.some(opt => opt.detail.includes('타사보상'))
-                    );
-                    renderProducts(withCompetitor);
-                    showToast(`타사보상이 있는 ${withCompetitor.length}개 제품을 표시합니다.`, 'success');
-                    break;
-            }
-        }
-        
-        // 검색 제안 표시
-        function showSuggestions(searchTerm) {
-            const suggestionsDiv = document.getElementById('searchSuggestions');
-            const term = searchTerm.toLowerCase();
-            
-            // 매칭되는 제품 찾기
-            const matches = products.filter(p => 
-                p.model_number.toLowerCase().includes(term) ||
-                p.product_name.toLowerCase().includes(term) ||
-                p.brand.toLowerCase().includes(term)
-            ).slice(0, 5); // 최대 5개만 표시
-            
-            // 최근 검색어 중 매칭되는 것 찾기
-            const recentMatches = recentSearches.filter(s => 
-                s.toLowerCase().includes(term)
-            ).slice(0, 3);
-            
-            if (matches.length === 0 && recentMatches.length === 0) {
-                hideSuggestions();
-                return;
-            }
-            
-            let html = '';
-            
-            // 최근 검색어 표시
-            if (recentMatches.length > 0) {
-                html += '<div style="padding: 5px 10px; font-size: 11px; color: #666; border-bottom: 1px solid #333;">최근 검색</div>';
-                recentMatches.forEach(recent => {
-                    html += `
-                        <div onclick="selectSuggestion('${recent}')" 
-                             style="padding: 8px 10px; cursor: pointer; transition: all 0.2s; font-size: 13px; color: #999;"
-                             onmouseover="this.style.background='rgba(0,102,255,0.1)'"
-                             onmouseout="this.style.background='transparent'">
-                            🕐 ${recent}
-                        </div>
-                    `;
-                });
-            }
-            
-            // 제품 제안 표시
-            if (matches.length > 0) {
-                html += '<div style="padding: 5px 10px; font-size: 11px; color: #666; border-bottom: 1px solid #333;">검색 제안</div>';
-                matches.forEach(product => {
-                    const brandLogo = brandLogos[product.brand] || '📦';
-                    const highlightedModel = highlightText(product.model_number, searchTerm);
-                    const highlightedName = highlightText(product.product_name, searchTerm);
-                    
-                    html += `
-                        <div onclick="selectSuggestion('${product.model_number}')" 
-                             style="padding: 8px 10px; cursor: pointer; transition: all 0.2s; font-size: 13px;"
-                             onmouseover="this.style.background='rgba(0,102,255,0.1)'"
-                             onmouseout="this.style.background='transparent'">
-                            <span style="color: #999; font-size: 12px;">${brandLogo} ${product.brand}</span><br>
-                            <span>${highlightedModel} / ${highlightedName}</span>
-                        </div>
-                    `;
-                });
-            }
-            
-            suggestionsDiv.innerHTML = html;
-            suggestionsDiv.style.display = 'block';
-        }
-        
-        // 검색 제안 숨기기
-        function hideSuggestions() {
-            document.getElementById('searchSuggestions').style.display = 'none';
-        }
-        
-        // 제안 선택
-        function selectSuggestion(modelNumber) {
-            document.getElementById('unifiedSearch').value = modelNumber;
-            currentSearchTerm = modelNumber;
-            hideSuggestions();
-            filterProducts();
-        }
-        
-        // 텍스트 하이라이팅
-        function highlightText(text, searchTerm) {
-            if (!searchTerm) return text;
-            const regex = new RegExp(`(${searchTerm})`, 'gi');
-            return text.replace(regex, '<span style="background: rgba(255,215,0,0.3); color: #ffd700; font-weight: 600;">$1</span>');
-        }
-        
-        // 최근 검색어 저장
-        function saveRecentSearch(term) {
-            if (term.length < 2) return;
-            
-            // 중복 제거
-            recentSearches = recentSearches.filter(s => s !== term);
-            
-            // 맨 앞에 추가
-            recentSearches.unshift(term);
-            
-            // 최대 10개만 보관
-            if (recentSearches.length > 10) {
-                recentSearches = recentSearches.slice(0, 10);
-            }
-            
-            localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
-        }
-        
-        // 검색 초기화
-        function clearSearch() {
-            document.getElementById('unifiedSearch').value = '';
-            currentSearchTerm = '';
-            hideSuggestions();
-            filterProducts();
-        }
-        
-        // 전역 클릭 이벤트로 제안 숨기기
-        document.addEventListener('click', function(e) {
-            if (!e.target.closest('#unifiedSearch') && !e.target.closest('#searchSuggestions')) {
-                hideSuggestions();
-            }
-        });
         
         // 월말월초 체크 함수 (26일~익월 5일)
         function isMonthEnd() {
@@ -2087,7 +2345,7 @@ https://zero-rental.biz/product-image/51317"></textarea>
                    upperName.includes('RO 필터');
         }
         
-        // 필터 설정 저장 (로컬스토리지)
+        // 필터 설정 저장 (로컬스토리지) - 브랜드 제외
         function saveFilterSettings() {
             const managementRadios = document.getElementsByName('managementType');
             let managementType = 'all';
@@ -2110,7 +2368,8 @@ https://zero-rental.biz/product-image/51317"></textarea>
                 hidePackage: document.getElementById('hidePackage').checked,
                 iceOnly: document.getElementById('iceOnly').checked,
                 roOnly: document.getElementById('roOnly').checked,
-                standOnly: document.getElementById('standOnly').checked
+                standOnly: document.getElementById('standOnly').checked,
+                waterOnly: document.getElementById('waterOnly').checked
             };
             localStorage.setItem('rentalFilterSettings', JSON.stringify(settings));
         }
@@ -2142,6 +2401,7 @@ https://zero-rental.biz/product-image/51317"></textarea>
                 document.getElementById('iceOnly').checked = settings.iceOnly ?? false;
                 document.getElementById('roOnly').checked = settings.roOnly ?? false;
                 document.getElementById('standOnly').checked = settings.standOnly ?? false;
+                document.getElementById('waterOnly').checked = settings.waterOnly ?? false;
             } else {
                 // 기본값 설정 (3년, 5년만 체크)
                 document.getElementById('year3').checked = true;
@@ -2297,6 +2557,7 @@ https://zero-rental.biz/product-image/51317"></textarea>
             document.getElementById('iceOnly').checked = false;
             document.getElementById('roOnly').checked = false;
             document.getElementById('standOnly').checked = false;
+            document.getElementById('waterOnly').checked = false;
             document.getElementById('brandFilter').value = '';
             document.getElementById('unifiedSearch').value = '';
             document.getElementById('sortBy').value = 'popular';
@@ -2329,12 +2590,22 @@ https://zero-rental.biz/product-image/51317"></textarea>
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
             
-            const tabIndex = tabName === 'output' ? 0 : tabName === 'input' ? 1 : tabName === 'notes' ? 2 : 3;
+            const tabMap = {
+                'output': 0,
+                'input': 1,
+                'tags': 2,
+                'notes': 3,
+                'competitor': 4
+            };
+            
+            const tabIndex = tabMap[tabName] ?? 0;
             document.querySelectorAll('.tab')[tabIndex].classList.add('active');
             document.getElementById(`${tabName}-panel`).classList.add('active');
             
             if (tabName === 'input') {
                 updateProductSummary();
+            } else if (tabName === 'tags') {
+                updateTaggedProductsList();
             }
         }
         
@@ -2387,6 +2658,7 @@ https://zero-rental.biz/product-image/51317"></textarea>
             const iceOnly = document.getElementById('iceOnly').checked;
             const roOnly = document.getElementById('roOnly').checked;
             const standOnly = document.getElementById('standOnly').checked;
+            const waterOnly = document.getElementById('waterOnly').checked;
             
             // 관리방식 필터 가져오기
             let managementFilter = 'all';
@@ -2403,6 +2675,7 @@ https://zero-rental.biz/product-image/51317"></textarea>
                 if (iceOnly && !product.product_name.includes('얼음')) return;
                 if (roOnly && !isROProduct(product.product_name)) return;
                 if (standOnly && !product.product_name.includes('스탠드')) return;
+                if (waterOnly && !isWaterOnlyProduct(product.product_name)) return;
                 
                 let filteredOptions = product.price_options.filter(option => {
                     if (option.term.includes('3년') && !showYear3) return false;
@@ -2436,6 +2709,7 @@ https://zero-rental.biz/product-image/51317"></textarea>
                 const isIceWater = product.product_name.includes('얼음');
                 const isRO = isROProduct(product.product_name);
                 const isStand = product.product_name.includes('스탠드');
+                const isWaterOnly = isWaterOnlyProduct(product.product_name);
                 const brandLogo = brandLogos[product.brand] || '📦';
                 const rank = topProductsMap.get(product.id);
                 const isTop3 = !!rank;
@@ -2443,6 +2717,14 @@ https://zero-rental.biz/product-image/51317"></textarea>
                 if (rank === 1) popularMark = '🥇 ';
                 else if (rank === 2) popularMark = '🥈 ';
                 else if (rank === 3) popularMark = '🥉 ';
+                
+                // 커스텀 태그 HTML 생성
+                let customTagsHtml = '';
+                if (product.custom_tags && product.custom_tags.length > 0) {
+                    customTagsHtml = product.custom_tags.map(tag => 
+                        `<span class="custom-tag-badge">✨ ${tag}</span>`
+                    ).join('');
+                }
                 
                 const card = document.createElement('div');
                 card.className = `product-card ${expandedProducts.has(product.id) ? 'expanded' : ''} ${isTop3 ? 'popular' : ''}`;
@@ -2461,8 +2743,8 @@ https://zero-rental.biz/product-image/51317"></textarea>
                                     ${isIceWater ? '<span class="ice-badge">❄️ 얼음</span>' : ''}
                                     ${isRO ? '<span class="ro-badge">💧 RO</span>' : ''}
                                     ${isStand ? '<span class="stand-badge">🏢 스탠드</span>' : ''}
-                                    ${product.color ? '<span class="color-badge">🎨 색상정보</span>' : ''}
-                                    ${product.image_url ? '<span class="url-success">🔗 URL</span>' : '<span class="url-warning">⚠️ URL 없음</span>'}
+                                    ${isWaterOnly ? '<span class="water-only-badge">💧 정수전용</span>' : ''}
+                                    ${customTagsHtml}
                                 </div>
                             </div>
                         </div>
@@ -2709,16 +2991,26 @@ https://zero-rental.biz/product-image/51317"></textarea>
             const iceOnly = document.getElementById('iceOnly').checked;
             const roOnly = document.getElementById('roOnly').checked;
             const standOnly = document.getElementById('standOnly').checked;
+            const waterOnly = document.getElementById('waterOnly').checked;
             
             let filtered = products;
             
-            // 통합 검색 적용
+            // 통합 검색 적용 (태그 검색 포함)
             if (unifiedSearchTerm) {
-                filtered = filtered.filter(p => 
-                    p.model_number.toLowerCase().includes(unifiedSearchTerm) ||
-                    p.product_name.toLowerCase().includes(unifiedSearchTerm) ||
-                    p.brand.toLowerCase().includes(unifiedSearchTerm)
-                );
+                filtered = filtered.filter(p => {
+                    // 기본 검색
+                    const basicMatch = p.model_number.toLowerCase().includes(unifiedSearchTerm) ||
+                                      p.product_name.toLowerCase().includes(unifiedSearchTerm) ||
+                                      p.brand.toLowerCase().includes(unifiedSearchTerm);
+                    
+                    // 태그 검색
+                    const tagMatch = p.custom_tags && 
+                                    p.custom_tags.some(tag => 
+                                        tag.toLowerCase().includes(unifiedSearchTerm)
+                                    );
+                    
+                    return basicMatch || tagMatch;
+                });
             }
             
             // 브랜드 필터
@@ -2735,6 +3027,9 @@ https://zero-rental.biz/product-image/51317"></textarea>
             }
             if (standOnly) {
                 filtered = filtered.filter(p => p.product_name.includes('스탠드'));
+            }
+            if (waterOnly) {
+                filtered = filtered.filter(p => isWaterOnlyProduct(p.product_name));
             }
             
             renderProducts(filtered);
@@ -3164,6 +3459,7 @@ https://zero-rental.biz/product-image/51317"></textarea>
                 const isIceWater = p.product_name.includes('얼음');
                 const isRO = isROProduct(p.product_name);
                 const isStand = p.product_name.includes('스탠드');
+                const isWaterOnly = isWaterOnlyProduct(p.product_name);
                 const competitorCount = p.price_options.filter(opt => opt.detail.includes('타사보상')).length;
                 const packageCount = p.price_options.filter(opt => opt.detail.includes('패키지')).length;
                 const selfCount = p.price_options.filter(opt => getManagementType(opt.detail) === 'self').length;
@@ -3179,6 +3475,12 @@ https://zero-rental.biz/product-image/51317"></textarea>
                 } else if (dataStatus === 'old') {
                     updateStyle = 'color: #ff0000; font-weight: 600;';
                     updateText = ' 🔴 시급! 업데이트 필요';
+                }
+                
+                // 커스텀 태그 표시
+                let tagsHtml = '';
+                if (p.custom_tags && p.custom_tags.length > 0) {
+                    tagsHtml = ' | 🏷️ ' + p.custom_tags.join(', ');
                 }
                 
                 return `
@@ -3199,8 +3501,10 @@ https://zero-rental.biz/product-image/51317"></textarea>
                         ${isIceWater ? ' | ❄️ 얼음' : ''}
                         ${isRO ? ' | 💧 RO' : ''}
                         ${isStand ? ' | 🏢 스탠드' : ''}
+                        ${isWaterOnly ? ' | 💧 정수전용' : ''}
                         ${p.color ? ' | 🎨 색상정보' : ''}
                         ${hasURL ? ' | 🔗 URL' : ' | ⚠️ URL 없음'}
+                        ${tagsHtml}
                     </div>
                 </div>
             `}).join('');
@@ -3315,43 +3619,6 @@ https://zero-rental.biz/product-image/51317"></textarea>
                 });
             } catch (error) {
                 console.error('Error loading competitor rules:', error);
-            }
-        }
-        
-        // Supabase 데이터 관리방식 업데이트
-        async function updateManagementTypes() {
-            try {
-                const { data: allProducts, error: fetchError } = await supabaseClient
-                    .from('rental_products')
-                    .select('*');
-                
-                if (fetchError) throw fetchError;
-                
-                for (const product of allProducts) {
-                    let hasUpdated = false;
-                    const updatedOptions = product.price_options.map(option => {
-                        if (!option.management_type) {
-                            option.management_type = getManagementType(option.detail);
-                            hasUpdated = true;
-                        }
-                        return option;
-                    });
-                    
-                    if (hasUpdated) {
-                        const { error: updateError } = await supabaseClient
-                            .from('rental_products')
-                            .update({ price_options: updatedOptions })
-                            .eq('id', product.id);
-                        
-                        if (updateError) {
-                            console.error('Error updating product:', product.model_number, updateError);
-                        }
-                    }
-                }
-                
-                console.log('Management types update completed');
-            } catch (error) {
-                console.error('Error updating management types:', error);
             }
         }
         
