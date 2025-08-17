@@ -544,10 +544,13 @@
             font-size: 11px;
         }
         
-        .color-info {
-            color: #999;
+        .color-badge {
+            background: rgba(218, 165, 32, 0.1);
+            border: 1px solid #daa520;
+            color: #daa520;
+            padding: 4px 8px;
+            border-radius: 4px;
             font-size: 11px;
-            padding: 3px 0;
         }
         
         .url-warning {
@@ -2371,9 +2374,9 @@ https://zero-rental.biz/product-image/51317
                                     ${isIceWater ? '<span class="ice-badge">❄️ 얼음</span>' : ''}
                                     ${isRO ? '<span class="ro-badge">💧 RO</span>' : ''}
                                     ${isStand ? '<span class="stand-badge">🏢 스탠드</span>' : ''}
+                                    ${product.color ? '<span class="color-badge">🎨 색상정보</span>' : ''}
                                     ${product.image_url ? '<span class="url-success">🔗 URL</span>' : '<span class="url-warning">⚠️ URL 없음</span>'}
                                 </div>
-                                ${product.color ? `<div class="color-info">🎨 ${product.color}</div>` : ''}
                             </div>
                         </div>
                         <div class="product-actions">
@@ -2386,6 +2389,9 @@ https://zero-rental.biz/product-image/51317
                     </div>
                     <div class="product-content">
                         <div class="price-table">
+                            ${product.color ? `<div style="padding: 10px 12px; margin-bottom: 10px; background: rgba(218, 165, 32, 0.05); border-left: 3px solid #daa520; color: #e0e0e0; font-size: 13px;">
+                                <strong style="color: #daa520;">🎨 색상:</strong> ${product.color}
+                            </div>` : ''}
                             ${filteredOptions.map((option, index) => {
                                 const originalIndex = product.price_options.indexOf(option);
                                 const isCompetitor = option.detail.includes('타사보상');
@@ -3082,7 +3088,6 @@ https://zero-rental.biz/product-image/51317
                     <div style="color: var(--primary-blue); font-size: 14px;">
                         <span style="font-size: 16px; margin-right: 5px;">${brandLogo}</span>
                         ${p.model_number} / ${p.product_name}
-                        ${p.color ? ` <span style="color: #999;">[${p.color}]</span>` : ''}
                     </div>
                     <div style="color: #666; font-size: 12px; margin-top: 5px;">
                         ${p.brand} | ${p.price_options.length}개 옵션 | 
@@ -3096,7 +3101,8 @@ https://zero-rental.biz/product-image/51317
                         ${isIceWater ? ' | ❄️ 얼음' : ''}
                         ${isRO ? ' | 💧 RO' : ''}
                         ${isStand ? ' | 🏢 스탠드' : ''}
-                        ${hasURL ? ' | 🔗 URL 있음' : ' | ⚠️ URL 없음'}
+                        ${p.color ? ' | 🎨 색상정보' : ''}
+                        ${hasURL ? ' | 🔗 URL' : ' | ⚠️ URL 없음'}
                     </div>
                 </div>
             `}).join('');
