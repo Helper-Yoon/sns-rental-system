@@ -1574,7 +1574,7 @@
                     <div class="filter-group" style="flex: 3;">
                         <label>🔍 통합 검색</label>
                         <input type="text" id="unifiedSearch" placeholder="검색어를 입력하세요... (모델명, 제품명, 브랜드, 태그)" 
-                               onkeyup="handleUnifiedSearch()">
+                               oninput="handleUnifiedSearch()">
                     </div>
                     <div class="filter-group" style="flex: 1;">
                         <label>브랜드</label>
@@ -1934,6 +1934,9 @@ https://zero-rental.biz/product-image/51317"></textarea>
         let expandedProducts = new Set();
         let additionalGifts = {};
         let selectedProductForTag = null;
+        let searchTimeout = null;
+        let currentSearchTerm = '';
+        let recentSearches = [];
         
         // 정수전용 판별 함수
         function isWaterOnlyProduct(productName) {
@@ -2114,67 +2117,27 @@ https://zero-rental.biz/product-image/51317"></textarea>
         // 전역 클릭 이벤트로 제안 숨기기
         document.addEventListener('click', function(e) {
             if (!e.target.closest('#productSearchInput') && !e.target.closest('#productSearchSuggestions')) {
-                document.getElementById('productSearchSuggestions').style.display = 'none';
+                const suggestionsDiv = document.getElementById('productSearchSuggestions');
+                if (suggestionsDiv) {
+                    suggestionsDiv.style.display = 'none';
+                }
             }
         });
         
-        // 복사 히스토리 저장
-        function saveToCopyHistory(text) {
-            const historyItem = {
-                text: text,
-                timestamp: new Date().toISOString(),
-                preview: text.substring(0, 100) + (text.length > 100 ? '...' : '')
-            };
-            
-            copyHistory.unshift(historyItem);
-            if (copyHistory.length > 10) {
-                copyHistory = copyHistory.slice(0, 10);
-            }
-            
-            localStorage.setItem('copyHistory', JSON.stringify(copyHistory));
-        }
-        
         // 디바운싱 함수
         function debounce(func, delay) {
+            let timeoutId;
             return function(...args) {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => func.apply(this, args), delay);
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => func.apply(this, args), delay);
             };
         }
         
-        // 통합 검색 처리
-        function handleUnifiedSearch(event) {
-            // ESC 키로 검색 취소
-            if (event && event.key === 'Escape') {
-                clearSearch();
-                return;
-            }
-            
-            const searchTerm = document.getElementById('unifiedSearch').value;
-            currentSearchTerm = searchTerm;
-            
-            if (searchTerm.length === 0) {
-                hideSuggestions();
-                filterProducts();
-                return;
-            }
-            
-            // Enter 키로 즉시 검색
-            if (event && event.key === 'Enter') {
-                hideSuggestions();
-                filterProducts();
-                saveRecentSearch(searchTerm);
-                return;
-            }
-            
-            // 디바운싱 적용 (300ms)
-            debounce(() => {
-                filterProducts();
-                if (searchTerm.length > 0) {
-                    showSuggestions(searchTerm);
-                    saveRecentSearch(searchTerm);
-                }
-            }, 300)();
+        // 통합 검색 처리 (간소화)
+        const debouncedFilter = debounce(filterProducts, 300);
+        
+        function handleUnifiedSearch() {
+            debouncedFilter();
         }
         
         // 월말월초 체크 함수 (26일~익월 5일)
