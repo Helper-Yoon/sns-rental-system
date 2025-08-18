@@ -2358,8 +2358,29 @@ https://zero-rental.biz/product-image/51317"></textarea>
                    upperName.includes('RO 필터');
         }
         
+        // 약정기간 필터 체크 (최소 하나는 체크되도록)
+        function validateYearFilters() {
+            const year3 = document.getElementById('year3').checked;
+            const year4 = document.getElementById('year4').checked;
+            const year5 = document.getElementById('year5').checked;
+            const year6 = document.getElementById('year6').checked;
+            const year7 = document.getElementById('year7').checked;
+            
+            // 아무것도 체크되지 않았으면 3년과 5년을 자동으로 체크
+            if (!year3 && !year4 && !year5 && !year6 && !year7) {
+                document.getElementById('year3').checked = true;
+                document.getElementById('year5').checked = true;
+                showToast('약정기간을 최소 하나는 선택해야 합니다. 3년, 5년이 자동 선택되었습니다.', 'warning');
+                return true; // 자동 체크됨
+            }
+            return false; // 정상
+        }
+        
         // 필터 설정 저장 (로컬스토리지) - 브랜드 제외
         function saveFilterSettings() {
+            // 약정기간 검증
+            validateYearFilters();
+            
             const managementRadios = document.getElementsByName('managementType');
             let managementType = 'all';
             for (const radio of managementRadios) {
