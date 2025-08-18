@@ -2692,11 +2692,6 @@ https://zero-rental.biz/product-image/51317"></textarea>
             const newSignupHide = document.getElementById('newSignupHide').checked;
             const hideCompetitor = document.getElementById('hideCompetitor').checked;
             const hidePackage = document.getElementById('hidePackage').checked;
-            const filterIceOnly = document.getElementById('iceOnly').checked;
-            const filterRoOnly = document.getElementById('roOnly').checked;
-            const filterStandOnly = document.getElementById('standOnly').checked;
-            const filterWaterOnly = document.getElementById('waterOnly').checked;
-            const filterColdOnly = document.getElementById('coldOnly').checked;
             const coldOnly = document.getElementById('coldOnly').checked;
             
             // 관리방식 필터 가져오기
@@ -2710,13 +2705,7 @@ https://zero-rental.biz/product-image/51317"></textarea>
             }
             
             productsToRender.forEach(product => {
-                // 제품 필터링
-                if (filterIceOnly && !product.product_name.includes('얼음')) return;
-                if (filterRoOnly && !isROProduct(product.product_name)) return;
-                if (filterStandOnly && !product.product_name.includes('스탠드')) return;
-                if (filterWaterOnly && !isWaterOnlyProduct(product.product_name)) return;
-                if (filterColdOnly && !isColdWaterProduct(product.product_name)) return;
-                
+                // 필터링된 옵션만 표시
                 let filteredOptions = product.price_options.filter(option => {
                     if (option.term.includes('3년') && !showYear3) return false;
                     if (option.term.includes('4년') && !showYear4) return false;
