@@ -1543,45 +1543,6 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 30px rgba(255, 152, 0, 0.6);
         }
-        
-        /* 디버그 패널 스타일 */
-        .debug-panel {
-            position: fixed;
-            bottom: 100px;
-            right: 30px;
-            background: #111;
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 10px;
-            display: none;
-            z-index: 1000;
-            font-size: 11px;
-            max-width: 200px;
-        }
-        
-        .debug-panel.show {
-            display: block;
-        }
-        
-        .debug-info {
-            color: #888;
-            margin: 5px 0;
-        }
-        
-        .debug-toggle {
-            position: fixed;
-            bottom: 30px;
-            left: 30px;
-            background: #333;
-            color: #888;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 11px;
-            z-index: 1000;
-            display: none; /* 기본적으로 숨김 */
-        }
     </style>
 </head>
 <body>
@@ -1798,7 +1759,79 @@
                     <p>각 브랜드의 렌탈 진행 시 주의사항을 기록해주세요</p>
                 </div>
                 <div class="notes-grid">
-                    <!-- 유의사항 카드들 -->
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>SK매직</span>
+                            </div>
+                            <div class="note-updated" id="note-sk-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-sk" placeholder="SK매직 관련 유의사항을 입력하세요...
+예: 설치비, 프로모션 정보, 특별 조건 등"></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>LG전자</span>
+                            </div>
+                            <div class="note-updated" id="note-lg-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-lg" placeholder="LG전자 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>코웨이</span>
+                            </div>
+                            <div class="note-updated" id="note-coway-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-coway" placeholder="코웨이 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>교원웰스</span>
+                            </div>
+                            <div class="note-updated" id="note-kyowon-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-kyowon" placeholder="교원웰스 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>청호나이스</span>
+                            </div>
+                            <div class="note-updated" id="note-chungho-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-chungho" placeholder="청호나이스 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>현대큐밍</span>
+                            </div>
+                            <div class="note-updated" id="note-hyundai-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-hyundai" placeholder="현대큐밍 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>세라젬</span>
+                            </div>
+                            <div class="note-updated" id="note-ceragem-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-ceragem" placeholder="세라젬 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>쿠쿠</span>
+                            </div>
+                            <div class="note-updated" id="note-cuckoo-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-cuckoo" placeholder="쿠쿠 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
                 </div>
                 <button class="save-notes-btn" onclick="saveNotes()">💾 유의사항 저장</button>
             </div>
@@ -1811,19 +1844,59 @@
                     <h2>🔄 브랜드별 타사보상 규정</h2>
                     <p>각 브랜드의 타사보상 프로모션 규정과 조건을 기록해주세요</p>
                 </div>
-                <!-- 타사보상 카드들 -->
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">SK매직 타사보상</div>
+                        <div class="note-updated" id="competitor-sk-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-sk" placeholder="SK매직 타사보상 규정을 입력하세요...
+예: 
+- 타사보상 적용 대상 및 조건
+- 필요 서류 및 증빙 자료
+- 위약금 면제 범위
+- 프로모션 기간 및 제한사항"></textarea>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">LG전자 타사보상</div>
+                        <div class="note-updated" id="competitor-lg-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-lg" placeholder="LG전자 타사보상 규정을 입력하세요..."></textarea>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">코웨이 타사보상</div>
+                        <div class="note-updated" id="competitor-coway-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-coway" placeholder="코웨이 타사보상 규정을 입력하세요..."></textarea>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">쿠쿠 타사보상</div>
+                        <div class="note-updated" id="competitor-cuckoo-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-cuckoo" placeholder="쿠쿠 타사보상 규정을 입력하세요..."></textarea>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">교원웰스 타사보상</div>
+                        <div class="note-updated" id="competitor-kyowon-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-kyowon" placeholder="교원웰스 타사보상 규정을 입력하세요..."></textarea>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">청호나이스 타사보상</div>
+                        <div class="note-updated" id="competitor-chungho-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-chungho" placeholder="청호나이스 타사보상 규정을 입력하세요..."></textarea>
+                </div>
                 <button class="save-competitor-btn" onclick="saveCompetitorRules()">💾 타사보상 규정 저장</button>
             </div>
         </div>
     </div>
     
     <div class="toast" id="toast"></div>
-    
-    <!-- 디버그 패널 (필요시 활성화) -->
-    <button class="debug-toggle" onclick="toggleDebug()">🐛 디버그</button>
-    <div class="debug-panel" id="debugPanel">
-        <div class="debug-info" id="debugInfo"></div>
-    </div>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -2563,6 +2636,118 @@
             }
         }
         
+        // 유의사항 불러오기
+        async function loadNotes() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('brand_notes')
+                    .select('*')
+                    .not('brand_key', 'like', 'competitor-%');
+                
+                if (error) throw error;
+                
+                data.forEach(note => {
+                    const element = document.getElementById(`note-${note.brand_key}`);
+                    if (element) {
+                        element.value = note.content || '';
+                    }
+                    
+                    const updatedElement = document.getElementById(`note-${note.brand_key}-updated`);
+                    if (updatedElement && note.updated_at) {
+                        const updateTime = new Date(note.updated_at).toLocaleString('ko-KR');
+                        updatedElement.textContent = `최종 수정: ${updateTime}`;
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading notes:', error);
+            }
+        }
+        
+        // 타사보상 규정 불러오기
+        async function loadCompetitorRules() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('brand_notes')
+                    .select('*')
+                    .like('brand_key', 'competitor-%');
+                
+                if (error) throw error;
+                
+                data.forEach(note => {
+                    const brandKey = note.brand_key.replace('competitor-', '');
+                    const element = document.getElementById(`competitor-${brandKey}`);
+                    if (element) {
+                        element.value = note.content || '';
+                    }
+                    
+                    const updatedElement = document.getElementById(`competitor-${brandKey}-updated`);
+                    if (updatedElement && note.updated_at) {
+                        const updateTime = new Date(note.updated_at).toLocaleString('ko-KR');
+                        updatedElement.textContent = `최종 수정: ${updateTime}`;
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading competitor rules:', error);
+            }
+        }
+        
+        // 유의사항 저장
+        async function saveNotes() {
+            const noteIds = ['sk', 'lg', 'coway', 'cuckoo', 'kyowon', 'chungho', 'hyundai', 'ceragem'];
+            
+            try {
+                for (const brandKey of noteIds) {
+                    const content = document.getElementById(`note-${brandKey}`).value;
+                    
+                    const { error } = await supabaseClient
+                        .from('brand_notes')
+                        .upsert({ 
+                            brand_key: brandKey,
+                            content: content 
+                        }, {
+                            onConflict: 'brand_key'
+                        });
+                    
+                    if (error) throw error;
+                }
+                
+                showToast('유의사항이 저장되었습니다!', 'success');
+                await loadNotes(); // 저장 후 다시 로드하여 업데이트 시간 표시
+            } catch (error) {
+                console.error('Error saving notes:', error);
+                showToast('유의사항 저장 중 오류가 발생했습니다.', 'error');
+            }
+        }
+        
+        // 타사보상 규정 저장
+        async function saveCompetitorRules() {
+            const competitorIds = ['sk', 'lg', 'coway', 'cuckoo', 'kyowon', 'chungho'];
+            
+            try {
+                for (const brandKey of competitorIds) {
+                    const content = document.getElementById(`competitor-${brandKey}`).value;
+                    const competitorKey = `competitor-${brandKey}`;
+                    
+                    const { error } = await supabaseClient
+                        .from('brand_notes')
+                        .upsert({ 
+                            brand_key: competitorKey,
+                            content: content 
+                        }, {
+                            onConflict: 'brand_key'
+                        });
+                    
+                    if (error) throw error;
+                }
+                
+                showToast('타사보상 규정이 저장되었습니다!', 'success');
+                await loadCompetitorRules(); // 저장 후 다시 로드
+            } catch (error) {
+                console.error('Error saving competitor rules:', error);
+                showToast('타사보상 규정 저장 중 오류가 발생했습니다.', 'error');
+            }
+        }
+        
         // 제품 요약 업데이트
         function updateProductSummary() {
             const summary = document.getElementById('productSummary');
@@ -2639,62 +2824,9 @@
             // 태그된 제품 목록 업데이트
         }
         
-        async function saveNotes() {
-            showToast('유의사항이 저장되었습니다.', 'success');
-        }
-        
-        async function saveCompetitorRules() {
-            showToast('타사보상 규정이 저장되었습니다.', 'success');
-        }
-        
         async function updateProductCopyCount(modelNumber, copyCount) {
             // 복사 횟수 업데이트
         }
-        
-        // ===== 디버깅 함수 =====
-        
-        function debugFilters() {
-            console.log('=== 현재 필터 상태 ===');
-            console.log('약정기간:', {
-                '3년': document.getElementById('year3').checked,
-                '4년': document.getElementById('year4').checked,
-                '5년': document.getElementById('year5').checked,
-                '6년': document.getElementById('year6').checked,
-                '7년': document.getElementById('year7').checked
-            });
-            
-            let managementType = 'all';
-            document.getElementsByName('managementType').forEach(radio => {
-                if (radio.checked) managementType = radio.value;
-            });
-            console.log('관리방식:', managementType);
-            
-            console.log('브랜드:', document.getElementById('brandFilter').value || '전체');
-            console.log('검색어:', document.getElementById('unifiedSearch').value || '없음');
-            console.log('정렬:', document.getElementById('sortBy').value);
-            console.log('전체 제품 수:', products.length);
-            console.log('현재 표시된 제품 수:', document.querySelectorAll('.product-card').length);
-        }
-        
-        function toggleDebug() {
-            const panel = document.getElementById('debugPanel');
-            panel.classList.toggle('show');
-            if (panel.classList.contains('show')) {
-                updateDebugInfo();
-            }
-        }
-        
-        function updateDebugInfo() {
-            const info = document.getElementById('debugInfo');
-            info.innerHTML = `
-                제품 수: ${products.length}<br>
-                표시: ${document.querySelectorAll('.product-card').length}<br>
-                선택: ${selectedItems.size}
-            `;
-        }
-        
-        // 전역 함수로 등록
-        window.debugFilters = debugFilters;
         
         // ===== 초기화 =====
         
@@ -2707,13 +2839,12 @@
                 
                 // 데이터 로드
                 await loadProducts();
+                await loadNotes();
+                await loadCompetitorRules();
                 
                 updateSelectedCount();
                 
                 console.log('Initialization completed successfully');
-                
-                // 디버그 모드 활성화 (필요시)
-                // document.querySelector('.debug-toggle').style.display = 'block';
                 
             } catch (error) {
                 console.error('Initialization error:', error);
