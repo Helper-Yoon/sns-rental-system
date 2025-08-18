@@ -1603,10 +1603,10 @@
                     <div class="filter-group" style="flex: 1;">
                         <label>정렬</label>
                         <select id="sortBy" onchange="sortProducts()">
-                            <option value="popular">인기순</option>
-                            <option value="name">이름순</option>
-                            <option value="brand">브랜드순</option>
-                            <option value="recent">최신순</option>
+                            <option value="popular">🔥 인기순 (복사 횟수)</option>
+                            <option value="name">📝 이름순 (가나다)</option>
+                            <option value="brand">🏢 브랜드순 (가나다)</option>
+                            <option value="recent">🆕 최신순 (최근 등록)</option>
                         </select>
                     </div>
                 </div>
@@ -2585,13 +2585,17 @@ https://zero-rental.biz/product-image/51317"></textarea>
             document.getElementById('coldOnly').checked = false;
             document.getElementById('brandFilter').value = '';
             document.getElementById('unifiedSearch').value = '';
-            document.getElementById('sortBy').value = 'popular';
+            document.getElementById('sortBy').value = 'popular'; // 인기순으로 초기화
             
             // 필터 설정만 초기화
             localStorage.removeItem('rentalFilterSettings');
             
             showToast('필터가 초기화되었습니다.', 'info');
-            filterProducts();
+            
+            // 인기순으로 정렬하여 표시
+            let sorted = [...products];
+            sorted.sort((a, b) => (b.copy_count || 0) - (a.copy_count || 0));
+            renderProducts(sorted);
         }
         
         // 전체 선택 초기화
@@ -3081,25 +3085,97 @@ https://zero-rental.biz/product-image/51317"></textarea>
         // 정렬
         function sortProducts() {
             const sortBy = document.getElementById('sortBy').value;
-            let sorted = [...products];
+            console.log('Sorting by:', sortBy);
             
-            switch(sortBy) {
-                case 'popular':
-                    sorted.sort((a, b) => b.copy_count - a.copy_count);
-                    break;
-                case 'name':
-                    sorted.sort((a, b) => a.product_name.localeCompare(b.product_name));
-                    break;
-                case 'brand':
-                    sorted.sort((a, b) => a.brand.localeCompare(b.brand));
-                    break;
-                case 'recent':
-                    sorted.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
-                    break;
+            // 현재 필터링된 상태 유지하면서 정렬
+            const brand = document.getElementById('brandFilter').value;
+            const unifiedSearchTerm = document.getElementById('unifiedSearch').value.toLowerCase();
+            const iceOnly = document.getElementById('iceOnly').checked;
+            const roOnly = document.getElementById('roOnly').checked;
+            const standOnly = document.getElementById('standOnly').checked;
+            const waterOnly = document.getElementById('waterOnly').checked;
+            const coldOnly = document.getElementById('coldOnly').checked;
+            
+            // 먼저 필터링
+            let filtered = [...products];
+            
+            // 통합 검색 적용
+            if (unifiedSearchTerm) {
+                filtered = filtered.filter(p => {
+                    const basicMatch = p.model_number.toLowerCase().includes(unifiedSearchTerm) ||
+                                      p.product_name.toLowerCase().includes(unifiedSearchTerm) ||
+                                      p.brand.toLowerCase().includes(unifiedSearchTerm);
+                    
+                    const tagMatch = p.custom_tags && 
+                                    p.custom_tags.some(tag => 
+                                        tag.toLowerCase().includes(unifiedSearchTerm)
+                                    );
+                    
+                    return basicMatch || tagMatch;
+                });
             }
             
-            products = sorted;
-            filterProducts();
+            // 브랜드 필터
+            if (brand) {
+                filtered = filtered.filter(p => p.brand === brand);
+            }
+            
+            // 특징 필터
+            if (iceOnly) filtered = filtered.filter(p => p.product_name.includes('얼음'));
+            if (roOnly) filtered = filtered.filter(p => isROProduct(p.product_name));
+            if (standOnly) filtered = filtered.filter(p => p.product_name.includes('스탠드'));
+            if (waterOnly) filtered = filtered.filter(p => isWaterOnlyProduct(p.product_name));
+            if (coldOnly) filtered = filtered.filter(p => isColdWaterProduct(p.product_name));
+            
+            // 정렬 적용
+            switch(sortBy) {
+                case 'popular':
+                    // 인기순: copy_count 높은 순서 (내림차순)
+                    filtered.sort((a, b) => {
+                        const countA = a.copy_count || 0;
+                        const countB = b.copy_count || 0;
+                        return countB - countA;
+                    });
+                    console.log('Sorted by popularity (copy_count)');
+                    break;
+                    
+                case 'name':
+                    // 이름순: 제품명 한글 순서 (오름차순)
+                    filtered.sort((a, b) => {
+                        return a.product_name.localeCompare(b.product_name, 'ko', { numeric: true });
+                    });
+                    console.log('Sorted by product name (Korean)');
+                    break;
+                    
+                case 'brand':
+                    // 브랜드순: 브랜드명 한글 순서 (오름차순) -> 같은 브랜드 내에서는 제품명 순서
+                    filtered.sort((a, b) => {
+                        const brandCompare = a.brand.localeCompare(b.brand, 'ko', { numeric: true });
+                        if (brandCompare === 0) {
+                            // 같은 브랜드면 제품명으로 정렬
+                            return a.product_name.localeCompare(b.product_name, 'ko', { numeric: true });
+                        }
+                        return brandCompare;
+                    });
+                    console.log('Sorted by brand (Korean)');
+                    break;
+                    
+                case 'recent':
+                    // 최신순: updated_at 최신 순서 (내림차순)
+                    filtered.sort((a, b) => {
+                        const dateA = new Date(a.updated_at || 0);
+                        const dateB = new Date(b.updated_at || 0);
+                        return dateB - dateA;
+                    });
+                    console.log('Sorted by recent update');
+                    break;
+                    
+                default:
+                    console.log('Unknown sort option:', sortBy);
+            }
+            
+            // 정렬된 결과를 렌더링
+            renderProducts(filtered);
         }
         
         // 약정 옵션 텍스트 자동 변환 함수
@@ -3739,8 +3815,22 @@ https://zero-rental.biz/product-image/51317"></textarea>
                         product.custom_tags = [];
                     }
                     
+                    // copy_count가 없으면 0으로 초기화
+                    if (typeof product.copy_count !== 'number') {
+                        product.copy_count = 0;
+                    }
+                    
                     return product;
                 });
+                
+                // 초기 로드 시 인기순으로 정렬
+                products.sort((a, b) => {
+                    const countA = a.copy_count || 0;
+                    const countB = b.copy_count || 0;
+                    return countB - countA;
+                });
+                
+                console.log('Initial sort by popularity applied');
                 
                 renderProducts();
                 updateProductSummary();
