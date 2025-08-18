@@ -1942,15 +1942,14 @@ https://zero-rental.biz/product-image/51317"></textarea>
         const { createClient } = supabase;
         const supabaseClient = createClient(supabaseUrl, supabaseKey);
         
+        console.log('Supabase client initialized');
+        
         // 전역 변수
         let products = [];
         let selectedItems = new Set();
         let expandedProducts = new Set();
         let additionalGifts = {};
         let selectedProductForTag = null;
-        let searchTimeout = null;
-        let currentSearchTerm = '';
-        let recentSearches = [];
         
         // 정수전용 판별 함수
         function isWaterOnlyProduct(productName) {
@@ -2389,43 +2388,56 @@ https://zero-rental.biz/product-image/51317"></textarea>
             localStorage.setItem('rentalFilterSettings', JSON.stringify(settings));
         }
         
-        // 필터 설정 불러오기 (로컬스토리지)
+        // 필터 설정 불러오기 (로컬스토리지 - 필터만!)
         function loadFilterSettings() {
             const saved = localStorage.getItem('rentalFilterSettings');
             if (saved) {
-                const settings = JSON.parse(saved);
-                document.getElementById('year3').checked = settings.year3 ?? true;
-                document.getElementById('year4').checked = settings.year4 ?? false;
-                document.getElementById('year5').checked = settings.year5 ?? true;
-                document.getElementById('year6').checked = settings.year6 ?? false;
-                document.getElementById('year7').checked = settings.year7 ?? false;
-                
-                // 관리방식 설정
-                const managementType = settings.managementType || 'all';
-                const managementRadios = document.getElementsByName('managementType');
-                for (const radio of managementRadios) {
-                    if (radio.value === managementType) {
-                        radio.checked = true;
-                        break;
+                try {
+                    const settings = JSON.parse(saved);
+                    // 약정기간 필터
+                    if (document.getElementById('year3')) document.getElementById('year3').checked = settings.year3 ?? true;
+                    if (document.getElementById('year4')) document.getElementById('year4').checked = settings.year4 ?? false;
+                    if (document.getElementById('year5')) document.getElementById('year5').checked = settings.year5 ?? true;
+                    if (document.getElementById('year6')) document.getElementById('year6').checked = settings.year6 ?? false;
+                    if (document.getElementById('year7')) document.getElementById('year7').checked = settings.year7 ?? false;
+                    
+                    // 관리방식 설정
+                    const managementType = settings.managementType || 'all';
+                    const managementRadios = document.getElementsByName('managementType');
+                    for (const radio of managementRadios) {
+                        if (radio.value === managementType) {
+                            radio.checked = true;
+                            break;
+                        }
                     }
+                    
+                    // 추가 필터
+                    if (document.getElementById('newSignupHide')) document.getElementById('newSignupHide').checked = settings.newSignupHide ?? false;
+                    if (document.getElementById('hideCompetitor')) document.getElementById('hideCompetitor').checked = settings.hideCompetitor ?? false;
+                    if (document.getElementById('hidePackage')) document.getElementById('hidePackage').checked = settings.hidePackage ?? false;
+                    if (document.getElementById('iceOnly')) document.getElementById('iceOnly').checked = settings.iceOnly ?? false;
+                    if (document.getElementById('roOnly')) document.getElementById('roOnly').checked = settings.roOnly ?? false;
+                    if (document.getElementById('standOnly')) document.getElementById('standOnly').checked = settings.standOnly ?? false;
+                    if (document.getElementById('waterOnly')) document.getElementById('waterOnly').checked = settings.waterOnly ?? false;
+                    if (document.getElementById('coldOnly')) document.getElementById('coldOnly').checked = settings.coldOnly ?? false;
+                } catch (e) {
+                    console.error('Error loading filter settings:', e);
+                    // 오류 발생 시 기본값 설정
+                    setDefaultFilters();
                 }
-                
-                document.getElementById('newSignupHide').checked = settings.newSignupHide ?? false;
-                document.getElementById('hideCompetitor').checked = settings.hideCompetitor ?? false;
-                document.getElementById('hidePackage').checked = settings.hidePackage ?? false;
-                document.getElementById('iceOnly').checked = settings.iceOnly ?? false;
-                document.getElementById('roOnly').checked = settings.roOnly ?? false;
-                document.getElementById('standOnly').checked = settings.standOnly ?? false;
-                document.getElementById('waterOnly').checked = settings.waterOnly ?? false;
-                document.getElementById('coldOnly').checked = settings.coldOnly ?? false;
             } else {
-                // 기본값 설정 (3년, 5년만 체크)
-                document.getElementById('year3').checked = true;
-                document.getElementById('year4').checked = false;
-                document.getElementById('year5').checked = true;
-                document.getElementById('year6').checked = false;
-                document.getElementById('year7').checked = false;
+                // 저장된 설정이 없으면 기본값 설정
+                setDefaultFilters();
             }
+        }
+        
+        // 기본 필터 설정
+        function setDefaultFilters() {
+            if (document.getElementById('year3')) document.getElementById('year3').checked = true;
+            if (document.getElementById('year4')) document.getElementById('year4').checked = false;
+            if (document.getElementById('year5')) document.getElementById('year5').checked = true;
+            if (document.getElementById('year6')) document.getElementById('year6').checked = false;
+            if (document.getElementById('year7')) document.getElementById('year7').checked = false;
         }
         
         // 브랜드별 로고 매핑
@@ -2552,11 +2564,7 @@ https://zero-rental.biz/product-image/51317"></textarea>
         // 필터 초기화
         function resetFilters() {
             // 기본값으로 설정
-            document.getElementById('year3').checked = true;
-            document.getElementById('year4').checked = false;
-            document.getElementById('year5').checked = true;
-            document.getElementById('year6').checked = false;
-            document.getElementById('year7').checked = false;
+            setDefaultFilters();
             
             // 관리방식 초기화
             const managementRadios = document.getElementsByName('managementType');
@@ -2579,7 +2587,7 @@ https://zero-rental.biz/product-image/51317"></textarea>
             document.getElementById('unifiedSearch').value = '';
             document.getElementById('sortBy').value = 'popular';
             
-            // localStorage 초기화
+            // 필터 설정만 초기화
             localStorage.removeItem('rentalFilterSettings');
             
             showToast('필터가 초기화되었습니다.', 'info');
@@ -2644,7 +2652,15 @@ https://zero-rental.biz/product-image/51317"></textarea>
         // 상품 렌더링
         function renderProducts(productsToRender = products) {
             const productsList = document.getElementById('productsList');
+            
+            if (!productsList) {
+                console.error('Products list element not found');
+                return;
+            }
+            
             productsList.innerHTML = '';
+            
+            console.log('Rendering products:', productsToRender.length);
             
             if (productsToRender.length === 0) {
                 productsList.innerHTML = `
@@ -3694,12 +3710,18 @@ https://zero-rental.biz/product-image/51317"></textarea>
         
         async function loadProducts() {
             try {
+                console.log('Loading products from Supabase...');
                 const { data, error } = await supabaseClient
                     .from('rental_products')
                     .select('*')
                     .order('updated_at', { ascending: false });
                 
-                if (error) throw error;
+                if (error) {
+                    console.error('Supabase error:', error);
+                    throw error;
+                }
+                
+                console.log('Products loaded:', data?.length || 0);
                 
                 // category와 company 필드 제거 및 brand로 통일
                 products = (data || []).map(product => {
@@ -3723,18 +3745,80 @@ https://zero-rental.biz/product-image/51317"></textarea>
                 updateProductSummary();
             } catch (error) {
                 console.error('Error loading products:', error);
-                showToast('데이터 로드 중 오류가 발생했습니다.', 'error');
+                showToast('데이터 로드 중 오류가 발생했습니다. 새로고침 해주세요.', 'error');
+            }
+        }
+        
+        // 로컬스토리지 정리 (필터 설정만 유지)
+        function cleanupLocalStorage() {
+            // 필터 설정 제외한 모든 항목 제거
+            const filterSettings = localStorage.getItem('rentalFilterSettings');
+            
+            // 불필요한 항목들 제거
+            localStorage.removeItem('customTagsInitialized');
+            localStorage.removeItem('productTags');
+            localStorage.removeItem('copyHistory');
+            localStorage.removeItem('recentSearches');
+            
+            // 필터 설정만 복원
+            if (filterSettings) {
+                localStorage.setItem('rentalFilterSettings', filterSettings);
+            }
+            
+            console.log('LocalStorage cleaned up - keeping only filter settings');
+        }
+        
+        // Supabase 연결 테스트
+        async function testSupabaseConnection() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('rental_products')
+                    .select('count', { count: 'exact', head: true });
+                
+                if (error) {
+                    console.error('Supabase connection error:', error);
+                    return false;
+                }
+                
+                console.log('Supabase connected successfully');
+                return true;
+            } catch (error) {
+                console.error('Supabase connection failed:', error);
+                return false;
             }
         }
         
         // 초기화
         window.onload = async function() {
-            showMonthEndWarning(); // 월말월초 경고 표시
-            loadFilterSettings(); // 필터 설정 불러오기 (로컬스토리지)
-            await loadProducts();
-            await loadNotes();
-            await loadCompetitorRules();
-            updateSelectedCount();
+            try {
+                console.log('Starting initialization...');
+                
+                // 로컬스토리지 정리
+                cleanupLocalStorage();
+                
+                // Supabase 연결 테스트
+                const isConnected = await testSupabaseConnection();
+                if (!isConnected) {
+                    showToast('데이터베이스 연결 실패. 잠시 후 다시 시도해주세요.', 'error');
+                    return;
+                }
+                
+                // 기본 기능들 실행
+                showMonthEndWarning();
+                loadFilterSettings();
+                
+                // Supabase에서 데이터 로드
+                await loadProducts();
+                await loadNotes();
+                await loadCompetitorRules();
+                
+                updateSelectedCount();
+                
+                console.log('Initialization completed successfully');
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showToast('초기화 중 오류가 발생했습니다. 페이지를 새로고침 해주세요.', 'error');
+            }
         };
     </script>
 </body>
