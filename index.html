@@ -1463,6 +1463,19 @@
             letter-spacing: -0.2px;
         }
         
+        .no-results {
+            text-align: center;
+            padding: 80px 20px;
+            color: #666;
+            background: linear-gradient(145deg, #111, #0f0f0f);
+            border: 1px solid #222;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: -0.2px;
+        }
+        
         .competitor-rules-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -1602,7 +1615,7 @@
                     </div>
                     <div class="filter-group" style="flex: 1;">
                         <label>정렬</label>
-                        <select id="sortBy" onchange="sortProducts()">
+                        <select id="sortBy" onchange="applySort()">
                             <option value="popular">인기순</option>
                             <option value="name">이름순</option>
                             <option value="brand">브랜드순</option>
@@ -1935,8 +1948,9 @@ https://zero-rental.biz/product-image/51317"></textarea>
     <div class="toast" id="toast"></div>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        // ===== [파일에서 복사한 전체 JavaScript 코드를 여기에 붙여넣기] =====
+
+<script>
+        // ===== [수정된 JavaScript 코드] =====
         // Supabase 초기화
         const supabaseUrl = 'https://bhtqjipygkawoyieidgp.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJodHFqaXB5Z2thd295aWVpZGdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0ODg5NjgsImV4cCI6MjA3MDA2NDk2OH0.hu2EAj9RCq436QBtfbEVF4aGOau4WWomLMDKahN4iAA';
@@ -2588,1138 +2602,1216 @@ https://zero-rental.biz/product-image/51317"></textarea>
             }
         }
         
-// ===== 필터링 및 정렬 함수들 =====
+        // ===== 필터링 및 정렬 함수들 =====
+        
+        // 🔧 수정된 filterProducts 함수 - 필터 해제 시 전체 결과 표시
+        function filterProducts() {
+            const brand = document.getElementById('brandFilter').value;
+            const unifiedSearchTerm = document.getElementById('unifiedSearch').value.toLowerCase();
+            const iceOnly = document.getElementById('iceOnly').checked;
+            const roOnly = document.getElementById('roOnly').checked;
+            const standOnly = document.getElementById('standOnly').checked;
+            const waterOnly = document.getElementById('waterOnly').checked;
+            const coldOnly = document.getElementById('coldOnly').checked;
+            const showYear3 = document.getElementById('year3').checked;
+            const showYear4 = document.getElementById('year4').checked;
+            const showYear5 = document.getElementById('year5').checked;
+            const showYear6 = document.getElementById('year6').checked;
+            const showYear7 = document.getElementById('year7').checked;
+            const newSignupHide = document.getElementById('newSignupHide').checked;
+            const hideCompetitor = document.getElementById('hideCompetitor').checked;
+            const hidePackage = document.getElementById('hidePackage').checked;
 
-function filterProducts() {
-    const brand = document.getElementById('brandFilter').value;
-    const unifiedSearchTerm = document.getElementById('unifiedSearch').value.toLowerCase();
-    const iceOnly = document.getElementById('iceOnly').checked;
-    const roOnly = document.getElementById('roOnly').checked;
-    const standOnly = document.getElementById('standOnly').checked;
-    const waterOnly = document.getElementById('waterOnly').checked;
-    const coldOnly = document.getElementById('coldOnly').checked;
-    
-    let filtered = products;
-    
-    // 통합 검색 적용 (태그 검색 포함)
-    if (unifiedSearchTerm) {
-        filtered = filtered.filter(p => {
-            // 기본 검색
-            const basicMatch = p.model_number.toLowerCase().includes(unifiedSearchTerm) ||
-                              p.product_name.toLowerCase().includes(unifiedSearchTerm) ||
-                              p.brand.toLowerCase().includes(unifiedSearchTerm);
-            
-            // 태그 검색
-            const tagMatch = p.custom_tags && 
-                            p.custom_tags.some(tag => 
-                                tag.toLowerCase().includes(unifiedSearchTerm)
-                            );
-            
-            return basicMatch || tagMatch;
-        });
-    }
-    
-    // 브랜드 필터
-    if (brand) {
-        filtered = filtered.filter(p => p.brand === brand);
-    }
-    
-    // 특징 필터
-    if (iceOnly) {
-        filtered = filtered.filter(p => p.product_name.includes('얼음'));
-    }
-    if (roOnly) {
-        filtered = filtered.filter(p => isROProduct(p.product_name));
-    }
-    if (standOnly) {
-        filtered = filtered.filter(p => p.product_name.includes('스탠드'));
-    }
-    if (waterOnly) {
-        filtered = filtered.filter(p => isWaterOnlyProduct(p.product_name));
-    }
-    if (coldOnly) {
-        filtered = filtered.filter(p => isColdWaterProduct(p.product_name));
-    }
-    
-    renderProducts(filtered);
-}
+            const managementRadios = document.getElementsByName('managementType');
+            let managementFilter = 'all';
+            for (const radio of managementRadios) {
+                if (radio.checked) {
+                    managementFilter = radio.value;
+                    break;
+                }
+            }
 
-function sortProducts() {
-    const sortBy = document.getElementById('sortBy').value;
-    let sorted = [...products];
-    
-    switch(sortBy) {
-        case 'popular':
-            sorted.sort((a, b) => b.copy_count - a.copy_count);
-            break;
-        case 'name':
-            sorted.sort((a, b) => a.product_name.localeCompare(b.product_name));
-            break;
-        case 'brand':
-            sorted.sort((a, b) => a.brand.localeCompare(b.brand));
-            break;
-        case 'recent':
-            sorted.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
-            break;
-    }
-    
-    products = sorted;
-    filterProducts();
-}
+            // 필터가 모두 해제되었는지 확인
+            const hasProductTypeFilter = iceOnly || roOnly || standOnly || waterOnly || coldOnly;
+            const hasYearFilter = showYear3 || showYear4 || showYear5 || showYear6 || showYear7;
+            const hasOptionFilter = newSignupHide || hideCompetitor || hidePackage;
+            const hasManagementFilter = managementFilter !== 'all';
+            const hasAnyFilter = brand || unifiedSearchTerm || hasProductTypeFilter || hasYearFilter || hasOptionFilter || hasManagementFilter;
 
-// ===== 렌더링 함수 =====
+            let filtered = products.filter(product => {
+                // 브랜드 필터
+                if (brand && product.brand !== brand) return false;
+                
+                // 통합 검색 (태그 검색 포함)
+                if (unifiedSearchTerm) {
+                    const basicMatch = product.model_number.toLowerCase().includes(unifiedSearchTerm) ||
+                                      product.product_name.toLowerCase().includes(unifiedSearchTerm) ||
+                                      product.brand.toLowerCase().includes(unifiedSearchTerm);
+                    
+                    const tagMatch = product.custom_tags && 
+                                    product.custom_tags.some(tag => 
+                                        tag.toLowerCase().includes(unifiedSearchTerm)
+                                    );
+                    
+                    if (!basicMatch && !tagMatch) return false;
+                }
+                
+                // 제품 타입 필터
+                if (hasProductTypeFilter) {
+                    if (iceOnly && !product.product_name.includes('얼음')) return false;
+                    if (roOnly && !isROProduct(product.product_name)) return false;
+                    if (standOnly && !product.product_name.includes('스탠드')) return false;
+                    if (waterOnly && !isWaterOnlyProduct(product.product_name)) return false;
+                    if (coldOnly && !isColdWaterProduct(product.product_name)) return false;
+                }
+                
+                // 필터가 없으면 모든 제품 표시
+                if (!hasAnyFilter) return true;
+                
+                // 옵션 필터링
+                const hasValidOption = product.price_options.some(option => {
+                    // 약정년수 필터가 있는 경우에만 적용
+                    if (hasYearFilter) {
+                        let yearMatch = false;
+                        if (option.term.includes('3년') && showYear3) yearMatch = true;
+                        if (option.term.includes('4년') && showYear4) yearMatch = true;
+                        if (option.term.includes('5년') && showYear5) yearMatch = true;
+                        if (option.term.includes('6년') && showYear6) yearMatch = true;
+                        if (option.term.includes('7년') && showYear7) yearMatch = true;
+                        
+                        if (!yearMatch) return false;
+                    }
+                    
+                    // 관리방식 필터
+                    if (hasManagementFilter) {
+                        const optionManagementType = getManagementType(option.detail);
+                        if (managementFilter === 'self' && optionManagementType !== 'self') return false;
+                        if (managementFilter === 'visit' && optionManagementType !== 'visit') return false;
+                    }
+                    
+                    // 옵션 필터
+                    if (hasOptionFilter) {
+                        if (newSignupHide && !option.detail.includes('타사보상')) return false;
+                        if (hideCompetitor && option.detail.includes('타사보상')) return false;
+                        if (hidePackage && option.detail.includes('패키지')) return false;
+                    }
+                    
+                    return true;
+                });
+                
+                return hasValidOption;
+            });
 
-function renderProducts(productsToRender = products) {
-    const productsList = document.getElementById('productsList');
-    
-    if (!productsList) {
-        console.error('Products list element not found');
-        return;
-    }
-    
-    productsList.innerHTML = '';
-    
-    console.log('Rendering products:', productsToRender.length);
-    
-    if (productsToRender.length === 0) {
-        productsList.innerHTML = `
-            <div class="empty-state">
-                <p>검색 결과가 없습니다</p>
-            </div>
-        `;
-        return;
-    }
-    
-    // Top 3 인기 상품 찾기 (전체 products 기준)
-    const topProductsMap = new Map();
-    [...products]
-        .sort((a, b) => b.copy_count - a.copy_count)
-        .slice(0, 3)
-        .forEach((p, index) => {
-            topProductsMap.set(p.id, index + 1);
-        });
-    
-    const showYear3 = document.getElementById('year3').checked;
-    const showYear4 = document.getElementById('year4').checked;
-    const showYear5 = document.getElementById('year5').checked;
-    const showYear6 = document.getElementById('year6').checked;
-    const showYear7 = document.getElementById('year7').checked;
-    const newSignupHide = document.getElementById('newSignupHide').checked;
-    const hideCompetitor = document.getElementById('hideCompetitor').checked;
-    const hidePackage = document.getElementById('hidePackage').checked;
-    
-    // 관리방식 필터 가져오기
-    let managementFilter = 'all';
-    const managementRadios = document.getElementsByName('managementType');
-    for (const radio of managementRadios) {
-        if (radio.checked) {
-            managementFilter = radio.value;
-            break;
+            // 정렬 적용
+            const sortBy = document.getElementById('sortBy').value;
+            applySort(filtered, sortBy);
         }
-    }
-    
-    productsToRender.forEach(product => {
-        // 제품 필터링
-        const filterIceOnly = document.getElementById('iceOnly').checked;
-        const filterRoOnly = document.getElementById('roOnly').checked;
-        const filterStandOnly = document.getElementById('standOnly').checked;
-        const filterWaterOnly = document.getElementById('waterOnly').checked;
-        const filterColdOnly = document.getElementById('coldOnly').checked;
-        
-        if (filterIceOnly && !product.product_name.includes('얼음')) return;
-        if (filterRoOnly && !isROProduct(product.product_name)) return;
-        if (filterStandOnly && !product.product_name.includes('스탠드')) return;
-        if (filterWaterOnly && !isWaterOnlyProduct(product.product_name)) return;
-        if (filterColdOnly && !isColdWaterProduct(product.product_name)) return;
-        
-        let filteredOptions = product.price_options.filter(option => {
-            if (option.term.includes('3년') && !showYear3) return false;
-            if (option.term.includes('4년') && !showYear4) return false;
-            if (option.term.includes('5년') && !showYear5) return false;
-            if (option.term.includes('6년') && !showYear6) return false;
-            if (option.term.includes('7년') && !showYear7) return false;
+
+        // 🔧 수정된 정렬 함수 - 한글 정렬 및 정확한 정렬 기준 적용
+        function applySort(productsToSort = products, sortBy) {
+            let sorted = [...productsToSort];
             
-            // 관리방식 필터
-            if (managementFilter !== 'all') {
-                const optionManagementType = getManagementType(option.detail);
-                if (managementFilter === 'self' && optionManagementType !== 'self') return false;
-                if (managementFilter === 'visit' && optionManagementType !== 'visit') return false;
+            console.log(`정렬 시작: ${sortBy} 방식으로 ${sorted.length}개 제품 정렬`);
+            
+            switch(sortBy) {
+                case 'popular':
+                    // 인기순: copy_count 높은 순서
+                    sorted.sort((a, b) => (b.copy_count || 0) - (a.copy_count || 0));
+                    console.log('인기순 정렬 완료');
+                    break;
+                case 'name':
+                    // 이름순: 제품명 한글 가나다순
+                    sorted.sort((a, b) => a.product_name.localeCompare(b.product_name, 'ko', { numeric: true }));
+                    console.log('이름순 정렬 완료');
+                    break;
+                case 'brand':
+                    // 브랜드순: 브랜드명 한글 가나다순 → 같은 브랜드는 제품명순
+                    sorted.sort((a, b) => {
+                        const brandCompare = a.brand.localeCompare(b.brand, 'ko', { numeric: true });
+                        if (brandCompare !== 0) return brandCompare;
+                        return a.product_name.localeCompare(b.product_name, 'ko', { numeric: true });
+                    });
+                    console.log('브랜드순 정렬 완료');
+                    break;
+                case 'recent':
+                    // 최신순: updated_at 최근 등록/수정 순서
+                    sorted.sort((a, b) => new Date(b.updated_at || 0) - new Date(a.updated_at || 0));
+                    console.log('최신순 정렬 완료');
+                    break;
+                default:
+                    console.log('기본 정렬 유지');
+                    break;
             }
             
-            if (newSignupHide && !option.detail.includes('타사보상')) return false;
-            if (hideCompetitor && option.detail.includes('타사보상')) return false;
-            if (hidePackage && option.detail.includes('패키지')) return false;
-            return true;
-        });
-        
-        if (filteredOptions.length === 0) return;
-        
-        const updateDate = new Date(product.updated_at);
-        const dateStr = `${updateDate.getMonth() + 1}/${updateDate.getDate()}`;
-        const dataStatus = getDataStatus(product.updated_at);
-        const statusClass = dataStatus === 'warning' ? 'warning-data' : dataStatus === 'old' ? 'old-data' : '';
-        const statusIcon = dataStatus === 'warning' ? ' 🟠' : dataStatus === 'old' ? ' 🔴' : '';
-        
-        // 특징 표시
-        const isIceWater = product.product_name.includes('얼음');
-        const isRO = isROProduct(product.product_name);
-        const isStand = product.product_name.includes('스탠드');
-        const isWaterOnly = isWaterOnlyProduct(product.product_name);
-        const isColdWater = isColdWaterProduct(product.product_name);
-        const brandLogo = brandLogos[product.brand] || '📦';
-        const rank = topProductsMap.get(product.id);
-        const isTop3 = !!rank;
-        let popularMark = '';
-        if (rank === 1) popularMark = '🥇 ';
-        else if (rank === 2) popularMark = '🥈 ';
-        else if (rank === 3) popularMark = '🥉 ';
-        
-        // 커스텀 태그 HTML 생성
-        let customTagsHtml = '';
-        if (product.custom_tags && product.custom_tags.length > 0) {
-            customTagsHtml = product.custom_tags.map(tag => 
-                `<span class="custom-tag-badge">✨ ${tag}</span>`
-            ).join('');
+            renderProducts(sorted);
         }
         
-        const card = document.createElement('div');
-        card.className = `product-card ${expandedProducts.has(product.id) ? 'expanded' : ''} ${isTop3 ? 'popular' : ''}`;
-        card.id = `product-${product.id}`;
+        // ===== 렌더링 함수 =====
         
-        card.innerHTML = `
-            <div class="product-header" onclick="toggleProductExpand(${product.id}, event)">
-                <div class="product-left">
-                    <div class="product-info">
-                        <h3>${popularMark}${product.model_number} / ${product.product_name}</h3>
-                        <div class="product-meta">
-                            <span class="brand-badge">
-                                <span class="brand-logo">${brandLogo}</span>
-                                ${product.brand}
-                            </span>
-                            ${isIceWater ? '<span class="ice-badge">❄️ 얼음</span>' : ''}
-                            ${isRO ? '<span class="ro-badge">💧 RO</span>' : ''}
-                            ${isStand ? '<span class="stand-badge">🏢 스탠드</span>' : ''}
-                            ${isWaterOnly ? '<span class="water-only-badge">💧 정수전용</span>' : ''}
-                            ${isColdWater ? '<span class="cold-water-badge">❄️💧 냉정수기</span>' : ''}
-                            ${customTagsHtml}
-                        </div>
+        function renderProducts(productsToRender = products) {
+            const productsList = document.getElementById('productsList');
+            
+            if (!productsList) {
+                console.error('Products list element not found');
+                return;
+            }
+            
+            productsList.innerHTML = '';
+            
+            console.log('Rendering products:', productsToRender.length);
+            
+            if (productsToRender.length === 0) {
+                productsList.innerHTML = `
+                    <div class="no-results">
+                        검색 결과가 없습니다
                     </div>
-                </div>
-                <div class="product-actions">
-                    <button class="select-copy-btn" onclick="copySelectedInProduct(${product.id}, event)">선택복사</button>
-                    <button class="copy-all-btn" onclick="copyAllOptions(${product.id}, event)">전체복사</button>
-                    <div class="copy-count">📋 ${product.copy_count}회</div>
-                    <div class="update-date ${statusClass}">업데이트: ${dateStr}${statusIcon}</div>
-                    <div class="expand-icon">▼</div>
-                </div>
-            </div>
-            <div class="product-content">
-                <div class="price-table">
-                    ${product.color ? `<div style="padding: 10px 12px; margin-bottom: 10px; background: rgba(218, 165, 32, 0.05); border-left: 3px solid #daa520; color: #e0e0e0; font-size: 13px;">
-                        <strong style="color: #daa520;">🎨 색상:</strong> ${product.color}
-                    </div>` : ''}
-                    ${filteredOptions.map((option, index) => {
-                        const originalIndex = product.price_options.indexOf(option);
-                        const isCompetitor = option.detail.includes('타사보상');
-                        const isPackage = option.detail.includes('패키지');
-                        const optionId = `${product.id}-${originalIndex}`;
-                        const isSelected = selectedItems.has(optionId);
-                        const managementType = getManagementType(option.detail);
-                        
-                        let termClass = '';
-                        if (option.term.includes('3년')) termClass = 'term-3year';
-                        else if (option.term.includes('4년')) termClass = 'term-4year';
-                        else if (option.term.includes('5년')) termClass = 'term-5year';
-                        else if (option.term.includes('6년')) termClass = 'term-6year';
-                        else if (option.term.includes('7년')) termClass = 'term-7year';
-                        
-                        let rowClass = '';
-                        if (isCompetitor) rowClass = 'competitor-option';
-                        else if (isPackage) rowClass = 'package-option';
-                        
-                        let managementBadge = '';
-                        if (managementType === 'self') {
-                            managementBadge = '<div class="management-badge management-self">🏠 자가</div>';
-                        } else if (managementType === 'visit') {
-                            managementBadge = '<div class="management-badge management-visit">🚐 방문</div>';
-                        }
-                        
-                        return `
-                        <div class="price-row ${rowClass} ${isSelected ? 'selected' : ''}" 
-                             id="option-${optionId}"
-                             onclick="toggleOptionByRow('${optionId}', event)"
-                             style="cursor: pointer;">
-                            <input type="checkbox" class="price-checkbox" 
-                                   id="check-${optionId}"
-                                   ${isSelected ? 'checked' : ''}
-                                   onchange="toggleOption('${optionId}')"
-                                   onclick="event.stopPropagation()">
-                            <div class="term ${termClass}">${option.term.replace('약정', ' 약정')}</div>
-                            ${managementBadge}
-                            <div class="management">${formatPriceDetail(option.detail)}</div>
-                            <div class="price">월 ${Number(option.price.replace(/,/g, '')).toLocaleString()}</div>
-                            <div class="gift">사은품 ${Number(option.gift.replace(/,/g, '')).toLocaleString()}</div>
-                            <button class="quick-copy-btn" onclick="quickCopy(${product.id}, ${originalIndex}, event)">복사</button>
-                        </div>
-                    `}).join('')}
-                </div>
-                <div class="additional-gift-section">
-                    <input type="text" id="additional-gift-${product.id}" 
-                           placeholder="추가 사은품 입력 (예: 100000)" 
-                           value="${additionalGifts[product.id] || ''}"
-                           class="additional-gift-input"
-                           onkeyup="formatAdditionalGift(${product.id})"
-                           title="빈 값으로 저장하면 삭제됩니다">
-                    <button class="additional-gift-btn" onclick="saveAdditionalGift(${product.id})">저장</button>
-                </div>
-            </div>
-        `;
-        
-        productsList.appendChild(card);
-    });
-    
-    // 선택 개수 업데이트
-    updateSelectedCount();
-}
-
-// ===== 복사 관련 함수들 =====
-
-async function copySelectedItems() {
-    if (selectedItems.size === 0) {
-        showToast('선택된 항목이 없습니다.', 'warning');
-        return;
-    }
-    
-    // 상품별로 그룹화
-    const grouped = {};
-    selectedItems.forEach(optionId => {
-        const [productId, optionIndex] = optionId.split('-').map(Number);
-        if (!grouped[productId]) {
-            grouped[productId] = [];
-        }
-        grouped[productId].push(optionIndex);
-    });
-    
-    let output = '';
-    let isFirst = true;
-    for (const productId in grouped) {
-        const product = products.find(p => p.id === Number(productId));
-        if (!product) continue;
-        
-        if (!isFirst) {
-            output += '\n\n';
-        }
-        isFirst = false;
-        
-        output += `* 브랜드 : ${product.brand}\n`;
-        output += `* 모델명 : ${product.model_number}\n`;
-        output += `* 제품명 : ${product.product_name}\n`;
-        if (product.color) {
-            output += `* 색상 : ${product.color}\n`;
-        }
-        output += `\n`;
-        
-        // 옵션 인덱스 정렬
-        grouped[productId].sort((a, b) => a - b).forEach(optionIndex => {
-            const option = product.price_options[optionIndex];
-            if (option) {
-                const formattedDetail = formatPriceDetail(option.detail);
-                output += `* ${option.term.replace('약정', ' 약정')} : ${formattedDetail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
+                `;
+                return;
             }
-        });
-        
-        // 추가사은품이 있으면 포함
-        if (additionalGifts[productId]) {
-            output += `* 추가사은품 : ${additionalGifts[productId]}\n`;
-        }
-        
-        if (product.image_url) {
-            output += `\n상품 안내페이지 : ${product.image_url}`;
-        }
-        
-        // 복사 횟수 업데이트
-        product.copy_count++;
-        await updateProductCopyCount(product.model_number, product.copy_count);
-    }
-    
-    navigator.clipboard.writeText(output.trim()).then(() => {
-        showToast(`${selectedItems.size}개 항목이 복사되었습니다!`, 'success');
-        // 선택 상태 유지하면서 데이터만 새로고침
-        loadProducts();
-    });
-}
-
-async function copySelectedInProduct(productId, event) {
-    event.stopPropagation();
-    
-    const product = products.find(p => p.id === productId);
-    if (!product) return;
-    
-    // 이 제품의 선택된 옵션들만 찾기
-    const selectedOptions = [];
-    product.price_options.forEach((option, index) => {
-        const optionId = `${productId}-${index}`;
-        if (selectedItems.has(optionId)) {
-            selectedOptions.push(option);
-        }
-    });
-    
-    if (selectedOptions.length === 0) {
-        showToast('선택된 옵션이 없습니다.', 'warning');
-        return;
-    }
-    
-    let output = `* 브랜드 : ${product.brand}\n`;
-    output += `* 모델명 : ${product.model_number}\n`;
-    output += `* 제품명 : ${product.product_name}\n`;
-    if (product.color) {
-        output += `* 색상 : ${product.color}\n`;
-    }
-    output += `\n`;
-    
-    selectedOptions.forEach(option => {
-        const formattedDetail = formatPriceDetail(option.detail);
-        output += `* ${option.term.replace('약정', ' 약정')} : ${formattedDetail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
-    });
-    
-    // 추가사은품이 있으면 포함
-    if (additionalGifts[productId]) {
-        output += `* 추가사은품 : ${additionalGifts[productId]}\n`;
-    }
-    
-    if (product.image_url) {
-        output += `\n상품 안내페이지 : ${product.image_url}\n`;
-    }
-    
-    navigator.clipboard.writeText(output.trim()).then(async () => {
-        showToast(`${selectedOptions.length}개 옵션이 복사되었습니다!`, 'success');
-        
-        // 복사 횟수 업데이트
-        product.copy_count++;
-        await updateProductCopyCount(product.model_number, product.copy_count);
-        
-        // 카운트만 업데이트
-        const countElement = document.querySelector(`#product-${productId} .copy-count`);
-        if (countElement) {
-            countElement.textContent = `📋 ${product.copy_count}회`;
-        }
-    });
-}
-
-async function copyAllOptions(productId, event) {
-    event.stopPropagation();
-    
-    const product = products.find(p => p.id === productId);
-    if (!product) return;
-    
-    // 현재 필터링된 옵션만 복사
-    const showYear3 = document.getElementById('year3').checked;
-    const showYear4 = document.getElementById('year4').checked;
-    const showYear5 = document.getElementById('year5').checked;
-    const showYear6 = document.getElementById('year6').checked;
-    const showYear7 = document.getElementById('year7').checked;
-    const newSignupHide = document.getElementById('newSignupHide').checked;
-    const hideCompetitor = document.getElementById('hideCompetitor').checked;
-    const hidePackage = document.getElementById('hidePackage').checked;
-    
-    // 관리방식 필터 가져오기
-    let managementFilter = 'all';
-    const managementRadios = document.getElementsByName('managementType');
-    for (const radio of managementRadios) {
-        if (radio.checked) {
-            managementFilter = radio.value;
-            break;
-        }
-    }
-    
-    let filteredOptions = product.price_options.filter(option => {
-        if (option.term.includes('3년') && !showYear3) return false;
-        if (option.term.includes('4년') && !showYear4) return false;
-        if (option.term.includes('5년') && !showYear5) return false;
-        if (option.term.includes('6년') && !showYear6) return false;
-        if (option.term.includes('7년') && !showYear7) return false;
-        
-        // 관리방식 필터
-        if (managementFilter !== 'all') {
-            const optionManagementType = getManagementType(option.detail);
-            if (managementFilter === 'self' && optionManagementType !== 'self') return false;
-            if (managementFilter === 'visit' && optionManagementType !== 'visit') return false;
-        }
-        
-        if (newSignupHide && !option.detail.includes('타사보상')) return false;
-        if (hideCompetitor && option.detail.includes('타사보상')) return false;
-        if (hidePackage && option.detail.includes('패키지')) return false;
-        return true;
-    });
-    
-    let output = `* 브랜드 : ${product.brand}\n`;
-    output += `* 모델명 : ${product.model_number}\n`;
-    output += `* 제품명 : ${product.product_name}\n`;
-    if (product.color) {
-        output += `* 색상 : ${product.color}\n`;
-    }
-    output += `\n`;
-    
-    filteredOptions.forEach(option => {
-        const formattedDetail = formatPriceDetail(option.detail);
-        output += `* ${option.term.replace('약정', ' 약정')} : ${formattedDetail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
-    });
-    
-    // 추가사은품이 있으면 포함
-    if (additionalGifts[productId]) {
-        output += `* 추가사은품 : ${additionalGifts[productId]}\n`;
-    }
-    
-    if (product.image_url) {
-        output += `\n상품 안내페이지 : ${product.image_url}\n`;
-    }
-    
-    navigator.clipboard.writeText(output.trim()).then(async () => {
-        // 시각적 피드백
-        const button = event.target;
-        const originalText = button.textContent;
-        button.textContent = '✓ 복사됨';
-        button.style.background = '#4caf50';
-        button.style.color = 'white';
-        
-        setTimeout(() => {
-            button.textContent = originalText;
-            button.style.background = '';
-            button.style.color = '';
-        }, 1500);
-        
-        // 복사 횟수 업데이트
-        product.copy_count++;
-        await updateProductCopyCount(product.model_number, product.copy_count);
-        
-        // 카운트만 업데이트
-        const countElement = document.querySelector(`#product-${productId} .copy-count`);
-        if (countElement) {
-            countElement.textContent = `복사 ${product.copy_count}회`;
-        }
-        
-        showToast(`${filteredOptions.length}개 옵션이 모두 복사되었습니다!`, 'success');
-    });
-}
-
-async function quickCopy(productId, optionIndex, event) {
-    event.stopPropagation();
-    
-    const product = products.find(p => p.id === productId);
-    if (!product) return;
-    
-    const option = product.price_options[optionIndex];
-    if (!option) return;
-    
-    let output = `* 브랜드 : ${product.brand}\n`;
-    output += `* 모델명 : ${product.model_number}\n`;
-    output += `* 제품명 : ${product.product_name}\n`;
-    if (product.color) {
-        output += `* 색상 : ${product.color}\n`;
-    }
-    output += `\n`;
-    
-    const formattedDetail = formatPriceDetail(option.detail);
-    output += `* ${option.term.replace('약정', ' 약정')} : ${formattedDetail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
-    
-    // 추가사은품이 있으면 포함
-    if (additionalGifts[productId]) {
-        output += `* 추가사은품 : ${additionalGifts[productId]}\n`;
-    }
-    
-    if (product.image_url) {
-        output += `\n상품 안내페이지 : ${product.image_url}\n`;
-    }
-    
-    navigator.clipboard.writeText(output.trim()).then(async () => {
-        // 시각적 피드백
-        let button = event.target;
-        if (!button.classList.contains('quick-copy-btn')) {
-            button = event.currentTarget.querySelector('.quick-copy-btn');
-        }
-        
-        if (button) {
-            const originalText = button.textContent;
-            button.textContent = '✓ 복사됨';
-            button.style.background = '#4caf50';
-            button.style.color = 'white';
             
-            setTimeout(() => {
-                button.textContent = originalText;
-                button.style.background = '';
-                button.style.color = '';
-            }, 1000);
-        }
-        
-        // 복사 횟수 업데이트
-        product.copy_count++;
-        await updateProductCopyCount(product.model_number, product.copy_count);
-        
-        // 카운트만 업데이트
-        const countElement = document.querySelector(`#product-${productId} .copy-count`);
-        if (countElement) {
-            countElement.textContent = `복사 ${product.copy_count}회`;
-        }
-    });
-}
-
-// ===== UI 컨트롤 함수들 =====
-
-function toggleOption(optionId) {
-    const checkbox = document.getElementById(`check-${optionId}`);
-    const row = document.getElementById(`option-${optionId}`);
-    
-    if (checkbox.checked) {
-        selectedItems.add(optionId);
-        row.classList.add('selected');
-    } else {
-        selectedItems.delete(optionId);
-        row.classList.remove('selected');
-    }
-    
-    updateSelectedCount();
-}
-
-function toggleOptionByRow(optionId, event) {
-    // 버튼이나 체크박스 클릭은 무시
-    if (event.target.tagName === 'BUTTON' || event.target.type === 'checkbox') {
-        return;
-    }
-    
-    const checkbox = document.getElementById(`check-${optionId}`);
-    checkbox.checked = !checkbox.checked;
-    toggleOption(optionId);
-}
-
-function toggleProductExpand(productId, event) {
-    if (event.target.type === 'checkbox') return;
-    
-    const card = document.getElementById(`product-${productId}`);
-    
-    if (expandedProducts.has(productId)) {
-        expandedProducts.delete(productId);
-        card.classList.remove('expanded');
-    } else {
-        expandedProducts.add(productId);
-        card.classList.add('expanded');
-    }
-}
-
-function updateSelectedCount() {
-    const count = selectedItems.size;
-    document.getElementById('selectedCount').textContent = count;
-    
-    const copyBtn = document.getElementById('copySelectedBtn');
-    if (count === 0) {
-        copyBtn.style.opacity = '0.5';
-        copyBtn.style.cursor = 'not-allowed';
-    } else {
-        copyBtn.style.opacity = '1';
-        copyBtn.style.cursor = 'pointer';
-    }
-}
-
-function clearAllSelections() {
-    const hadSelections = selectedItems.size > 0;
-    selectedItems.clear();
-    document.querySelectorAll('.price-checkbox').forEach(checkbox => {
-        checkbox.checked = false;
-    });
-    document.querySelectorAll('.price-row.selected').forEach(row => {
-        row.classList.remove('selected');
-    });
-    updateSelectedCount();
-    if (hadSelections) {
-        showToast('선택이 초기화되었습니다.', 'info');
-    }
-}
-
-function switchTab(tabName) {
-    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
-    
-    const tabMap = {
-        'output': 0,
-        'input': 1,
-        'tags': 2,
-        'notes': 3,
-        'competitor': 4
-    };
-    
-    const tabIndex = tabMap[tabName] ?? 0;
-    document.querySelectorAll('.tab')[tabIndex].classList.add('active');
-    document.getElementById(`${tabName}-panel`).classList.add('active');
-    
-    if (tabName === 'input') {
-        updateProductSummary();
-    } else if (tabName === 'tags') {
-        updateTaggedProductsList();
-    }
-}
-
-// ===== 필터 설정 관련 함수들 =====
-
-function saveFilterSettings() {
-    const managementRadios = document.getElementsByName('managementType');
-    let managementType = 'all';
-    for (const radio of managementRadios) {
-        if (radio.checked) {
-            managementType = radio.value;
-            break;
-        }
-    }
-    
-    const settings = {
-        year3: document.getElementById('year3').checked,
-        year4: document.getElementById('year4').checked,
-        year5: document.getElementById('year5').checked,
-        year6: document.getElementById('year6').checked,
-        year7: document.getElementById('year7').checked,
-        managementType: managementType,
-        newSignupHide: document.getElementById('newSignupHide').checked,
-        hideCompetitor: document.getElementById('hideCompetitor').checked,
-        hidePackage: document.getElementById('hidePackage').checked,
-        iceOnly: document.getElementById('iceOnly').checked,
-        roOnly: document.getElementById('roOnly').checked,
-        standOnly: document.getElementById('standOnly').checked,
-        waterOnly: document.getElementById('waterOnly').checked,
-        coldOnly: document.getElementById('coldOnly').checked
-    };
-    localStorage.setItem('rentalFilterSettings', JSON.stringify(settings));
-}
-
-function loadFilterSettings() {
-    const saved = localStorage.getItem('rentalFilterSettings');
-    if (saved) {
-        try {
-            const settings = JSON.parse(saved);
-            document.getElementById('year3').checked = settings.year3 ?? true;
-            document.getElementById('year4').checked = settings.year4 ?? false;
-            document.getElementById('year5').checked = settings.year5 ?? true;
-            document.getElementById('year6').checked = settings.year6 ?? false;
-            document.getElementById('year7').checked = settings.year7 ?? false;
+            // Top 3 인기 상품 찾기 (전체 products 기준)
+            const topProductsMap = new Map();
+            [...products]
+                .sort((a, b) => (b.copy_count || 0) - (a.copy_count || 0))
+                .slice(0, 3)
+                .forEach((p, index) => {
+                    topProductsMap.set(p.id, index + 1);
+                });
             
-            const managementType = settings.managementType || 'all';
+            const showYear3 = document.getElementById('year3').checked;
+            const showYear4 = document.getElementById('year4').checked;
+            const showYear5 = document.getElementById('year5').checked;
+            const showYear6 = document.getElementById('year6').checked;
+            const showYear7 = document.getElementById('year7').checked;
+            const newSignupHide = document.getElementById('newSignupHide').checked;
+            const hideCompetitor = document.getElementById('hideCompetitor').checked;
+            const hidePackage = document.getElementById('hidePackage').checked;
+            
+            // 관리방식 필터 가져오기
+            let managementFilter = 'all';
             const managementRadios = document.getElementsByName('managementType');
             for (const radio of managementRadios) {
-                if (radio.value === managementType) {
+                if (radio.checked) {
+                    managementFilter = radio.value;
+                    break;
+                }
+            }
+            
+            productsToRender.forEach(product => {
+                // 제품 필터링
+                const filterIceOnly = document.getElementById('iceOnly').checked;
+                const filterRoOnly = document.getElementById('roOnly').checked;
+                const filterStandOnly = document.getElementById('standOnly').checked;
+                const filterWaterOnly = document.getElementById('waterOnly').checked;
+                const filterColdOnly = document.getElementById('coldOnly').checked;
+                
+                if (filterIceOnly && !product.product_name.includes('얼음')) return;
+                if (filterRoOnly && !isROProduct(product.product_name)) return;
+                if (filterStandOnly && !product.product_name.includes('스탠드')) return;
+                if (filterWaterOnly && !isWaterOnlyProduct(product.product_name)) return;
+                if (filterColdOnly && !isColdWaterProduct(product.product_name)) return;
+                
+                let filteredOptions = product.price_options.filter(option => {
+                    if (option.term.includes('3년') && !showYear3) return false;
+                    if (option.term.includes('4년') && !showYear4) return false;
+                    if (option.term.includes('5년') && !showYear5) return false;
+                    if (option.term.includes('6년') && !showYear6) return false;
+                    if (option.term.includes('7년') && !showYear7) return false;
+                    
+                    // 관리방식 필터
+                    if (managementFilter !== 'all') {
+                        const optionManagementType = getManagementType(option.detail);
+                        if (managementFilter === 'self' && optionManagementType !== 'self') return false;
+                        if (managementFilter === 'visit' && optionManagementType !== 'visit') return false;
+                    }
+                    
+                    if (newSignupHide && !option.detail.includes('타사보상')) return false;
+                    if (hideCompetitor && option.detail.includes('타사보상')) return false;
+                    if (hidePackage && option.detail.includes('패키지')) return false;
+                    return true;
+                });
+                
+                if (filteredOptions.length === 0) return;
+                
+                const updateDate = new Date(product.updated_at);
+                const dateStr = `${updateDate.getMonth() + 1}/${updateDate.getDate()}`;
+                const dataStatus = getDataStatus(product.updated_at);
+                const statusClass = dataStatus === 'warning' ? 'warning-data' : dataStatus === 'old' ? 'old-data' : '';
+                const statusIcon = dataStatus === 'warning' ? ' 🟠' : dataStatus === 'old' ? ' 🔴' : '';
+                
+                // 특징 표시
+                const isIceWater = product.product_name.includes('얼음');
+                const isRO = isROProduct(product.product_name);
+                const isStand = product.product_name.includes('스탠드');
+                const isWaterOnly = isWaterOnlyProduct(product.product_name);
+                const isColdWater = isColdWaterProduct(product.product_name);
+                const brandLogo = brandLogos[product.brand] || '📦';
+                const rank = topProductsMap.get(product.id);
+                const isTop3 = !!rank;
+                let popularMark = '';
+                if (rank === 1) popularMark = '🥇 ';
+                else if (rank === 2) popularMark = '🥈 ';
+                else if (rank === 3) popularMark = '🥉 ';
+                
+                // 커스텀 태그 HTML 생성
+                let customTagsHtml = '';
+                if (product.custom_tags && product.custom_tags.length > 0) {
+                    customTagsHtml = product.custom_tags.map(tag => 
+                        `<span class="custom-tag-badge">✨ ${tag}</span>`
+                    ).join('');
+                }
+                
+                const card = document.createElement('div');
+                card.className = `product-card ${expandedProducts.has(product.id) ? 'expanded' : ''} ${isTop3 ? 'popular' : ''}`;
+                card.id = `product-${product.id}`;
+                
+                card.innerHTML = `
+                    <div class="product-header" onclick="toggleProductExpand(${product.id}, event)">
+                        <div class="product-left">
+                            <div class="product-info">
+                                <h3>${popularMark}${product.model_number} / ${product.product_name}</h3>
+                                <div class="product-meta">
+                                    <span class="brand-badge">
+                                        <span class="brand-logo">${brandLogo}</span>
+                                        ${product.brand}
+                                    </span>
+                                    ${isIceWater ? '<span class="ice-badge">❄️ 얼음</span>' : ''}
+                                    ${isRO ? '<span class="ro-badge">💧 RO</span>' : ''}
+                                    ${isStand ? '<span class="stand-badge">🏢 스탠드</span>' : ''}
+                                    ${isWaterOnly ? '<span class="water-only-badge">💧 정수전용</span>' : ''}
+                                    ${isColdWater ? '<span class="cold-water-badge">❄️💧 냉정수기</span>' : ''}
+                                    ${customTagsHtml}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="select-copy-btn" onclick="copySelectedInProduct(${product.id}, event)">선택복사</button>
+                            <button class="copy-all-btn" onclick="copyAllOptions(${product.id}, event)">전체복사</button>
+                            <div class="copy-count">📋 ${product.copy_count || 0}회</div>
+                            <div class="update-date ${statusClass}">업데이트: ${dateStr}${statusIcon}</div>
+                            <div class="expand-icon">▼</div>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <div class="price-table">
+                            ${product.color ? `<div style="padding: 10px 12px; margin-bottom: 10px; background: rgba(218, 165, 32, 0.05); border-left: 3px solid #daa520; color: #e0e0e0; font-size: 13px;">
+                                <strong style="color: #daa520;">🎨 색상:</strong> ${product.color}
+                            </div>` : ''}
+                            ${filteredOptions.map((option, index) => {
+                                const originalIndex = product.price_options.indexOf(option);
+                                const isCompetitor = option.detail.includes('타사보상');
+                                const isPackage = option.detail.includes('패키지');
+                                const optionId = `${product.id}-${originalIndex}`;
+                                const isSelected = selectedItems.has(optionId);
+                                const managementType = getManagementType(option.detail);
+                                
+                                let termClass = '';
+                                if (option.term.includes('3년')) termClass = 'term-3year';
+                                else if (option.term.includes('4년')) termClass = 'term-4year';
+                                else if (option.term.includes('5년')) termClass = 'term-5year';
+                                else if (option.term.includes('6년')) termClass = 'term-6year';
+                                else if (option.term.includes('7년')) termClass = 'term-7year';
+                                
+                                let rowClass = '';
+                                if (isCompetitor) rowClass = 'competitor-option';
+                                else if (isPackage) rowClass = 'package-option';
+                                
+                                let managementBadge = '';
+                                if (managementType === 'self') {
+                                    managementBadge = '<div class="management-badge management-self">🏠 자가</div>';
+                                } else if (managementType === 'visit') {
+                                    managementBadge = '<div class="management-badge management-visit">🚐 방문</div>';
+                                }
+                                
+                                return `
+                                <div class="price-row ${rowClass} ${isSelected ? 'selected' : ''}" 
+                                     id="option-${optionId}"
+                                     onclick="toggleOptionByRow('${optionId}', event)"
+                                     style="cursor: pointer;">
+                                    <input type="checkbox" class="price-checkbox" 
+                                           id="check-${optionId}"
+                                           ${isSelected ? 'checked' : ''}
+                                           onchange="toggleOption('${optionId}')"
+                                           onclick="event.stopPropagation()">
+                                    <div class="term ${termClass}">${option.term.replace('약정', ' 약정')}</div>
+                                    ${managementBadge}
+                                    <div class="management">${formatPriceDetail(option.detail)}</div>
+                                    <div class="price">월 ${Number(option.price.replace(/,/g, '')).toLocaleString()}</div>
+                                    <div class="gift">사은품 ${Number(option.gift.replace(/,/g, '')).toLocaleString()}</div>
+                                    <button class="quick-copy-btn" onclick="quickCopy(${product.id}, ${originalIndex}, event)">복사</button>
+                                </div>
+                            `}).join('')}
+                        </div>
+                        <div class="additional-gift-section">
+                            <input type="text" id="additional-gift-${product.id}" 
+                                   placeholder="추가 사은품 입력 (예: 100000)" 
+                                   value="${additionalGifts[product.id] || ''}"
+                                   class="additional-gift-input"
+                                   onkeyup="formatAdditionalGift(${product.id})"
+                                   title="빈 값으로 저장하면 삭제됩니다">
+                            <button class="additional-gift-btn" onclick="saveAdditionalGift(${product.id})">저장</button>
+                        </div>
+                    </div>
+                `;
+                
+                productsList.appendChild(card);
+            });
+            
+            // 선택 개수 업데이트
+            updateSelectedCount();
+        }
+        
+        // ===== 복사 관련 함수들 =====
+        
+        async function copySelectedItems() {
+            if (selectedItems.size === 0) {
+                showToast('선택된 항목이 없습니다.', 'warning');
+                return;
+            }
+            
+            // 상품별로 그룹화
+            const grouped = {};
+            selectedItems.forEach(optionId => {
+                const [productId, optionIndex] = optionId.split('-').map(Number);
+                if (!grouped[productId]) {
+                    grouped[productId] = [];
+                }
+                grouped[productId].push(optionIndex);
+            });
+            
+            let output = '';
+            let isFirst = true;
+            for (const productId in grouped) {
+                const product = products.find(p => p.id === Number(productId));
+                if (!product) continue;
+                
+                if (!isFirst) {
+                    output += '\n\n';
+                }
+                isFirst = false;
+                
+                output += `* 브랜드 : ${product.brand}\n`;
+                output += `* 모델명 : ${product.model_number}\n`;
+                output += `* 제품명 : ${product.product_name}\n`;
+                if (product.color) {
+                    output += `* 색상 : ${product.color}\n`;
+                }
+                output += `\n`;
+                
+                // 옵션 인덱스 정렬
+                grouped[productId].sort((a, b) => a - b).forEach(optionIndex => {
+                    const option = product.price_options[optionIndex];
+                    if (option) {
+                        const formattedDetail = formatPriceDetail(option.detail);
+                        output += `* ${option.term.replace('약정', ' 약정')} : ${formattedDetail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
+                    }
+                });
+                
+                // 추가사은품이 있으면 포함
+                if (additionalGifts[productId]) {
+                    output += `* 추가사은품 : ${additionalGifts[productId]}\n`;
+                }
+                
+                if (product.image_url) {
+                    output += `\n상품 안내페이지 : ${product.image_url}`;
+                }
+                
+                // 복사 횟수 업데이트
+                product.copy_count = (product.copy_count || 0) + 1;
+                await updateProductCopyCount(product.model_number, product.copy_count);
+            }
+            
+            navigator.clipboard.writeText(output.trim()).then(() => {
+                showToast(`${selectedItems.size}개 항목이 복사되었습니다!`, 'success');
+                // 선택 상태 유지하면서 데이터만 새로고침
+                loadProducts();
+            });
+        }
+        
+        async function copySelectedInProduct(productId, event) {
+            event.stopPropagation();
+            
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            // 이 제품의 선택된 옵션들만 찾기
+            const selectedOptions = [];
+            product.price_options.forEach((option, index) => {
+                const optionId = `${productId}-${index}`;
+                if (selectedItems.has(optionId)) {
+                    selectedOptions.push(option);
+                }
+            });
+            
+            if (selectedOptions.length === 0) {
+                showToast('선택된 옵션이 없습니다.', 'warning');
+                return;
+            }
+            
+            let output = `* 브랜드 : ${product.brand}\n`;
+            output += `* 모델명 : ${product.model_number}\n`;
+            output += `* 제품명 : ${product.product_name}\n`;
+            if (product.color) {
+                output += `* 색상 : ${product.color}\n`;
+            }
+            output += `\n`;
+            
+            selectedOptions.forEach(option => {
+                const formattedDetail = formatPriceDetail(option.detail);
+                output += `* ${option.term.replace('약정', ' 약정')} : ${formattedDetail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
+            });
+            
+            // 추가사은품이 있으면 포함
+            if (additionalGifts[productId]) {
+                output += `* 추가사은품 : ${additionalGifts[productId]}\n`;
+            }
+            
+            if (product.image_url) {
+                output += `\n상품 안내페이지 : ${product.image_url}\n`;
+            }
+            
+            navigator.clipboard.writeText(output.trim()).then(async () => {
+                showToast(`${selectedOptions.length}개 옵션이 복사되었습니다!`, 'success');
+                
+                // 복사 횟수 업데이트
+                product.copy_count = (product.copy_count || 0) + 1;
+                await updateProductCopyCount(product.model_number, product.copy_count);
+                
+                // 카운트만 업데이트
+                const countElement = document.querySelector(`#product-${productId} .copy-count`);
+                if (countElement) {
+                    countElement.textContent = `📋 ${product.copy_count}회`;
+                }
+            });
+        }
+        
+        async function copyAllOptions(productId, event) {
+            event.stopPropagation();
+            
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            // 현재 필터링된 옵션만 복사
+            const showYear3 = document.getElementById('year3').checked;
+            const showYear4 = document.getElementById('year4').checked;
+            const showYear5 = document.getElementById('year5').checked;
+            const showYear6 = document.getElementById('year6').checked;
+            const showYear7 = document.getElementById('year7').checked;
+            const newSignupHide = document.getElementById('newSignupHide').checked;
+            const hideCompetitor = document.getElementById('hideCompetitor').checked;
+            const hidePackage = document.getElementById('hidePackage').checked;
+            
+            // 관리방식 필터 가져오기
+            let managementFilter = 'all';
+            const managementRadios = document.getElementsByName('managementType');
+            for (const radio of managementRadios) {
+                if (radio.checked) {
+                    managementFilter = radio.value;
+                    break;
+                }
+            }
+            
+            let filteredOptions = product.price_options.filter(option => {
+                if (option.term.includes('3년') && !showYear3) return false;
+                if (option.term.includes('4년') && !showYear4) return false;
+                if (option.term.includes('5년') && !showYear5) return false;
+                if (option.term.includes('6년') && !showYear6) return false;
+                if (option.term.includes('7년') && !showYear7) return false;
+                
+                // 관리방식 필터
+                if (managementFilter !== 'all') {
+                    const optionManagementType = getManagementType(option.detail);
+                    if (managementFilter === 'self' && optionManagementType !== 'self') return false;
+                    if (managementFilter === 'visit' && optionManagementType !== 'visit') return false;
+                }
+                
+                if (newSignupHide && !option.detail.includes('타사보상')) return false;
+                if (hideCompetitor && option.detail.includes('타사보상')) return false;
+                if (hidePackage && option.detail.includes('패키지')) return false;
+                return true;
+            });
+            
+            let output = `* 브랜드 : ${product.brand}\n`;
+            output += `* 모델명 : ${product.model_number}\n`;
+            output += `* 제품명 : ${product.product_name}\n`;
+            if (product.color) {
+                output += `* 색상 : ${product.color}\n`;
+            }
+            output += `\n`;
+            
+            filteredOptions.forEach(option => {
+                const formattedDetail = formatPriceDetail(option.detail);
+                output += `* ${option.term.replace('약정', ' 약정')} : ${formattedDetail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
+            });
+            
+            // 추가사은품이 있으면 포함
+            if (additionalGifts[productId]) {
+                output += `* 추가사은품 : ${additionalGifts[productId]}\n`;
+            }
+            
+            if (product.image_url) {
+                output += `\n상품 안내페이지 : ${product.image_url}\n`;
+            }
+            
+            navigator.clipboard.writeText(output.trim()).then(async () => {
+                // 시각적 피드백
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = '✓ 복사됨';
+                button.style.background = '#4caf50';
+                button.style.color = 'white';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '';
+                    button.style.color = '';
+                }, 1500);
+                
+                // 복사 횟수 업데이트
+                product.copy_count = (product.copy_count || 0) + 1;
+                await updateProductCopyCount(product.model_number, product.copy_count);
+                
+                // 카운트만 업데이트
+                const countElement = document.querySelector(`#product-${productId} .copy-count`);
+                if (countElement) {
+                    countElement.textContent = `📋 ${product.copy_count}회`;
+                }
+                
+                showToast(`${filteredOptions.length}개 옵션이 모두 복사되었습니다!`, 'success');
+            });
+        }
+        
+        async function quickCopy(productId, optionIndex, event) {
+            event.stopPropagation();
+            
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            const option = product.price_options[optionIndex];
+            if (!option) return;
+            
+            let output = `* 브랜드 : ${product.brand}\n`;
+            output += `* 모델명 : ${product.model_number}\n`;
+            output += `* 제품명 : ${product.product_name}\n`;
+            if (product.color) {
+                output += `* 색상 : ${product.color}\n`;
+            }
+            output += `\n`;
+            
+            const formattedDetail = formatPriceDetail(option.detail);
+            output += `* ${option.term.replace('약정', ' 약정')} : ${formattedDetail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
+            
+            // 추가사은품이 있으면 포함
+            if (additionalGifts[productId]) {
+                output += `* 추가사은품 : ${additionalGifts[productId]}\n`;
+            }
+            
+            if (product.image_url) {
+                output += `\n상품 안내페이지 : ${product.image_url}\n`;
+            }
+            
+            navigator.clipboard.writeText(output.trim()).then(async () => {
+                // 시각적 피드백
+                let button = event.target;
+                if (!button.classList.contains('quick-copy-btn')) {
+                    button = event.currentTarget.querySelector('.quick-copy-btn');
+                }
+                
+                if (button) {
+                    const originalText = button.textContent;
+                    button.textContent = '✓ 복사됨';
+                    button.style.background = '#4caf50';
+                    button.style.color = 'white';
+                    
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.style.background = '';
+                        button.style.color = '';
+                    }, 1000);
+                }
+                
+                // 복사 횟수 업데이트
+                product.copy_count = (product.copy_count || 0) + 1;
+                await updateProductCopyCount(product.model_number, product.copy_count);
+                
+                // 카운트만 업데이트
+                const countElement = document.querySelector(`#product-${productId} .copy-count`);
+                if (countElement) {
+                    countElement.textContent = `📋 ${product.copy_count}회`;
+                }
+            });
+        }
+        
+        // ===== UI 컨트롤 함수들 =====
+        
+        function toggleOption(optionId) {
+            const checkbox = document.getElementById(`check-${optionId}`);
+            const row = document.getElementById(`option-${optionId}`);
+            
+            if (checkbox.checked) {
+                selectedItems.add(optionId);
+                row.classList.add('selected');
+            } else {
+                selectedItems.delete(optionId);
+                row.classList.remove('selected');
+            }
+            
+            updateSelectedCount();
+        }
+        
+        function toggleOptionByRow(optionId, event) {
+            // 버튼이나 체크박스 클릭은 무시
+            if (event.target.tagName === 'BUTTON' || event.target.type === 'checkbox') {
+                return;
+            }
+            
+            const checkbox = document.getElementById(`check-${optionId}`);
+            checkbox.checked = !checkbox.checked;
+            toggleOption(optionId);
+        }
+        
+        function toggleProductExpand(productId, event) {
+            if (event.target.type === 'checkbox') return;
+            
+            const card = document.getElementById(`product-${productId}`);
+            
+            if (expandedProducts.has(productId)) {
+                expandedProducts.delete(productId);
+                card.classList.remove('expanded');
+            } else {
+                expandedProducts.add(productId);
+                card.classList.add('expanded');
+            }
+        }
+        
+        function updateSelectedCount() {
+            const count = selectedItems.size;
+            document.getElementById('selectedCount').textContent = count;
+            
+            const copyBtn = document.getElementById('copySelectedBtn');
+            if (count === 0) {
+                copyBtn.style.opacity = '0.5';
+                copyBtn.style.cursor = 'not-allowed';
+            } else {
+                copyBtn.style.opacity = '1';
+                copyBtn.style.cursor = 'pointer';
+            }
+        }
+        
+        function clearAllSelections() {
+            const hadSelections = selectedItems.size > 0;
+            selectedItems.clear();
+            document.querySelectorAll('.price-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            document.querySelectorAll('.price-row.selected').forEach(row => {
+                row.classList.remove('selected');
+            });
+            updateSelectedCount();
+            if (hadSelections) {
+                showToast('선택이 초기화되었습니다.', 'info');
+            }
+        }
+        
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+            
+            const tabMap = {
+                'output': 0,
+                'input': 1,
+                'tags': 2,
+                'notes': 3,
+                'competitor': 4
+            };
+            
+            const tabIndex = tabMap[tabName] ?? 0;
+            document.querySelectorAll('.tab')[tabIndex].classList.add('active');
+            document.getElementById(`${tabName}-panel`).classList.add('active');
+            
+            if (tabName === 'input') {
+                updateProductSummary();
+            } else if (tabName === 'tags') {
+                updateTaggedProductsList();
+            }
+        }
+        
+        // ===== 필터 설정 관련 함수들 =====
+        
+        function saveFilterSettings() {
+            const managementRadios = document.getElementsByName('managementType');
+            let managementType = 'all';
+            for (const radio of managementRadios) {
+                if (radio.checked) {
+                    managementType = radio.value;
+                    break;
+                }
+            }
+            
+            const settings = {
+                year3: document.getElementById('year3').checked,
+                year4: document.getElementById('year4').checked,
+                year5: document.getElementById('year5').checked,
+                year6: document.getElementById('year6').checked,
+                year7: document.getElementById('year7').checked,
+                managementType: managementType,
+                newSignupHide: document.getElementById('newSignupHide').checked,
+                hideCompetitor: document.getElementById('hideCompetitor').checked,
+                hidePackage: document.getElementById('hidePackage').checked,
+                iceOnly: document.getElementById('iceOnly').checked,
+                roOnly: document.getElementById('roOnly').checked,
+                standOnly: document.getElementById('standOnly').checked,
+                waterOnly: document.getElementById('waterOnly').checked,
+                coldOnly: document.getElementById('coldOnly').checked
+            };
+            localStorage.setItem('rentalFilterSettings', JSON.stringify(settings));
+        }
+        
+        function loadFilterSettings() {
+            const saved = localStorage.getItem('rentalFilterSettings');
+            if (saved) {
+                try {
+                    const settings = JSON.parse(saved);
+                    document.getElementById('year3').checked = settings.year3 ?? true;
+                    document.getElementById('year4').checked = settings.year4 ?? false;
+                    document.getElementById('year5').checked = settings.year5 ?? true;
+                    document.getElementById('year6').checked = settings.year6 ?? false;
+                    document.getElementById('year7').checked = settings.year7 ?? false;
+                    
+                    const managementType = settings.managementType || 'all';
+                    const managementRadios = document.getElementsByName('managementType');
+                    for (const radio of managementRadios) {
+                        if (radio.value === managementType) {
+                            radio.checked = true;
+                            break;
+                        }
+                    }
+                    
+                    document.getElementById('newSignupHide').checked = settings.newSignupHide ?? false;
+                    document.getElementById('hideCompetitor').checked = settings.hideCompetitor ?? false;
+                    document.getElementById('hidePackage').checked = settings.hidePackage ?? false;
+                    document.getElementById('iceOnly').checked = settings.iceOnly ?? false;
+                    document.getElementById('roOnly').checked = settings.roOnly ?? false;
+                    document.getElementById('standOnly').checked = settings.standOnly ?? false;
+                    document.getElementById('waterOnly').checked = settings.waterOnly ?? false;
+                    document.getElementById('coldOnly').checked = settings.coldOnly ?? false;
+                } catch (e) {
+                    console.error('Error loading filter settings:', e);
+                    setDefaultFilters();
+                }
+            } else {
+                setDefaultFilters();
+            }
+        }
+        
+        function setDefaultFilters() {
+            document.getElementById('year3').checked = true;
+            document.getElementById('year4').checked = false;
+            document.getElementById('year5').checked = true;
+            document.getElementById('year6').checked = false;
+            document.getElementById('year7').checked = false;
+        }
+        
+        // 🔧 수정된 resetFilters 함수 - 초기화 시 인기순 정렬
+        function resetFilters() {
+            setDefaultFilters();
+            
+            const managementRadios = document.getElementsByName('managementType');
+            for (const radio of managementRadios) {
+                if (radio.value === 'all') {
                     radio.checked = true;
                     break;
                 }
             }
             
-            document.getElementById('newSignupHide').checked = settings.newSignupHide ?? false;
-            document.getElementById('hideCompetitor').checked = settings.hideCompetitor ?? false;
-            document.getElementById('hidePackage').checked = settings.hidePackage ?? false;
-            document.getElementById('iceOnly').checked = settings.iceOnly ?? false;
-            document.getElementById('roOnly').checked = settings.roOnly ?? false;
-            document.getElementById('standOnly').checked = settings.standOnly ?? false;
-            document.getElementById('waterOnly').checked = settings.waterOnly ?? false;
-            document.getElementById('coldOnly').checked = settings.coldOnly ?? false;
-        } catch (e) {
-            console.error('Error loading filter settings:', e);
-            setDefaultFilters();
-        }
-    } else {
-        setDefaultFilters();
-    }
-}
-
-function setDefaultFilters() {
-    document.getElementById('year3').checked = true;
-    document.getElementById('year4').checked = false;
-    document.getElementById('year5').checked = true;
-    document.getElementById('year6').checked = false;
-    document.getElementById('year7').checked = false;
-}
-
-function resetFilters() {
-    setDefaultFilters();
-    
-    const managementRadios = document.getElementsByName('managementType');
-    for (const radio of managementRadios) {
-        if (radio.value === 'all') {
-            radio.checked = true;
-            break;
-        }
-    }
-    
-    document.getElementById('newSignupHide').checked = false;
-    document.getElementById('hideCompetitor').checked = false;
-    document.getElementById('hidePackage').checked = false;
-    document.getElementById('iceOnly').checked = false;
-    document.getElementById('roOnly').checked = false;
-    document.getElementById('standOnly').checked = false;
-    document.getElementById('waterOnly').checked = false;
-    document.getElementById('coldOnly').checked = false;
-    document.getElementById('brandFilter').value = '';
-    document.getElementById('unifiedSearch').value = '';
-    document.getElementById('sortBy').value = 'popular';
-    
-    localStorage.removeItem('rentalFilterSettings');
-    
-    showToast('필터가 초기화되었습니다.', 'info');
-    filterProducts();
-}
-
-// ===== 날짜 및 데이터 관련 함수들 =====
-
-function isMonthEnd() {
-    const today = new Date();
-    const day = today.getDate();
-    return day >= 26 || day <= 5;
-}
-
-function getDataStatus(updateDate) {
-    const today = new Date();
-    const update = new Date(updateDate);
-    const todayDay = today.getDate();
-    const todayMonth = today.getMonth();
-    const todayYear = today.getFullYear();
-    const updateMonth = update.getMonth();
-    const updateYear = update.getFullYear();
-    
-    if (updateMonth === todayMonth && updateYear === todayYear) {
-        return 'normal';
-    }
-    
-    if (todayDay === 29) {
-        return 'warning';
-    }
-    
-    if (todayDay >= 30 || todayDay <= 5) {
-        return 'old';
-    }
-    
-    return 'normal';
-}
-
-function showMonthEndWarning() {
-    if (isMonthEnd()) {
-        document.getElementById('monthEndWarning').style.display = 'block';
-        document.querySelector('.header').classList.add('with-warning');
-    }
-}
-
-// ===== 제품 요약 업데이트 =====
-
-function updateProductSummary() {
-    const summary = document.getElementById('productSummary');
-    summary.innerHTML = products.map(p => {
-        const updateDate = new Date(p.updated_at);
-        const dataStatus = getDataStatus(p.updated_at);
-        const isIceWater = p.product_name.includes('얼음');
-        const isRO = isROProduct(p.product_name);
-        const isStand = p.product_name.includes('스탠드');
-        const isWaterOnly = isWaterOnlyProduct(p.product_name);
-        const isColdWater = isColdWaterProduct(p.product_name);
-        const competitorCount = p.price_options.filter(opt => opt.detail.includes('타사보상')).length;
-        const packageCount = p.price_options.filter(opt => opt.detail.includes('패키지')).length;
-        const selfCount = p.price_options.filter(opt => getManagementType(opt.detail) === 'self').length;
-        const visitCount = p.price_options.filter(opt => getManagementType(opt.detail) === 'visit').length;
-        const brandLogo = brandLogos[p.brand] || '📦';
-        const hasURL = !!p.image_url;
-        
-        let updateStyle = '';
-        let updateText = '';
-        if (dataStatus === 'warning') {
-            updateStyle = 'color: #ff9800; font-weight: 600;';
-            updateText = ' 🟠 업데이트 필요';
-        } else if (dataStatus === 'old') {
-            updateStyle = 'color: #ff0000; font-weight: 600;';
-            updateText = ' 🔴 시급! 업데이트 필요';
-        }
-        
-        let tagsHtml = '';
-        if (p.custom_tags && p.custom_tags.length > 0) {
-            tagsHtml = ' | 🏷️ ' + p.custom_tags.join(', ');
-        }
-        
-        return `
-        <div style="padding: 10px; border-bottom: 1px solid #333;">
-            <div style="color: var(--primary-blue); font-size: 14px;">
-                <span style="font-size: 16px; margin-right: 5px;">${brandLogo}</span>
-                ${p.model_number} / ${p.product_name}
-            </div>
-            <div style="color: #666; font-size: 12px; margin-top: 5px;">
-                ${p.brand} | ${p.price_options.length}개 옵션 | 
-                <span style="${updateStyle}">
-                    마지막 업데이트: ${updateDate.toLocaleString('ko-KR')}${updateText}
-                </span>
-                ${selfCount > 0 ? ` | 🏠 자가 ${selfCount}개` : ''}
-                ${visitCount > 0 ? ` | 🚐 방문 ${visitCount}개` : ''}
-                ${competitorCount > 0 ? ` | 타사보상 ${competitorCount}개` : ''}
-                ${packageCount > 0 ? ` | 패키지 ${packageCount}개` : ''}
-                ${isIceWater ? ' | ❄️ 얼음' : ''}
-                ${isRO ? ' | 💧 RO' : ''}
-                ${isStand ? ' | 🏢 스탠드' : ''}
-                ${isWaterOnly ? ' | 💧 정수전용' : ''}
-                ${isColdWater ? ' | ❄️💧 냉정수기' : ''}
-                ${p.color ? ' | 🎨 색상정보' : ''}
-                ${hasURL ? ' | 🔗 URL' : ' | ⚠️ URL 없음'}
-                ${tagsHtml}
-            </div>
-        </div>
-    `}).join('');
-}
-
-// ===== 유의사항 및 타사보상 관련 함수들 =====
-
-async function saveNotes() {
-    const noteIds = ['sk', 'lg', 'coway', 'cuckoo', 'kyowon', 'chungho', 'hyundai', 'ceragem'];
-    
-    try {
-        for (const brandKey of noteIds) {
-            const content = document.getElementById(`note-${brandKey}`).value;
+            document.getElementById('newSignupHide').checked = false;
+            document.getElementById('hideCompetitor').checked = false;
+            document.getElementById('hidePackage').checked = false;
+            document.getElementById('iceOnly').checked = false;
+            document.getElementById('roOnly').checked = false;
+            document.getElementById('standOnly').checked = false;
+            document.getElementById('waterOnly').checked = false;
+            document.getElementById('coldOnly').checked = false;
+            document.getElementById('brandFilter').value = '';
+            document.getElementById('unifiedSearch').value = '';
+            document.getElementById('sortBy').value = 'popular';
             
-            const { error } = await supabaseClient
-                .from('brand_notes')
-                .upsert({ 
-                    brand_key: brandKey,
-                    content: content 
-                }, {
-                    onConflict: 'brand_key'
+            localStorage.removeItem('rentalFilterSettings');
+            
+            showToast('필터가 초기화되었습니다.', 'info');
+            
+            // 인기순으로 정렬하여 표시
+            let sorted = [...products];
+            sorted.sort((a, b) => (b.copy_count || 0) - (a.copy_count || 0));
+            renderProducts(sorted);
+        }
+        
+        // ===== 날짜 및 데이터 관련 함수들 =====
+        
+        function isMonthEnd() {
+            const today = new Date();
+            const day = today.getDate();
+            return day >= 26 || day <= 5;
+        }
+        
+        function getDataStatus(updateDate) {
+            const today = new Date();
+            const update = new Date(updateDate);
+            const todayDay = today.getDate();
+            const todayMonth = today.getMonth();
+            const todayYear = today.getFullYear();
+            const updateMonth = update.getMonth();
+            const updateYear = update.getFullYear();
+            
+            if (updateMonth === todayMonth && updateYear === todayYear) {
+                return 'normal';
+            }
+            
+            if (todayDay === 29) {
+                return 'warning';
+            }
+            
+            if (todayDay >= 30 || todayDay <= 5) {
+                return 'old';
+            }
+            
+            return 'normal';
+        }
+        
+        function showMonthEndWarning() {
+            if (isMonthEnd()) {
+                document.getElementById('monthEndWarning').style.display = 'block';
+                document.querySelector('.header').classList.add('with-warning');
+            }
+        }
+        
+        // ===== 제품 요약 업데이트 =====
+        
+        function updateProductSummary() {
+            const summary = document.getElementById('productSummary');
+            summary.innerHTML = products.map(p => {
+                const updateDate = new Date(p.updated_at);
+                const dataStatus = getDataStatus(p.updated_at);
+                const isIceWater = p.product_name.includes('얼음');
+                const isRO = isROProduct(p.product_name);
+                const isStand = p.product_name.includes('스탠드');
+                const isWaterOnly = isWaterOnlyProduct(p.product_name);
+                const isColdWater = isColdWaterProduct(p.product_name);
+                const competitorCount = p.price_options.filter(opt => opt.detail.includes('타사보상')).length;
+                const packageCount = p.price_options.filter(opt => opt.detail.includes('패키지')).length;
+                const selfCount = p.price_options.filter(opt => getManagementType(opt.detail) === 'self').length;
+                const visitCount = p.price_options.filter(opt => getManagementType(opt.detail) === 'visit').length;
+                const brandLogo = brandLogos[p.brand] || '📦';
+                const hasURL = !!p.image_url;
+                
+                let updateStyle = '';
+                let updateText = '';
+                if (dataStatus === 'warning') {
+                    updateStyle = 'color: #ff9800; font-weight: 600;';
+                    updateText = ' 🟠 업데이트 필요';
+                } else if (dataStatus === 'old') {
+                    updateStyle = 'color: #ff0000; font-weight: 600;';
+                    updateText = ' 🔴 시급! 업데이트 필요';
+                }
+                
+                let tagsHtml = '';
+                if (p.custom_tags && p.custom_tags.length > 0) {
+                    tagsHtml = ' | 🏷️ ' + p.custom_tags.join(', ');
+                }
+                
+                return `
+                <div style="padding: 10px; border-bottom: 1px solid #333;">
+                    <div style="color: var(--primary-blue); font-size: 14px;">
+                        <span style="font-size: 16px; margin-right: 5px;">${brandLogo}</span>
+                        ${p.model_number} / ${p.product_name}
+                    </div>
+                    <div style="color: #666; font-size: 12px; margin-top: 5px;">
+                        ${p.brand} | ${p.price_options.length}개 옵션 | 
+                        <span style="${updateStyle}">
+                            마지막 업데이트: ${updateDate.toLocaleString('ko-KR')}${updateText}
+                        </span>
+                        ${selfCount > 0 ? ` | 🏠 자가 ${selfCount}개` : ''}
+                        ${visitCount > 0 ? ` | 🚐 방문 ${visitCount}개` : ''}
+                        ${competitorCount > 0 ? ` | 타사보상 ${competitorCount}개` : ''}
+                        ${packageCount > 0 ? ` | 패키지 ${packageCount}개` : ''}
+                        ${isIceWater ? ' | ❄️ 얼음' : ''}
+                        ${isRO ? ' | 💧 RO' : ''}
+                        ${isStand ? ' | 🏢 스탠드' : ''}
+                        ${isWaterOnly ? ' | 💧 정수전용' : ''}
+                        ${isColdWater ? ' | ❄️💧 냉정수기' : ''}
+                        ${p.color ? ' | 🎨 색상정보' : ''}
+                        ${hasURL ? ' | 🔗 URL' : ' | ⚠️ URL 없음'}
+                        ${tagsHtml}
+                    </div>
+                </div>
+            `}).join('');
+        }
+        
+        // ===== 유의사항 및 타사보상 관련 함수들 =====
+        
+        async function saveNotes() {
+            const noteIds = ['sk', 'lg', 'coway', 'cuckoo', 'kyowon', 'chungho', 'hyundai', 'ceragem'];
+            
+            try {
+                for (const brandKey of noteIds) {
+                    const content = document.getElementById(`note-${brandKey}`).value;
+                    
+                    const { error } = await supabaseClient
+                        .from('brand_notes')
+                        .upsert({ 
+                            brand_key: brandKey,
+                            content: content 
+                        }, {
+                            onConflict: 'brand_key'
+                        });
+                    
+                    if (error) throw error;
+                }
+                
+                showToast('유의사항이 저장되었습니다!', 'success');
+                await loadNotes();
+            } catch (error) {
+                console.error('Error saving notes:', error);
+                showToast('유의사항 저장 중 오류가 발생했습니다.', 'error');
+            }
+        }
+        
+        async function loadNotes() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('brand_notes')
+                    .select('*')
+                    .not('brand_key', 'like', 'competitor-%');
+                
+                if (error) throw error;
+                
+                data.forEach(note => {
+                    const element = document.getElementById(`note-${note.brand_key}`);
+                    if (element) {
+                        element.value = note.content || '';
+                    }
+                    
+                    const updatedElement = document.getElementById(`note-${note.brand_key}-updated`);
+                    if (updatedElement && note.updated_at) {
+                        const updateTime = new Date(note.updated_at).toLocaleString('ko-KR');
+                        updatedElement.textContent = `최종 수정: ${updateTime}`;
+                    }
                 });
-            
-            if (error) throw error;
+            } catch (error) {
+                console.error('Error loading notes:', error);
+            }
         }
         
-        showToast('유의사항이 저장되었습니다!', 'success');
-        await loadNotes();
-    } catch (error) {
-        console.error('Error saving notes:', error);
-        showToast('유의사항 저장 중 오류가 발생했습니다.', 'error');
-    }
-}
-
-async function loadNotes() {
-    try {
-        const { data, error } = await supabaseClient
-            .from('brand_notes')
-            .select('*')
-            .not('brand_key', 'like', 'competitor-%');
-        
-        if (error) throw error;
-        
-        data.forEach(note => {
-            const element = document.getElementById(`note-${note.brand_key}`);
-            if (element) {
-                element.value = note.content || '';
-            }
+        async function saveCompetitorRules() {
+            const competitorIds = ['sk', 'lg', 'coway', 'cuckoo', 'kyowon', 'chungho'];
             
-            const updatedElement = document.getElementById(`note-${note.brand_key}-updated`);
-            if (updatedElement && note.updated_at) {
-                const updateTime = new Date(note.updated_at).toLocaleString('ko-KR');
-                updatedElement.textContent = `최종 수정: ${updateTime}`;
+            try {
+                for (const brandKey of competitorIds) {
+                    const content = document.getElementById(`competitor-${brandKey}`).value;
+                    const competitorKey = `competitor-${brandKey}`;
+                    
+                    const { error } = await supabaseClient
+                        .from('brand_notes')
+                        .upsert({ 
+                            brand_key: competitorKey,
+                            content: content 
+                        }, {
+                            onConflict: 'brand_key'
+                        });
+                    
+                    if (error) throw error;
+                }
+                
+                showToast('타사보상 규정이 저장되었습니다!', 'success');
+                await loadCompetitorRules();
+            } catch (error) {
+                console.error('Error saving competitor rules:', error);
+                showToast('타사보상 규정 저장 중 오류가 발생했습니다.', 'error');
             }
-        });
-    } catch (error) {
-        console.error('Error loading notes:', error);
-    }
-}
-
-async function saveCompetitorRules() {
-    const competitorIds = ['sk', 'lg', 'coway', 'cuckoo', 'kyowon', 'chungho'];
-    
-    try {
-        for (const brandKey of competitorIds) {
-            const content = document.getElementById(`competitor-${brandKey}`).value;
-            const competitorKey = `competitor-${brandKey}`;
-            
-            const { error } = await supabaseClient
-                .from('brand_notes')
-                .upsert({ 
-                    brand_key: competitorKey,
-                    content: content 
-                }, {
-                    onConflict: 'brand_key'
+        }
+        
+        async function loadCompetitorRules() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('brand_notes')
+                    .select('*')
+                    .like('brand_key', 'competitor-%');
+                
+                if (error) throw error;
+                
+                data.forEach(note => {
+                    const brandKey = note.brand_key.replace('competitor-', '');
+                    const element = document.getElementById(`competitor-${brandKey}`);
+                    if (element) {
+                        element.value = note.content || '';
+                    }
+                    
+                    const updatedElement = document.getElementById(`competitor-${brandKey}-updated`);
+                    if (updatedElement && note.updated_at) {
+                        const updateTime = new Date(note.updated_at).toLocaleString('ko-KR');
+                        updatedElement.textContent = `최종 수정: ${updateTime}`;
+                    }
                 });
-            
-            if (error) throw error;
+            } catch (error) {
+                console.error('Error loading competitor rules:', error);
+            }
         }
         
-        showToast('타사보상 규정이 저장되었습니다!', 'success');
-        await loadCompetitorRules();
-    } catch (error) {
-        console.error('Error saving competitor rules:', error);
-        showToast('타사보상 규정 저장 중 오류가 발생했습니다.', 'error');
-    }
-}
-
-async function loadCompetitorRules() {
-    try {
-        const { data, error } = await supabaseClient
-            .from('brand_notes')
-            .select('*')
-            .like('brand_key', 'competitor-%');
+        // ===== Toast 메시지 =====
         
-        if (error) throw error;
-        
-        data.forEach(note => {
-            const brandKey = note.brand_key.replace('competitor-', '');
-            const element = document.getElementById(`competitor-${brandKey}`);
-            if (element) {
-                element.value = note.content || '';
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast';
+            
+            if (type === 'success') {
+                toast.classList.add('success');
+            } else if (type === 'warning') {
+                toast.classList.add('warning');
+            } else if (type === 'error') {
+                toast.classList.add('error');
             }
             
-            const updatedElement = document.getElementById(`competitor-${brandKey}-updated`);
-            if (updatedElement && note.updated_at) {
-                const updateTime = new Date(note.updated_at).toLocaleString('ko-KR');
-                updatedElement.textContent = `최종 수정: ${updateTime}`;
+            toast.style.display = 'block';
+            
+            if (toast.hideTimeout) {
+                clearTimeout(toast.hideTimeout);
             }
-        });
-    } catch (error) {
-        console.error('Error loading competitor rules:', error);
-    }
-}
-
-// ===== Toast 메시지 =====
-
-function showToast(message, type = 'info') {
-    const toast = document.getElementById('toast');
-    toast.textContent = message;
-    toast.className = 'toast';
-    
-    if (type === 'success') {
-        toast.classList.add('success');
-    } else if (type === 'warning') {
-        toast.classList.add('warning');
-    } else if (type === 'error') {
-        toast.classList.add('error');
-    }
-    
-    toast.style.display = 'block';
-    
-    if (toast.hideTimeout) {
-        clearTimeout(toast.hideTimeout);
-    }
-    
-    toast.hideTimeout = setTimeout(() => {
-        toast.style.display = 'none';
-    }, 3000);
-}
-
-// ===== Supabase 관련 함수들 =====
-
-async function updateProductCopyCount(modelNumber, copyCount) {
-    try {
-        const { error } = await supabaseClient
-            .from('rental_products')
-            .update({ copy_count: copyCount })
-            .eq('model_number', modelNumber);
-        
-        if (error) throw error;
-    } catch (error) {
-        console.error('Error updating copy count:', error);
-    }
-}
-
-async function loadProducts() {
-    try {
-        console.log('Loading products from Supabase...');
-        const { data, error } = await supabaseClient
-            .from('rental_products')
-            .select('*')
-            .order('updated_at', { ascending: false });
-        
-        if (error) {
-            console.error('Supabase error:', error);
-            throw error;
+            
+            toast.hideTimeout = setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
         }
         
-        console.log('Products loaded:', data?.length || 0);
+        // ===== Supabase 관련 함수들 =====
         
-        products = (data || []).map(product => {
-            if (!product.brand && product.company) {
-                product.brand = product.company;
+        async function updateProductCopyCount(modelNumber, copyCount) {
+            try {
+                const { error } = await supabaseClient
+                    .from('rental_products')
+                    .update({ copy_count: copyCount })
+                    .eq('model_number', modelNumber);
+                
+                if (error) throw error;
+            } catch (error) {
+                console.error('Error updating copy count:', error);
             }
-            delete product.category;
-            delete product.company;
-            
-            if (!Array.isArray(product.custom_tags)) {
-                product.custom_tags = [];
-            }
-            
-            if (typeof product.copy_count !== 'number') {
-                product.copy_count = 0;
-            }
-            
-            return product;
-        });
-        
-        renderProducts();
-        updateProductSummary();
-    } catch (error) {
-        console.error('Error loading products:', error);
-        showToast('데이터 로드 중 오류가 발생했습니다. 새로고침 해주세요.', 'error');
-    }
-}
-
-// ===== 유틸리티 함수들 =====
-
-function cleanupLocalStorage() {
-    const filterSettings = localStorage.getItem('rentalFilterSettings');
-    
-    localStorage.removeItem('customTagsInitialized');
-    localStorage.removeItem('productTags');
-    localStorage.removeItem('copyHistory');
-    localStorage.removeItem('recentSearches');
-    
-    if (filterSettings) {
-        localStorage.setItem('rentalFilterSettings', filterSettings);
-    }
-    
-    console.log('LocalStorage cleaned up - keeping only filter settings');
-}
-
-async function testSupabaseConnection() {
-    try {
-        const { data, error } = await supabaseClient
-            .from('rental_products')
-            .select('count', { count: 'exact', head: true });
-        
-        if (error) {
-            console.error('Supabase connection error:', error);
-            return false;
         }
         
-        console.log('Supabase connected successfully');
-        return true;
-    } catch (error) {
-        console.error('Supabase connection failed:', error);
-        return false;
-    }
-}
-
-// ===== 초기화 =====
-
-window.onload = async function() {
-    try {
-        console.log('Starting initialization...');
-        
-        cleanupLocalStorage();
-        
-        const isConnected = await testSupabaseConnection();
-        if (!isConnected) {
-            showToast('데이터베이스 연결 실패. 잠시 후 다시 시도해주세요.', 'error');
-            return;
+        // 🔧 수정된 loadProducts 함수 - 초기 로딩 시 인기순 정렬
+        async function loadProducts() {
+            try {
+                console.log('Loading products from Supabase...');
+                const { data, error } = await supabaseClient
+                    .from('rental_products')
+                    .select('*')
+                    .order('updated_at', { ascending: false });
+                
+                if (error) {
+                    console.error('Supabase error:', error);
+                    throw error;
+                }
+                
+                console.log('Products loaded:', data?.length || 0);
+                
+                products = (data || []).map(product => {
+                    if (!product.brand && product.company) {
+                        product.brand = product.company;
+                    }
+                    delete product.category;
+                    delete product.company;
+                    
+                    if (!Array.isArray(product.custom_tags)) {
+                        product.custom_tags = [];
+                    }
+                    
+                    if (typeof product.copy_count !== 'number') {
+                        product.copy_count = 0;
+                    }
+                    
+                    return product;
+                });
+                
+                // 초기 정렬을 인기순으로 설정
+                document.getElementById('sortBy').value = 'popular';
+                
+                // 인기순으로 정렬하여 표시
+                let sorted = [...products];
+                sorted.sort((a, b) => (b.copy_count || 0) - (a.copy_count || 0));
+                renderProducts(sorted);
+                
+                updateProductSummary();
+            } catch (error) {
+                console.error('Error loading products:', error);
+                showToast('데이터 로드 중 오류가 발생했습니다. 새로고침 해주세요.', 'error');
+            }
         }
         
-        showMonthEndWarning();
-        loadFilterSettings();
+        // ===== 유틸리티 함수들 =====
         
-        await loadProducts();
-        await loadNotes();
-        await loadCompetitorRules();
+        function cleanupLocalStorage() {
+            const filterSettings = localStorage.getItem('rentalFilterSettings');
+            
+            localStorage.removeItem('customTagsInitialized');
+            localStorage.removeItem('productTags');
+            localStorage.removeItem('copyHistory');
+            localStorage.removeItem('recentSearches');
+            
+            if (filterSettings) {
+                localStorage.setItem('rentalFilterSettings', filterSettings);
+            }
+            
+            console.log('LocalStorage cleaned up - keeping only filter settings');
+        }
         
-        updateSelectedCount();
+        async function testSupabaseConnection() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('rental_products')
+                    .select('count', { count: 'exact', head: true });
+                
+                if (error) {
+                    console.error('Supabase connection error:', error);
+                    return false;
+                }
+                
+                console.log('Supabase connected successfully');
+                return true;
+            } catch (error) {
+                console.error('Supabase connection failed:', error);
+                return false;
+            }
+        }
         
-        console.log('Initialization completed successfully');
-    } catch (error) {
-        console.error('Initialization error:', error);
-        showToast('초기화 중 오류가 발생했습니다. 페이지를 새로고침 해주세요.', 'error');
-    }
-};
+        // ===== 초기화 =====
+        
+        window.onload = async function() {
+            try {
+                console.log('Starting initialization...');
+                
+                cleanupLocalStorage();
+                
+                const isConnected = await testSupabaseConnection();
+                if (!isConnected) {
+                    showToast('데이터베이스 연결 실패. 잠시 후 다시 시도해주세요.', 'error');
+                    return;
+                }
+                
+                showMonthEndWarning();
+                loadFilterSettings();
+                
+                await loadProducts();
+                await loadNotes();
+                await loadCompetitorRules();
+                
+                updateSelectedCount();
+                
+                console.log('Initialization completed successfully');
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showToast('초기화 중 오류가 발생했습니다. 페이지를 새로고침 해주세요.', 'error');
+            }
+        };
     </script>
 </body>
 </html>
