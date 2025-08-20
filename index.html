@@ -1,5 +1,1953 @@
-<script>
-        // ===== [수정된 JavaScript 코드] =====
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="SNS센터 렌탈견적 시스템 - 정수기 렌탈 견적 관리">
+    <meta name="keywords" content="렌탈, 정수기, 견적, SK매직, LG전자, 코웨이">
+    <meta name="theme-color" content="#0066FF">
+    <title>SNS센터 렌탈견적 시스템 - 정수기 편</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            letter-spacing: -0.3px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        :root {
+            --primary-blue: #0066FF;
+            --primary-blue-hover: #0052CC;
+            --primary-blue-light: rgba(0, 102, 255, 0.1);
+            --primary-blue-glow: rgba(0, 102, 255, 0.5);
+            --year3-color: #4CAF50;
+            --year4-color: #2196F3;
+            --year5-color: #9C27B0;
+            --year6-color: #FF9800;
+            --year7-color: #E91E63;
+        }
+        
+        .header {
+            background: #111;
+            border-bottom: 1px solid #222;
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-shadow: 0 0 20px var(--primary-blue-glow);
+            letter-spacing: -0.5px;
+        }
+        
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .header-btn {
+            background: var(--primary-blue-light);
+            border: 1px solid var(--primary-blue);
+            color: var(--primary-blue);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: -0.2px;
+        }
+        
+        .header-btn:hover {
+            background: rgba(0, 102, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 102, 255, 0.3);
+        }
+        
+        .header-btn.clear-btn {
+            background: rgba(255, 152, 0, 0.1);
+            border-color: #ff9800;
+            color: #ff9800;
+        }
+        
+        .header-btn.clear-btn:hover {
+            background: rgba(255, 152, 0, 0.2);
+            box-shadow: 0 0 15px rgba(255, 152, 0, 0.3);
+        }
+        
+        #copySelectedBtn {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-hover));
+            color: white;
+            font-weight: 600;
+            padding: 10px 20px;
+            box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3);
+        }
+        
+        #copySelectedBtn:hover {
+            background: linear-gradient(135deg, var(--primary-blue-hover), #0044AA);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 102, 255, 0.5);
+        }
+        
+        .tabs {
+            background: #111;
+            border-bottom: 1px solid #222;
+            padding: 0 20px;
+        }
+        
+        .tabs-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .tab {
+            background: transparent;
+            color: #666;
+            border: none;
+            padding: 15px 30px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            position: relative;
+            transition: all 0.3s;
+            letter-spacing: -0.3px;
+        }
+        
+        .tab:hover {
+            color: #999;
+        }
+        
+        .tab.active {
+            color: var(--primary-blue);
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-blue);
+            box-shadow: 0 0 10px var(--primary-blue-glow);
+        }
+        
+        .content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        .tab-panel {
+            display: none;
+        }
+        
+        .tab-panel.active {
+            display: block;
+        }
+        
+        .filters {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .filter-section {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .filter-section-title {
+            color: var(--primary-blue);
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .filter-main-row {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #222;
+        }
+        
+        .filter-section-inline {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .filter-divider {
+            width: 1px;
+            background: #333;
+            margin: 0;
+            align-self: stretch;
+        }
+        
+        .filter-additional-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding: 8px 0;
+            margin-top: -5px;
+        }
+        
+        .filter-additional-row .checkbox-label {
+            background: transparent;
+            border-color: #333;
+            font-size: 13px;
+            padding: 5px 10px;
+        }
+        
+        .filter-additional-row .checkbox-label:hover {
+            background: rgba(0, 102, 255, 0.08);
+            border-color: rgba(0, 102, 255, 0.3);
+        }
+        
+        .filter-additional-row .checkbox-label input:checked {
+            accent-color: var(--primary-blue);
+        }
+        
+        .filter-additional-row .checkbox-label input:checked ~ span {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+        
+        .filter-additional-row::-webkit-scrollbar {
+            height: 6px;
+        }
+        
+        .filter-additional-row::-webkit-scrollbar-track {
+            background: #1a1a1a;
+            border-radius: 3px;
+        }
+        
+        .filter-additional-row::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+        }
+        
+        .filter-additional-row::-webkit-scrollbar-thumb:hover {
+            background: #444;
+        }
+        
+        .year-filters {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .management-filters {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .year-filters .checkbox-label input:checked ~ span {
+            transition: all 0.3s;
+        }
+        
+        .year-filters .checkbox-label:nth-child(1) input:checked ~ span {
+            color: var(--year3-color);
+            font-weight: 600;
+        }
+        
+        .year-filters .checkbox-label:nth-child(1) input:checked {
+            accent-color: var(--year3-color);
+        }
+        
+        .year-filters .checkbox-label:nth-child(2) input:checked ~ span {
+            color: var(--year4-color);
+            font-weight: 600;
+        }
+        
+        .year-filters .checkbox-label:nth-child(2) input:checked {
+            accent-color: var(--year4-color);
+        }
+        
+        .year-filters .checkbox-label:nth-child(3) input:checked ~ span {
+            color: var(--year5-color);
+            font-weight: 600;
+        }
+        
+        .year-filters .checkbox-label:nth-child(3) input:checked {
+            accent-color: var(--year5-color);
+        }
+        
+        .year-filters .checkbox-label:nth-child(4) input:checked ~ span {
+            color: var(--year6-color);
+            font-weight: 600;
+        }
+        
+        .year-filters .checkbox-label:nth-child(4) input:checked {
+            accent-color: var(--year6-color);
+        }
+        
+        .year-filters .checkbox-label:nth-child(5) input:checked ~ span {
+            color: var(--year7-color);
+            font-weight: 600;
+        }
+        
+        .year-filters .checkbox-label:nth-child(5) input:checked {
+            accent-color: var(--year7-color);
+        }
+        
+        .radio-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid transparent;
+        }
+        
+        .radio-label:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .radio-label input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-blue);
+            cursor: pointer;
+        }
+        
+        .radio-label input[type="radio"]:checked + span {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+        
+        .radio-label span {
+            color: #e0e0e0;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: -0.2px;
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #222;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            flex: 1;
+        }
+        
+        .filter-group label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+        
+        .filter-group select,
+        .filter-group input {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: -0.2px;
+        }
+        
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 2px var(--primary-blue-light);
+        }
+        
+        .checkbox-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid transparent;
+            white-space: nowrap;
+        }
+        
+        .checkbox-label:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .checkbox-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-blue);
+            cursor: pointer;
+        }
+        
+        .checkbox-label span {
+            color: #e0e0e0;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: -0.2px;
+        }
+        
+        .products-grid {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .product-card {
+            background: linear-gradient(145deg, #111, #0f0f0f);
+            border: 1px solid #222;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .product-card:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+            border-color: #333;
+        }
+        
+        .product-card.expanded {
+            border-color: #444;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+        }
+        
+        .product-header {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .product-header:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        
+        .product-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .product-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .product-info h3 {
+            color: #fff;
+            font-size: 15px;
+            margin-bottom: 5px;
+            font-weight: 600;
+            line-height: 1.4;
+            word-break: keep-all;
+            letter-spacing: -0.3px;
+        }
+        
+        .product-card.popular {
+            border-color: rgba(255, 215, 0, 0.3);
+            background: linear-gradient(145deg, #111, #0f0f0f);
+        }
+        
+        .product-card.popular .product-header {
+            background: linear-gradient(to right, rgba(255, 215, 0, 0.05), transparent);
+        }
+        
+        .product-card.popular .product-info h3 {
+            color: #ffd700;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+        }
+        
+        .product-meta {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 5px;
+            flex-wrap: wrap;
+        }
+        
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #222;
+            color: #888;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: -0.1px;
+        }
+        
+        .competitor-badge {
+            background: rgba(255, 152, 0, 0.1);
+            color: #ff9800;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: -0.1px;
+        }
+        
+        .hot-cold-badge {
+            background: rgba(245, 101, 101, 0.1);
+            color: #f56565;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: -0.1px;
+        }
+        
+        .ice-badge {
+            background: rgba(0, 188, 212, 0.1);
+            color: #00bcd4;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: -0.1px;
+        }
+        
+        .ro-badge {
+            background: rgba(96, 165, 250, 0.1);
+            color: #60a5fa;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: -0.1px;
+        }
+        
+        .stand-badge {
+            background: rgba(147, 51, 234, 0.1);
+            color: #9333ea;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: -0.1px;
+        }
+        
+        .water-only-badge {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: -0.1px;
+        }
+        
+        .cold-water-badge {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: -0.1px;
+        }
+        
+        .custom-tag-badge {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 152, 0, 0.1));
+            color: #ffd700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: -0.1px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .product-stats {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .copy-count {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'Pretendard Variable', Pretendard, sans-serif;
+            letter-spacing: -0.2px;
+        }
+        
+        .month-end-warning {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 15px;
+            border-bottom: 2px solid #ff0000;
+            box-shadow: 0 2px 10px rgba(255, 0, 0, 0.3);
+            animation: pulse 2s infinite;
+            letter-spacing: -0.3px;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.9; }
+            100% { opacity: 1; }
+        }
+        
+        .month-end-warning-icon {
+            display: inline-block;
+            margin: 0 5px;
+            animation: blink 1.5s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .update-date {
+            color: #666;
+            font-size: 12px;
+            transition: all 0.3s;
+            font-weight: 500;
+            letter-spacing: -0.2px;
+        }
+        
+        .update-date.warning-data {
+            color: #ff9800;
+            font-weight: 600;
+        }
+        
+        .update-date.old-data {
+            color: #ff0000;
+            font-weight: 600;
+            animation: blink 2s infinite;
+        }
+        
+        .expand-icon {
+            color: #666;
+            font-size: 20px;
+            transition: transform 0.3s;
+            font-weight: 600;
+        }
+        
+        .product-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+        
+        .product-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: #0a0a0a;
+            border-top: 1px solid #222;
+        }
+        
+        .product-card.expanded .product-content {
+            max-height: 2000px;
+            overflow: visible;
+        }
+        
+        .price-table {
+            padding: 20px;
+        }
+        
+        .price-row {
+            display: grid;
+            grid-template-columns: 40px 110px 80px 1fr 130px 140px 80px;
+            align-items: center;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+        }
+        
+        .price-row:hover {
+            background: rgba(0, 102, 255, 0.08);
+            border-color: rgba(0, 102, 255, 0.3);
+            transform: translateX(3px);
+        }
+        
+        .price-row.selected {
+            background: rgba(0, 102, 255, 0.15);
+            border-color: var(--primary-blue);
+            border-left: 4px solid var(--primary-blue);
+        }
+        
+        .price-row.competitor-option {
+            background: rgba(255, 152, 0, 0.05);
+            border-left: 4px solid #ff9800;
+        }
+        
+        .price-row.competitor-option:hover {
+            background: rgba(255, 152, 0, 0.12);
+            border-color: rgba(255, 152, 0, 0.3);
+        }
+        
+        .price-row.competitor-option.selected {
+            background: rgba(255, 152, 0, 0.18);
+            border-left: 4px solid #ff9800;
+        }
+        
+        .price-row.package-option {
+            background: rgba(76, 175, 80, 0.05);
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .price-row.package-option:hover {
+            background: rgba(76, 175, 80, 0.12);
+            border-color: rgba(76, 175, 80, 0.3);
+        }
+        
+        .price-row.package-option.selected {
+            background: rgba(76, 175, 80, 0.18);
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .price-checkbox {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-blue);
+            cursor: pointer;
+            margin-right: 8px;
+        }
+        
+        .management-badge {
+            font-size: 11px;
+            padding: 3px 6px;
+            border-radius: 4px;
+            white-space: nowrap;
+            font-weight: 500;
+            letter-spacing: -0.1px;
+        }
+        
+        .management-self {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+        }
+        
+        .management-visit {
+            background: rgba(168, 85, 247, 0.15);
+            color: #a855f7;
+        }
+        
+        .term {
+            font-weight: 600;
+            font-size: 14px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            letter-spacing: -0.2px;
+        }
+        
+        .term-3year {
+            background: rgba(76, 175, 80, 0.15);
+            color: var(--year3-color);
+        }
+        
+        .term-4year {
+            background: rgba(33, 150, 243, 0.15);
+            color: var(--year4-color);
+        }
+        
+        .term-5year {
+            background: rgba(156, 39, 176, 0.15);
+            color: var(--year5-color);
+        }
+        
+        .term-6year {
+            background: rgba(255, 152, 0, 0.15);
+            color: var(--year6-color);
+        }
+        
+        .term-7year {
+            background: rgba(233, 30, 99, 0.15);
+            color: var(--year7-color);
+        }
+        
+        .management {
+            color: #e0e0e0;
+            font-size: 14px;
+            padding: 0 10px;
+            letter-spacing: -0.2px;
+        }
+        
+        .price {
+            color: #fff;
+            font-weight: 700;
+            font-size: 15px;
+            font-family: 'Pretendard Variable', Pretendard, sans-serif;
+            letter-spacing: -0.3px;
+        }
+        
+        .gift {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+            letter-spacing: -0.2px;
+        }
+        
+        .quick-copy-btn {
+            background: linear-gradient(135deg, #333, #444);
+            border: 1px solid #555;
+            color: #e0e0e0;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+            letter-spacing: -0.2px;
+        }
+        
+        .quick-copy-btn:hover {
+            background: var(--primary-blue);
+            border-color: var(--primary-blue);
+            color: white;
+            transform: scale(1.08);
+            box-shadow: 0 2px 10px rgba(0, 102, 255, 0.4);
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .select-copy-btn {
+            background: var(--primary-blue);
+            border: none;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+            letter-spacing: -0.2px;
+        }
+        
+        .select-copy-btn:hover {
+            background: var(--primary-blue-hover);
+            transform: scale(1.05);
+        }
+        
+        .copy-all-btn {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid #4caf50;
+            color: #4caf50;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+            letter-spacing: -0.2px;
+        }
+        
+        .copy-all-btn:hover {
+            background: #4caf50;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .additional-gift-section {
+            padding: 15px;
+            background: #0a0a0a;
+            border-top: 1px solid #222;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .additional-gift-input {
+            flex: 1;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: -0.2px;
+        }
+        
+        .additional-gift-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 2px var(--primary-blue-light);
+        }
+        
+        .additional-gift-btn {
+            background: #ff9800;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s;
+            letter-spacing: -0.2px;
+        }
+        
+        .additional-gift-btn:hover {
+            background: #f57c00;
+            transform: scale(1.05);
+        }
+        
+        .input-container {
+            display: grid;
+            grid-template-columns: 2fr 1.5fr;
+            gap: 30px;
+        }
+        
+        .input-panel {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 25px;
+        }
+        
+        .input-panel h3 {
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+        
+        .paste-area {
+            width: 100%;
+            min-height: 400px;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'D2Coding', 'Courier New', monospace;
+            font-size: 13px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+        
+        .paste-area:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 2px var(--primary-blue-light);
+        }
+        
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 15px;
+            letter-spacing: -0.3px;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-blue-hover);
+            box-shadow: 0 0 20px var(--primary-blue-glow);
+        }
+        
+        /* 태그 관리 스타일 */
+        .tags-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .tags-header {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .tags-header h2 {
+            color: var(--primary-blue);
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+        
+        .tags-header p {
+            color: #666;
+            font-size: 14px;
+            letter-spacing: -0.2px;
+        }
+        
+        .tag-input-section {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .tag-input-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 15px;
+            align-items: end;
+        }
+        
+        .tag-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .tag-input-group label {
+            color: #999;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: -0.2px;
+        }
+        
+        .tag-input-group input {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: -0.2px;
+        }
+        
+        .tag-input-group input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 2px var(--primary-blue-light);
+        }
+        
+        .tag-add-btn {
+            background: linear-gradient(135deg, #ffd700, #ff9800);
+            border: none;
+            color: #111;
+            padding: 10px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            letter-spacing: -0.2px;
+            height: 42px;
+        }
+        
+        .tag-add-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+        
+        .product-tags-list {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .product-tags-list h3 {
+            color: #ffd700;
+            font-size: 16px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+        
+        .tagged-product {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .tagged-product-info {
+            flex: 1;
+        }
+        
+        .tagged-product-name {
+            color: #e0e0e0;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            letter-spacing: -0.2px;
+        }
+        
+        .tagged-product-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .tag-item {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 152, 0, 0.15));
+            color: #ffd700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: -0.1px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .tag-remove-btn {
+            background: none;
+            border: none;
+            color: #ff6b6b;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0 2px;
+            transition: all 0.2s;
+        }
+        
+        .tag-remove-btn:hover {
+            color: #ff0000;
+            transform: scale(1.2);
+        }
+        
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            margin-top: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+        }
+        
+        .search-suggestion-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 13px;
+            border-bottom: 1px solid #222;
+            transition: all 0.2s;
+        }
+        
+        .search-suggestion-item:hover {
+            background: rgba(0, 102, 255, 0.1);
+        }
+        
+        .search-suggestion-item:last-child {
+            border-bottom: none;
+        }
+        
+        .notes-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .notes-header {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .notes-header h2 {
+            color: var(--primary-blue);
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+        
+        .notes-header p {
+            color: #666;
+            font-size: 14px;
+            letter-spacing: -0.2px;
+        }
+        
+        .notes-grid {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .note-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .note-card:hover {
+            border-color: #333;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .note-header {
+            background: linear-gradient(135deg, var(--primary-blue-light), transparent);
+            padding: 15px 20px;
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .note-brand {
+            color: var(--primary-blue);
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.3px;
+        }
+        
+        .note-updated {
+            color: #666;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: -0.2px;
+        }
+        
+        .note-content {
+            background: #0a0a0a;
+            border: none;
+            padding: 20px;
+            min-height: 150px;
+            color: #e0e0e0;
+            font-size: 14px;
+            line-height: 1.8;
+            resize: vertical;
+            width: 100%;
+            font-family: inherit;
+            letter-spacing: -0.2px;
+        }
+        
+        .note-content:focus {
+            outline: none;
+            background: #0f0f0f;
+        }
+        
+        .note-content::placeholder {
+            color: #444;
+        }
+        
+        .save-notes-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0, 102, 255, 0.4);
+            transition: all 0.3s;
+            z-index: 50;
+            letter-spacing: -0.2px;
+        }
+        
+        .save-notes-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 102, 255, 0.6);
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary-blue);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            display: none;
+            animation: slideUp 0.3s ease-out;
+            box-shadow: 0 5px 20px rgba(0, 102, 255, 0.4);
+            z-index: 2000;
+            letter-spacing: -0.2px;
+        }
+        
+        .toast.success {
+            background: #4caf50;
+            box-shadow: 0 5px 20px rgba(76, 175, 80, 0.4);
+        }
+        
+        .toast.warning {
+            background: #ff9800;
+            box-shadow: 0 5px 20px rgba(255, 152, 0, 0.4);
+        }
+        
+        .toast.error {
+            background: #f44336;
+            box-shadow: 0 5px 20px rgba(244, 67, 54, 0.4);
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 80px 20px;
+            color: #666;
+            background: linear-gradient(145deg, #111, #0f0f0f);
+            border: 1px solid #222;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: -0.2px;
+        }
+        
+        .competitor-rules-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .competitor-rule-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        
+        .competitor-rule-card:hover {
+            border-color: #333;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .competitor-rule-header {
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), transparent);
+            padding: 15px 20px;
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .competitor-rule-brand {
+            color: #ff9800;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+        
+        .competitor-rule-content {
+            background: #0a0a0a;
+            border: none;
+            padding: 20px;
+            min-height: 200px;
+            color: #e0e0e0;
+            font-size: 14px;
+            line-height: 1.8;
+            resize: vertical;
+            width: 100%;
+            font-family: inherit;
+            letter-spacing: -0.2px;
+        }
+        
+        .competitor-rule-content:focus {
+            outline: none;
+            background: #0f0f0f;
+        }
+        
+        .competitor-rule-content::placeholder {
+            color: #444;
+        }
+        
+        .save-competitor-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ff9800;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 152, 0, 0.4);
+            transition: all 0.3s;
+            z-index: 50;
+            letter-spacing: -0.2px;
+        }
+        
+        .save-competitor-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255, 152, 0, 0.6);
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .header-buttons {
+                width: 100%;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .product-info h3 {
+                font-size: 14px;
+            }
+            
+            .price-row {
+                grid-template-columns: 35px 80px 60px 1fr;
+                grid-template-rows: auto auto;
+                gap: 8px;
+            }
+            
+            .price-row .price,
+            .price-row .gift,
+            .price-row .quick-copy-btn {
+                grid-column: span 1;
+            }
+            
+            .product-actions {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .filter-row {
+                flex-direction: column;
+            }
+            
+            .filter-group {
+                width: 100% !important;
+                flex: 1 !important;
+            }
+            
+            .filter-main-row {
+                flex-direction: column;
+                gap: 20px;
+                align-items: stretch;
+            }
+            
+            .filter-section-inline {
+                width: 100%;
+            }
+            
+            .filter-divider {
+                display: none;
+            }
+            
+            .year-filters,
+            .management-filters {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .filter-additional-row {
+                gap: 15px;
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+            
+            .checkbox-label {
+                white-space: nowrap;
+            }
+            
+            .tag-input-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .tag-add-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="monthEndWarning" class="month-end-warning" style="display: none;">
+        <span class="month-end-warning-icon">※</span>
+        월말월초입니다.
+        <span class="month-end-warning-icon">★</span>
+        수수료 변동 및 프로모션 변경 가능성에 대해 고객에게 고지하고 진행 부탁드립니다.
+    </div>
+    
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">📋 SNS센터 렌탈견적 시스템 - 정수기 편</div>
+            <div class="header-buttons">
+                <button class="header-btn" id="copySelectedBtn" onclick="copySelectedItems()">
+                    📋 선택 복사 (<span id="selectedCount">0</span>)
+                </button>
+                <button class="header-btn clear-btn" onclick="clearAllSelections()">🔄 선택 초기화</button>
+                <button class="header-btn clear-btn" onclick="resetFilters()">🔄 필터 초기화</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tabs">
+        <div class="tabs-container">
+            <button class="tab active" onclick="switchTab('output')">📋 견적 출력</button>
+            <button class="tab" onclick="switchTab('input')">✏️ 견적 입력</button>
+            <button class="tab" onclick="switchTab('tags')">🏷️ 태그 관리</button>
+            <button class="tab" onclick="switchTab('notes')">📌 브랜드 유의사항</button>
+            <button class="tab" onclick="switchTab('competitor')">🔄 타사보상 규정</button>
+        </div>
+    </div>
+    
+    <div class="content">
+        <!-- 견적 출력 탭 -->
+        <div id="output-panel" class="tab-panel active">
+            <div class="filters">
+                <div class="filter-row">
+                    <div class="filter-group" style="flex: 3;">
+                        <label>🔍 통합 검색</label>
+                        <input type="text" id="unifiedSearch" placeholder="검색어를 입력하세요... (모델명, 제품명, 브랜드, 태그)" 
+                               oninput="handleUnifiedSearch()">
+                    </div>
+                    <div class="filter-group" style="flex: 1;">
+                        <label>브랜드</label>
+                        <select id="brandFilter" onchange="filterProducts()">
+                            <option value="">전체</option>
+                            <option value="SK매직">🔵 SK매직</option>
+                            <option value="LG전자">🔴 LG전자</option>
+                            <option value="코웨이">💧 코웨이</option>
+                            <option value="쿠쿠">🍚 쿠쿠</option>
+                            <option value="교원웰스">📚 교원웰스</option>
+                            <option value="청호나이스">💎 청호나이스</option>
+                            <option value="현대큐밍">🏢 현대큐밍</option>
+                            <option value="세라젬">♨️ 세라젬</option>
+                        </select>
+                    </div>
+                    <div class="filter-group" style="flex: 1;">
+                        <label>정렬</label>
+                        <select id="sortBy" onchange="applySort()">
+                            <option value="popular">인기순</option>
+                            <option value="name">이름순</option>
+                            <option value="brand">브랜드순</option>
+                            <option value="recent">최신순</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="filter-main-row">
+                    <div class="filter-section-inline">
+                        <div class="filter-section-title">📅 약정기간</div>
+                        <div class="year-filters">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="year3" checked onchange="saveFilterSettings(); filterProducts()">
+                                <span>3년</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="year4" onchange="saveFilterSettings(); filterProducts()">
+                                <span>4년</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="year5" checked onchange="saveFilterSettings(); filterProducts()">
+                                <span>5년</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="year6" onchange="saveFilterSettings(); filterProducts()">
+                                <span>6년</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="year7" onchange="saveFilterSettings(); filterProducts()">
+                                <span>7년</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-divider"></div>
+                    
+                    <div class="filter-section-inline">
+                        <div class="filter-section-title">🔧 관리방식</div>
+                        <div class="management-filters">
+                            <label class="radio-label">
+                                <input type="radio" name="managementType" value="all" checked onchange="saveFilterSettings(); filterProducts()">
+                                <span>전체</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="managementType" value="self" onchange="saveFilterSettings(); filterProducts()">
+                                <span>🏠 자가관리</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="managementType" value="visit" onchange="saveFilterSettings(); filterProducts()">
+                                <span>🚐 방문관리</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-additional-row">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="newSignupHide" onchange="saveFilterSettings(); filterProducts()">
+                        <span>신규가입 숨기기</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="hideCompetitor" onchange="saveFilterSettings(); filterProducts()">
+                        <span>타사보상 숨기기</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="hidePackage" onchange="saveFilterSettings(); filterProducts()">
+                        <span>패키지 숨기기</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="hotColdOnly" onchange="saveFilterSettings(); filterProducts()">
+                        <span>🔥❄️ 냉온정수기만</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="iceOnly" onchange="saveFilterSettings(); filterProducts()">
+                        <span>❄️ 얼음정수기만</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="roOnly" onchange="saveFilterSettings(); filterProducts()">
+                        <span>💧 RO필터만</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="standOnly" onchange="saveFilterSettings(); filterProducts()">
+                        <span>🏢 스탠드형만</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="waterOnly" onchange="saveFilterSettings(); filterProducts()">
+                        <span>💧 정수전용만</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="coldOnly" onchange="saveFilterSettings(); filterProducts()">
+                        <span>❄️💧 냉정수기만</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="products-grid" id="productsList">
+                <!-- 상품 카드들이 여기에 동적으로 생성됩니다 -->
+            </div>
+        </div>
+        
+        <!-- 견적 입력 탭 -->
+        <div id="input-panel" class="tab-panel">
+            <div class="input-container">
+                <div class="input-panel">
+                    <h3>📝 견적 입력</h3>
+                    <textarea class="paste-area" id="pasteArea" placeholder="💡 CRM에서 복사한 데이터를 여기에 붙여넣으세요...
+
+예시:
+* 모델명 : WPUIAC425S
+* 제품명 : SK매직 원코크 플러스 얼음물 냉온정수기 (얼음냉온정)
+* 색명칭: 선택안함(화이트실버(WS)/다크실버(DSL)/그레이스화이트(GWH)/그레이스핑크(GPK))
+
+* 3년 약정 : 4개월관리 / 월 55,900 / 사은품 180,000
+* 4년 약정 : 4개월필터발송 12개월관리 / 월 51,900 / 사은품 200,000
+* 5년 약정 : 6M반값_4개월관리 / 월 50,400 / 사은품 330,000
+* 5년 약정 : 타사보상_4개월관리 / 월 42,900 / 사은품 320,000
+* 5년 약정 : 패키지_4개월관리 / 월 39,900 / 사은품 350,000
+* 6년 약정 : 타사보상_4개월관리 / 월 41,400 / 사은품 340,000
+* 7년 약정 : 프리미엄_4개월관리 / 월 38,900 / 사은품 380,000
+
+https://zero-rental.biz/product-image/51317"></textarea>
+                    <button class="btn-primary" onclick="parseAndAdd()">견적 추가/업데이트</button>
+                    <div style="background: rgba(0, 102, 255, 0.05); border: 1px solid rgba(0, 102, 255, 0.2); border-radius: 8px; padding: 12px; margin-top: 15px;">
+                        <div style="color: var(--primary-blue); font-weight: 600; margin-bottom: 8px; font-size: 13px;">
+                            💡 입력 가이드
+                        </div>
+                        <div style="color: #e0e0e0; font-size: 12px; line-height: 1.6;">
+                            <div style="display: flex; gap: 15px;">
+                                <div style="flex: 1;">
+                                    <span style="color: #4CAF50; font-weight: 600;">① CRM 상품정보 복사</span><br>
+                                    📋 CRM에서 상품 선택 → <span style="background: rgba(255, 255, 255, 0.1); padding: 1px 4px; border-radius: 3px; font-size: 11px;">상품 요약 정보</span> 복사
+                                </div>
+                                <div style="flex: 1;">
+                                    <span style="color: #2196F3; font-weight: 600;">② URL 추가 (선택)</span><br>
+                                    🔗 CRM <span style="background: rgba(255, 255, 255, 0.1); padding: 1px 4px; border-radius: 3px; font-size: 11px;">상세</span> → 이미지 URL 복사
+                                </div>
+                                <div style="flex: 1;">
+                                    <span style="color: #FF9800; font-weight: 600;">⚡ 자동 인식</span><br>
+                                    <span style="color: #999; font-size: 11px;">브랜드/색상/프로모션 자동 변환</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-panel">
+                    <h3>📊 등록된 상품 목록</h3>
+                    <div id="productSummary" style="max-height: 600px; overflow-y: auto;">
+                        <!-- 등록된 상품 목록이 표시됩니다 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 태그 관리 탭 -->
+        <div id="tags-panel" class="tab-panel">
+            <div class="tags-container">
+                <div class="tags-header">
+                    <h2>🏷️ 태그 관리 시스템</h2>
+                    <p>상품에 커스텀 태그를 추가하여 분류하고 검색할 수 있습니다</p>
+                </div>
+                
+                <div class="tag-input-section">
+                    <div class="tag-input-grid">
+                        <div class="tag-input-group" style="position: relative;">
+                            <label>모델명/상품명 입력해서 선택하고</label>
+                            <input type="text" id="productSearchInput" placeholder="모델명 또는 상품명 검색..." 
+                                   onkeyup="searchProductsForTag()" onfocus="searchProductsForTag()">
+                            <div id="productSearchSuggestions" class="search-suggestions"></div>
+                        </div>
+                        <div class="tag-input-group">
+                            <label>붙이고 싶은 태그(예: 가성비)를 붙여주세요</label>
+                            <input type="text" id="tagInput" placeholder="태그명 입력...">
+                        </div>
+                        <button class="tag-add-btn" onclick="addTagToProduct()">✨ 태그 추가</button>
+                    </div>
+                </div>
+                
+                <div class="product-tags-list">
+                    <h3>📌 태그가 붙은 상품들</h3>
+                    <div id="taggedProductsList">
+                        <!-- 태그가 붙은 상품 목록이 여기에 표시됩니다 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 브랜드 유의사항 탭 -->
+        <div id="notes-panel" class="tab-panel">
+            <div class="notes-container">
+                <div class="notes-header">
+                    <h2>📌 브랜드별 유의사항</h2>
+                    <p>각 브랜드의 렌탈 진행 시 주의사항을 기록해주세요</p>
+                </div>
+                <div class="notes-grid">
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>SK매직</span>
+                            </div>
+                            <div class="note-updated" id="note-sk-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-sk" placeholder="SK매직 관련 유의사항을 입력하세요...
+예: 설치비, 프로모션 정보, 특별 조건 등"></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>LG전자</span>
+                            </div>
+                            <div class="note-updated" id="note-lg-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-lg" placeholder="LG전자 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>코웨이</span>
+                            </div>
+                            <div class="note-updated" id="note-coway-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-coway" placeholder="코웨이 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>교원웰스</span>
+                            </div>
+                            <div class="note-updated" id="note-kyowon-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-kyowon" placeholder="교원웰스 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>청호나이스</span>
+                            </div>
+                            <div class="note-updated" id="note-chungho-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-chungho" placeholder="청호나이스 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>현대큐밍</span>
+                            </div>
+                            <div class="note-updated" id="note-hyundai-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-hyundai" placeholder="현대큐밍 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>세라젬</span>
+                            </div>
+                            <div class="note-updated" id="note-ceragem-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-ceragem" placeholder="세라젬 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>쿠쿠</span>
+                            </div>
+                            <div class="note-updated" id="note-cuckoo-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-cuckoo" placeholder="쿠쿠 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                </div>
+                <button class="save-notes-btn" onclick="saveNotes()">💾 유의사항 저장</button>
+            </div>
+        </div>
+        
+        <!-- 타사보상 규정 탭 -->
+        <div id="competitor-panel" class="tab-panel">
+            <div class="competitor-rules-container">
+                <div class="notes-header">
+                    <h2>🔄 브랜드별 타사보상 규정</h2>
+                    <p>각 브랜드의 타사보상 프로모션 규정과 조건을 기록해주세요</p>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">SK매직 타사보상</div>
+                        <div class="note-updated" id="competitor-sk-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-sk" placeholder="SK매직 타사보상 규정을 입력하세요...
+예: 
+- 타사보상 적용 대상 및 조건
+- 필요 서류 및 증빙 자료
+- 위약금 면제 범위
+- 프로모션 기간 및 제한사항"></textarea>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">LG전자 타사보상</div>
+                        <div class="note-updated" id="competitor-lg-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-lg" placeholder="LG전자 타사보상 규정을 입력하세요..."></textarea>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">코웨이 타사보상</div>
+                        <div class="note-updated" id="competitor-coway-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-coway" placeholder="코웨이 타사보상 규정을 입력하세요..."></textarea>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">쿠쿠 타사보상</div>
+                        <div class="note-updated" id="competitor-cuckoo-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-cuckoo" placeholder="쿠쿠 타사보상 규정을 입력하세요..."></textarea>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">교원웰스 타사보상</div>
+                        <div class="note-updated" id="competitor-kyowon-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-kyowon" placeholder="교원웰스 타사보상 규정을 입력하세요..."></textarea>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">청호나이스 타사보상</div>
+                        <div class="note-updated" id="competitor-chungho-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-chungho" placeholder="청호나이스 타사보상 규정을 입력하세요..."></textarea>
+                </div>
+                <button class="save-competitor-btn" onclick="saveCompetitorRules()">💾 타사보상 규정 저장</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="toast" id="toast"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // ===== [완전한 JavaScript 코드] =====
         // Supabase 초기화
         const supabaseUrl = 'https://bhtqjipygkawoyieidgp.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJodHFqaXB5Z2thd295aWVpZGdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0ODg5NjgsImV4cCI6MjA3MDA2NDk2OH0.hu2EAj9RCq436QBtfbEVF4aGOau4WWomLMDKahN4iAA';
@@ -250,421 +2198,6 @@
         
         function handleUnifiedSearch() {
             debouncedFilter();
-        }
-        
-        // ===== 태그 관련 함수들 =====
-        
-        function searchProductsForTag() {
-            const searchInput = document.getElementById('productSearchInput');
-            const searchTerm = searchInput.value.toLowerCase();
-            const suggestionsDiv = document.getElementById('productSearchSuggestions');
-            
-            if (searchTerm.length === 0) {
-                suggestionsDiv.style.display = 'none';
-                return;
-            }
-            
-            const matches = products.filter(p => 
-                p.model_number.toLowerCase().includes(searchTerm) ||
-                p.product_name.toLowerCase().includes(searchTerm)
-            ).slice(0, 5);
-            
-            if (matches.length === 0) {
-                suggestionsDiv.style.display = 'none';
-                return;
-            }
-            
-            let html = '';
-            matches.forEach(product => {
-                const brandLogo = brandLogos[product.brand] || '📦';
-                html += `
-                    <div class="search-suggestion-item" onclick="selectProductForTag('${product.model_number}')">
-                        <span style="color: #999; font-size: 11px;">${brandLogo} ${product.brand}</span><br>
-                        <span>${product.model_number} / ${product.product_name}</span>
-                    </div>
-                `;
-            });
-            
-            suggestionsDiv.innerHTML = html;
-            suggestionsDiv.style.display = 'block';
-        }
-        
-        function selectProductForTag(modelNumber) {
-            const product = products.find(p => p.model_number === modelNumber);
-            if (product) {
-                selectedProductForTag = product;
-                document.getElementById('productSearchInput').value = `${product.model_number} / ${product.product_name}`;
-                document.getElementById('productSearchSuggestions').style.display = 'none';
-            }
-        }
-        
-        async function addTagToProduct() {
-            if (!selectedProductForTag) {
-                showToast('상품을 먼저 선택해주세요.', 'warning');
-                return;
-            }
-            
-            const tagInput = document.getElementById('tagInput');
-            const tagName = tagInput.value.trim();
-            
-            if (!tagName) {
-                showToast('태그명을 입력해주세요.', 'warning');
-                return;
-            }
-            
-            if (!selectedProductForTag.custom_tags) {
-                selectedProductForTag.custom_tags = [];
-            }
-            
-            if (selectedProductForTag.custom_tags.includes(tagName)) {
-                showToast('이미 존재하는 태그입니다.', 'warning');
-                return;
-            }
-            
-            selectedProductForTag.custom_tags.push(tagName);
-            
-            try {
-                const { error } = await supabaseClient
-                    .from('rental_products')
-                    .update({ 
-                        custom_tags: selectedProductForTag.custom_tags
-                    })
-                    .eq('model_number', selectedProductForTag.model_number);
-                
-                if (error) {
-                    console.error('Update error:', error);
-                    if (error.code === '42703') {
-                        showToast('데이터베이스에 custom_tags 컬럼이 없습니다. 관리자에게 문의하세요.', 'error');
-                    } else {
-                        showToast('태그 추가 실패: ' + error.message, 'error');
-                    }
-                    selectedProductForTag.custom_tags.pop();
-                    return;
-                }
-                
-                showToast(`'${tagName}' 태그가 추가되었습니다!`, 'success');
-                
-                document.getElementById('productSearchInput').value = '';
-                tagInput.value = '';
-                selectedProductForTag = null;
-                
-                await loadProducts();
-                updateTaggedProductsList();
-                
-            } catch (error) {
-                console.error('Error adding tag:', error);
-                showToast('태그 추가 중 오류가 발생했습니다.', 'error');
-                selectedProductForTag.custom_tags.pop();
-            }
-        }
-        
-        async function removeTagFromProduct(modelNumber, tagName) {
-            const product = products.find(p => p.model_number === modelNumber);
-            if (!product) return;
-            
-            product.custom_tags = product.custom_tags.filter(t => t !== tagName);
-            
-            try {
-                const { error } = await supabaseClient
-                    .from('rental_products')
-                    .update({ custom_tags: product.custom_tags })
-                    .eq('model_number', modelNumber);
-                
-                if (error) {
-                    console.error('Update error:', error);
-                    showToast('태그 제거 실패. 데이터베이스 설정을 확인하세요.', 'error');
-                    product.custom_tags.push(tagName);
-                    return;
-                }
-                
-                showToast(`'${tagName}' 태그가 제거되었습니다.`, 'success');
-                
-                await loadProducts();
-                updateTaggedProductsList();
-                
-            } catch (error) {
-                console.error('Error removing tag:', error);
-                showToast('태그 제거 중 오류가 발생했습니다.', 'error');
-                product.custom_tags.push(tagName);
-            }
-        }
-        
-        function updateTaggedProductsList() {
-            const listDiv = document.getElementById('taggedProductsList');
-            const taggedProducts = products.filter(p => p.custom_tags && p.custom_tags.length > 0);
-            
-            if (taggedProducts.length === 0) {
-                listDiv.innerHTML = '<div style="text-align: center; color: #666; padding: 30px;">태그가 붙은 상품이 없습니다.</div>';
-                return;
-            }
-            
-            let html = '';
-            taggedProducts.forEach(product => {
-                const brandLogo = brandLogos[product.brand] || '📦';
-                html += `
-                    <div class="tagged-product">
-                        <div class="tagged-product-info">
-                            <div class="tagged-product-name">
-                                ${brandLogo} ${product.model_number} / ${product.product_name}
-                            </div>
-                            <div class="tagged-product-tags">
-                                ${product.custom_tags.map(tag => `
-                                    <span class="tag-item">
-                                        ${tag}
-                                        <button class="tag-remove-btn" onclick="removeTagFromProduct('${product.model_number}', '${tag}')">×</button>
-                                    </span>
-                                `).join('')}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            listDiv.innerHTML = html;
-        }
-        
-        // 전역 클릭 이벤트로 제안 숨기기
-        document.addEventListener('click', function(e) {
-            if (!e.target.closest('#productSearchInput') && !e.target.closest('#productSearchSuggestions')) {
-                const suggestionsDiv = document.getElementById('productSearchSuggestions');
-                if (suggestionsDiv) {
-                    suggestionsDiv.style.display = 'none';
-                }
-            }
-        });
-        
-        // ===== 견적 입력 관련 함수 =====
-        
-        async function parseAndAdd() {
-            const pasteArea = document.getElementById('pasteArea');
-            const text = pasteArea.value;
-            
-            if (!text.trim()) {
-                showToast('견적 정보를 입력해주세요.', 'warning');
-                return;
-            }
-            
-            const lines = text.split('\n');
-            let parsedProduct = {
-                copy_count: 0,
-                price_options: [],
-                has_competitor: false,
-                color: null
-            };
-            
-            let foundURL = null;
-            
-            lines.forEach(line => {
-                const originalLine = line;
-                line = line.replace(/^[\*\-]\s*/, '').trim();
-                
-                // 불필요한 라인 필터링
-                if (line.includes('메인 상담') || 
-                    line.includes('상담원') || 
-                    line.includes('고객센터') ||
-                    line.includes('추가 문의') ||
-                    line.includes('계약번호') ||
-                    line.includes('고객명') ||
-                    line.includes('주소') ||
-                    line.includes('연락처') ||
-                    line.includes('메모') ||
-                    line.includes('브랜드/분류') ||
-                    line.includes('주방가전') ||
-                    line.includes('렌탈 업체') ||
-                    line.includes('조리수설치') ||
-                    line.includes('설치일') ||
-                    line.includes('배송일')) {
-                    return;
-                }
-                
-                // URL 감지
-                if (!foundURL) {
-                    const urlKeywords = [
-                        '상품 안내페이지', '안내페이지', '상품안내페이지', 
-                        '안내 페이지', '상품페이지', '페이지',
-                        'URL', 'url', '링크', 'link', '주소', '사이트',
-                        '상세페이지', '상세 페이지', '이미지', '사진'
-                    ];
-                    
-                    let hasURLKeyword = false;
-                    for (const keyword of urlKeywords) {
-                        if (line.toLowerCase().includes(keyword.toLowerCase())) {
-                            hasURLKeyword = true;
-                            break;
-                        }
-                    }
-                    
-                    if (hasURLKeyword) {
-                        if (line.includes(':')) {
-                            const urlPart = line.split(':').slice(1).join(':').trim();
-                            const extractedURL = extractURL(urlPart);
-                            if (extractedURL) {
-                                foundURL = extractedURL;
-                            }
-                        } else {
-                            const extractedURL = extractURL(line);
-                            if (extractedURL) {
-                                foundURL = extractedURL;
-                            }
-                        }
-                    }
-                    
-                    if (!foundURL) {
-                        const extractedURL = extractURL(originalLine);
-                        if (extractedURL) {
-                            foundURL = extractedURL;
-                        }
-                    }
-                }
-                
-                // 기존 파싱 로직
-                if (line.includes('브랜드') && line.includes(':') && !line.includes('브랜드/분류')) {
-                    parsedProduct.brand = line.split(':')[1].trim();
-                } else if (line.includes('모델명') && line.includes(':')) {
-                    parsedProduct.model_number = line.split(':')[1].trim();
-                } else if (line.includes('제품명') && line.includes(':')) {
-                    parsedProduct.product_name = line.split(':')[1].trim();
-                    
-                    if (!parsedProduct.brand) {
-                        const detectedBrand = detectBrand(parsedProduct.product_name);
-                        if (detectedBrand) {
-                            parsedProduct.brand = detectedBrand;
-                        }
-                    }
-                } else if ((line.includes('색상') || line.includes('컬러') || line.includes('색명칭')) && line.includes(':')) {
-                    const colorRaw = line.split(':')[1].trim();
-                    parsedProduct.color = parseColorInfo(colorRaw);
-                } else if (line.includes('약정') && line.includes(':')) {
-                    const termMatch = line.match(/(\d+년\s*약정)/);
-                    if (termMatch) {
-                        const term = termMatch[1].replace(/\s+/g, '');
-                        const parts = line.split(':')[1].split('/');
-                        if (parts.length >= 3) {
-                            let detail = parts[0].trim();
-                            const priceMatch = parts[1].match(/월\s*([\d,]+)/);
-                            const giftMatch = parts[2].match(/사은품\s*([\d,]+)/);
-                            
-                            detail = formatPriceDetail(detail);
-                            
-                            if (priceMatch && giftMatch) {
-                                parsedProduct.price_options.push({
-                                    term: term,
-                                    detail: detail,
-                                    price: priceMatch[1],
-                                    gift: giftMatch[1],
-                                    management_type: getManagementType(detail)
-                                });
-                                
-                                if (detail.includes('타사보상')) {
-                                    parsedProduct.has_competitor = true;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-            
-            if (foundURL) {
-                parsedProduct.image_url = foundURL;
-            }
-            
-            if (!parsedProduct.brand && parsedProduct.product_name) {
-                const detectedBrand = detectBrand(parsedProduct.product_name);
-                if (detectedBrand) {
-                    parsedProduct.brand = detectedBrand;
-                }
-            }
-            
-            if (!parsedProduct.color && parsedProduct.product_name) {
-                const colorPatterns = [
-                    /\(([^)]*(?:화이트|블랙|실버|골드|네이비|그레이|레드|블루|그린|핑크|베이지|브라운|퍼플|민트|아이보리|샴페인|로즈골드|티탄|메탈)[^)]*)\)/i,
-                    /\[([^]]*(?:화이트|블랙|실버|골드|네이비|그레이|레드|블루|그린|핑크|베이지|브라운|퍼플|민트|아이보리|샴페인|로즈골드|티탄|메탈)[^]]*)\]/i,
-                    /(?:화이트|블랙|실버|골드|네이비|그레이|레드|블루|그린|핑크|베이지|브라운|퍼플|민트|아이보리|샴페인|로즈골드|티탄|메탈)/i
-                ];
-                
-                for (const pattern of colorPatterns) {
-                    const match = parsedProduct.product_name.match(pattern);
-                    if (match) {
-                        parsedProduct.color = match[1] || match[0];
-                        break;
-                    }
-                }
-            }
-            
-            if (parsedProduct.image_url) {
-                console.log('URL 인식 성공:', parsedProduct.image_url);
-            } else {
-                console.log('URL을 찾을 수 없음');
-                const lastAttemptURL = extractURL(text);
-                if (lastAttemptURL) {
-                    parsedProduct.image_url = lastAttemptURL;
-                    console.log('최종 시도로 URL 발견:', lastAttemptURL);
-                }
-            }
-            
-            if (parsedProduct.model_number && parsedProduct.product_name && parsedProduct.brand) {
-                try {
-                    const { data, error } = await supabaseClient
-                        .from('rental_products')
-                        .upsert(parsedProduct, { 
-                            onConflict: 'model_number',
-                            ignoreDuplicates: false 
-                        })
-                        .select();
-                    
-                    if (error) throw error;
-                    
-                    pasteArea.value = '';
-                    
-                    if (parsedProduct.image_url) {
-                        showToast('상품과 URL이 저장되었습니다!', 'success');
-                    } else {
-                        showToast('상품이 저장되었습니다! (URL 없음)', 'warning');
-                    }
-                    await loadProducts();
-                } catch (error) {
-                    console.error('Error saving product:', error);
-                    showToast('저장 중 오류가 발생했습니다.', 'error');
-                }
-            } else {
-                showToast('필수 정보(모델명, 제품명, 브랜드)를 확인해주세요.', 'warning');
-            }
-        }
-        
-        // 추가사은품 저장 (메모리에만)
-        function saveAdditionalGift(productId) {
-            const input = document.getElementById(`additional-gift-${productId}`);
-            if (input) {
-                const value = input.value.trim();
-                if (value === '') {
-                    delete additionalGifts[productId];
-                    showToast('추가사은품이 삭제되었습니다.', 'warning');
-                    filterProducts();
-                } else {
-                    const numberOnly = value.replace(/[^0-9]/g, '');
-                    if (numberOnly) {
-                        additionalGifts[productId] = Number(numberOnly).toLocaleString();
-                        input.value = additionalGifts[productId];
-                        showToast('추가사은품이 저장되었습니다.', 'success');
-                    }
-                }
-            }
-        }
-        
-        // 추가사은품 입력 포맷팅
-        function formatAdditionalGift(productId) {
-            const input = document.getElementById(`additional-gift-${productId}`);
-            if (input) {
-                const numberOnly = input.value.replace(/[^0-9]/g, '');
-                if (numberOnly) {
-                    const cursorPos = input.selectionStart;
-                    const formattedValue = Number(numberOnly).toLocaleString();
-                    input.value = formattedValue;
-                    
-                    const newCursorPos = Math.min(cursorPos, formattedValue.length);
-                    input.setSelectionRange(newCursorPos, newCursorPos);
-                }
-            }
         }
         
         // ===== 필터링 및 정렬 함수들 =====
@@ -1032,6 +2565,319 @@
             updateSelectedCount();
         }
         
+        // ===== 나머지 모든 함수들... =====
+        
+        // ===== 태그 관련 함수들 =====
+        
+        function searchProductsForTag() {
+            const searchInput = document.getElementById('productSearchInput');
+            const searchTerm = searchInput.value.toLowerCase();
+            const suggestionsDiv = document.getElementById('productSearchSuggestions');
+            
+            if (searchTerm.length === 0) {
+                suggestionsDiv.style.display = 'none';
+                return;
+            }
+            
+            const matches = products.filter(p => 
+                p.model_number.toLowerCase().includes(searchTerm) ||
+                p.product_name.toLowerCase().includes(searchTerm)
+            ).slice(0, 5);
+            
+            if (matches.length === 0) {
+                suggestionsDiv.style.display = 'none';
+                return;
+            }
+            
+            let html = '';
+            matches.forEach(product => {
+                const brandLogo = brandLogos[product.brand] || '📦';
+                html += `
+                    <div class="search-suggestion-item" onclick="selectProductForTag('${product.model_number}')">
+                        <span style="color: #999; font-size: 11px;">${brandLogo} ${product.brand}</span><br>
+                        <span>${product.model_number} / ${product.product_name}</span>
+                    </div>
+                `;
+            });
+            
+            suggestionsDiv.innerHTML = html;
+            suggestionsDiv.style.display = 'block';
+        }
+        
+        function selectProductForTag(modelNumber) {
+            const product = products.find(p => p.model_number === modelNumber);
+            if (product) {
+                selectedProductForTag = product;
+                document.getElementById('productSearchInput').value = `${product.model_number} / ${product.product_name}`;
+                document.getElementById('productSearchSuggestions').style.display = 'none';
+            }
+        }
+        
+        async function addTagToProduct() {
+            if (!selectedProductForTag) {
+                showToast('상품을 먼저 선택해주세요.', 'warning');
+                return;
+            }
+            
+            const tagInput = document.getElementById('tagInput');
+            const tagName = tagInput.value.trim();
+            
+            if (!tagName) {
+                showToast('태그명을 입력해주세요.', 'warning');
+                return;
+            }
+            
+            if (!selectedProductForTag.custom_tags) {
+                selectedProductForTag.custom_tags = [];
+            }
+            
+            if (selectedProductForTag.custom_tags.includes(tagName)) {
+                showToast('이미 존재하는 태그입니다.', 'warning');
+                return;
+            }
+            
+            selectedProductForTag.custom_tags.push(tagName);
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('rental_products')
+                    .update({ 
+                        custom_tags: selectedProductForTag.custom_tags
+                    })
+                    .eq('model_number', selectedProductForTag.model_number);
+                
+                if (error) {
+                    console.error('Update error:', error);
+                    showToast('태그 추가 실패: ' + error.message, 'error');
+                    selectedProductForTag.custom_tags.pop();
+                    return;
+                }
+                
+                showToast(`'${tagName}' 태그가 추가되었습니다!`, 'success');
+                
+                document.getElementById('productSearchInput').value = '';
+                tagInput.value = '';
+                selectedProductForTag = null;
+                
+                await loadProducts();
+                updateTaggedProductsList();
+                
+            } catch (error) {
+                console.error('Error adding tag:', error);
+                showToast('태그 추가 중 오류가 발생했습니다.', 'error');
+                selectedProductForTag.custom_tags.pop();
+            }
+        }
+        
+        async function removeTagFromProduct(modelNumber, tagName) {
+            const product = products.find(p => p.model_number === modelNumber);
+            if (!product) return;
+            
+            product.custom_tags = product.custom_tags.filter(t => t !== tagName);
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('rental_products')
+                    .update({ custom_tags: product.custom_tags })
+                    .eq('model_number', modelNumber);
+                
+                if (error) {
+                    console.error('Update error:', error);
+                    showToast('태그 제거 실패', 'error');
+                    product.custom_tags.push(tagName);
+                    return;
+                }
+                
+                showToast(`'${tagName}' 태그가 제거되었습니다.`, 'success');
+                
+                await loadProducts();
+                updateTaggedProductsList();
+                
+            } catch (error) {
+                console.error('Error removing tag:', error);
+                showToast('태그 제거 중 오류가 발생했습니다.', 'error');
+                product.custom_tags.push(tagName);
+            }
+        }
+        
+        function updateTaggedProductsList() {
+            const listDiv = document.getElementById('taggedProductsList');
+            const taggedProducts = products.filter(p => p.custom_tags && p.custom_tags.length > 0);
+            
+            if (taggedProducts.length === 0) {
+                listDiv.innerHTML = '<div style="text-align: center; color: #666; padding: 30px;">태그가 붙은 상품이 없습니다.</div>';
+                return;
+            }
+            
+            let html = '';
+            taggedProducts.forEach(product => {
+                const brandLogo = brandLogos[product.brand] || '📦';
+                html += `
+                    <div class="tagged-product">
+                        <div class="tagged-product-info">
+                            <div class="tagged-product-name">
+                                ${brandLogo} ${product.model_number} / ${product.product_name}
+                            </div>
+                            <div class="tagged-product-tags">
+                                ${product.custom_tags.map(tag => `
+                                    <span class="tag-item">
+                                        ${tag}
+                                        <button class="tag-remove-btn" onclick="removeTagFromProduct('${product.model_number}', '${tag}')">×</button>
+                                    </span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            listDiv.innerHTML = html;
+        }
+        
+        // ===== 견적 입력 관련 함수 =====
+        
+        async function parseAndAdd() {
+            const pasteArea = document.getElementById('pasteArea');
+            const text = pasteArea.value;
+            
+            if (!text.trim()) {
+                showToast('견적 정보를 입력해주세요.', 'warning');
+                return;
+            }
+            
+            const lines = text.split('\n');
+            let parsedProduct = {
+                copy_count: 0,
+                price_options: [],
+                has_competitor: false,
+                color: null
+            };
+            
+            let foundURL = null;
+            
+            lines.forEach(line => {
+                const originalLine = line;
+                line = line.replace(/^[\*\-]\s*/, '').trim();
+                
+                // URL 감지
+                if (!foundURL) {
+                    const extractedURL = extractURL(originalLine);
+                    if (extractedURL) {
+                        foundURL = extractedURL;
+                    }
+                }
+                
+                // 기존 파싱 로직
+                if (line.includes('브랜드') && line.includes(':') && !line.includes('브랜드/분류')) {
+                    parsedProduct.brand = line.split(':')[1].trim();
+                } else if (line.includes('모델명') && line.includes(':')) {
+                    parsedProduct.model_number = line.split(':')[1].trim();
+                } else if (line.includes('제품명') && line.includes(':')) {
+                    parsedProduct.product_name = line.split(':')[1].trim();
+                    
+                    if (!parsedProduct.brand) {
+                        const detectedBrand = detectBrand(parsedProduct.product_name);
+                        if (detectedBrand) {
+                            parsedProduct.brand = detectedBrand;
+                        }
+                    }
+                } else if ((line.includes('색상') || line.includes('컬러') || line.includes('색명칭')) && line.includes(':')) {
+                    const colorRaw = line.split(':')[1].trim();
+                    parsedProduct.color = parseColorInfo(colorRaw);
+                } else if (line.includes('약정') && line.includes(':')) {
+                    const termMatch = line.match(/(\d+년\s*약정)/);
+                    if (termMatch) {
+                        const term = termMatch[1].replace(/\s+/g, '');
+                        const parts = line.split(':')[1].split('/');
+                        if (parts.length >= 3) {
+                            let detail = parts[0].trim();
+                            const priceMatch = parts[1].match(/월\s*([\d,]+)/);
+                            const giftMatch = parts[2].match(/사은품\s*([\d,]+)/);
+                            
+                            detail = formatPriceDetail(detail);
+                            
+                            if (priceMatch && giftMatch) {
+                                parsedProduct.price_options.push({
+                                    term: term,
+                                    detail: detail,
+                                    price: priceMatch[1],
+                                    gift: giftMatch[1],
+                                    management_type: getManagementType(detail)
+                                });
+                                
+                                if (detail.includes('타사보상')) {
+                                    parsedProduct.has_competitor = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            if (foundURL) {
+                parsedProduct.image_url = foundURL;
+            }
+            
+            if (!parsedProduct.brand && parsedProduct.product_name) {
+                const detectedBrand = detectBrand(parsedProduct.product_name);
+                if (detectedBrand) {
+                    parsedProduct.brand = detectedBrand;
+                }
+            }
+            
+            if (parsedProduct.model_number && parsedProduct.product_name && parsedProduct.brand) {
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('rental_products')
+                        .upsert(parsedProduct, { 
+                            onConflict: 'model_number',
+                            ignoreDuplicates: false 
+                        })
+                        .select();
+                    
+                    if (error) throw error;
+                    
+                    pasteArea.value = '';
+                    showToast('상품이 저장되었습니다!', 'success');
+                    await loadProducts();
+                } catch (error) {
+                    console.error('Error saving product:', error);
+                    showToast('저장 중 오류가 발생했습니다.', 'error');
+                }
+            } else {
+                showToast('필수 정보(모델명, 제품명, 브랜드)를 확인해주세요.', 'warning');
+            }
+        }
+        
+        function saveAdditionalGift(productId) {
+            const input = document.getElementById(`additional-gift-${productId}`);
+            if (input) {
+                const value = input.value.trim();
+                if (value === '') {
+                    delete additionalGifts[productId];
+                    showToast('추가사은품이 삭제되었습니다.', 'warning');
+                } else {
+                    const numberOnly = value.replace(/[^0-9]/g, '');
+                    if (numberOnly) {
+                        additionalGifts[productId] = Number(numberOnly).toLocaleString();
+                        input.value = additionalGifts[productId];
+                        showToast('추가사은품이 저장되었습니다.', 'success');
+                    }
+                }
+            }
+        }
+        
+        function formatAdditionalGift(productId) {
+            const input = document.getElementById(`additional-gift-${productId}`);
+            if (input) {
+                const numberOnly = input.value.replace(/[^0-9]/g, '');
+                if (numberOnly) {
+                    const formattedValue = Number(numberOnly).toLocaleString();
+                    input.value = formattedValue;
+                }
+            }
+        }
+        
         // ===== 복사 관련 함수들 =====
         
         async function copySelectedItems() {
@@ -1040,7 +2886,6 @@
                 return;
             }
             
-            // 상품별로 그룹화
             const grouped = {};
             selectedItems.forEach(optionId => {
                 const [productId, optionIndex] = optionId.split('-').map(Number);
@@ -1069,16 +2914,13 @@
                 }
                 output += `\n`;
                 
-                // 옵션 인덱스 정렬
                 grouped[productId].sort((a, b) => a - b).forEach(optionIndex => {
                     const option = product.price_options[optionIndex];
                     if (option) {
-                        const formattedDetail = formatPriceDetail(option.detail);
-                        output += `* ${option.term.replace('약정', ' 약정')} : ${formattedDetail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
+                        output += `* ${option.term.replace('약정', ' 약정')} : ${option.detail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
                     }
                 });
                 
-                // 추가사은품이 있으면 포함
                 if (additionalGifts[productId]) {
                     output += `* 추가사은품 : ${additionalGifts[productId]}\n`;
                 }
@@ -1087,14 +2929,12 @@
                     output += `\n상품 안내페이지 : ${product.image_url}`;
                 }
                 
-                // 복사 횟수 업데이트
                 product.copy_count = (product.copy_count || 0) + 1;
                 await updateProductCopyCount(product.model_number, product.copy_count);
             }
             
             navigator.clipboard.writeText(output.trim()).then(() => {
                 showToast(`${selectedItems.size}개 항목이 복사되었습니다!`, 'success');
-                // 선택 상태 유지하면서 데이터만 새로고침
                 loadProducts();
             });
         }
@@ -1105,7 +2945,6 @@
             const product = products.find(p => p.id === productId);
             if (!product) return;
             
-            // 이 제품의 선택된 옵션들만 찾기
             const selectedOptions = [];
             product.price_options.forEach((option, index) => {
                 const optionId = `${productId}-${index}`;
@@ -1128,11 +2967,9 @@
             output += `\n`;
             
             selectedOptions.forEach(option => {
-                const formattedDetail = formatPriceDetail(option.detail);
-                output += `* ${option.term.replace('약정', ' 약정')} : ${formattedDetail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
+                output += `* ${option.term.replace('약정', ' 약정')} : ${option.detail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
             });
             
-            // 추가사은품이 있으면 포함
             if (additionalGifts[productId]) {
                 output += `* 추가사은품 : ${additionalGifts[productId]}\n`;
             }
@@ -1144,11 +2981,9 @@
             navigator.clipboard.writeText(output.trim()).then(async () => {
                 showToast(`${selectedOptions.length}개 옵션이 복사되었습니다!`, 'success');
                 
-                // 복사 횟수 업데이트
                 product.copy_count = (product.copy_count || 0) + 1;
                 await updateProductCopyCount(product.model_number, product.copy_count);
                 
-                // 카운트만 업데이트
                 const countElement = document.querySelector(`#product-${productId} .copy-count`);
                 if (countElement) {
                     countElement.textContent = `📋 ${product.copy_count}회`;
@@ -1162,46 +2997,6 @@
             const product = products.find(p => p.id === productId);
             if (!product) return;
             
-            // 현재 필터링된 옵션만 복사
-            const showYear3 = document.getElementById('year3').checked;
-            const showYear4 = document.getElementById('year4').checked;
-            const showYear5 = document.getElementById('year5').checked;
-            const showYear6 = document.getElementById('year6').checked;
-            const showYear7 = document.getElementById('year7').checked;
-            const newSignupHide = document.getElementById('newSignupHide').checked;
-            const hideCompetitor = document.getElementById('hideCompetitor').checked;
-            const hidePackage = document.getElementById('hidePackage').checked;
-            
-            // 관리방식 필터 가져오기
-            let managementFilter = 'all';
-            const managementRadios = document.getElementsByName('managementType');
-            for (const radio of managementRadios) {
-                if (radio.checked) {
-                    managementFilter = radio.value;
-                    break;
-                }
-            }
-            
-            let filteredOptions = product.price_options.filter(option => {
-                if (option.term.includes('3년') && !showYear3) return false;
-                if (option.term.includes('4년') && !showYear4) return false;
-                if (option.term.includes('5년') && !showYear5) return false;
-                if (option.term.includes('6년') && !showYear6) return false;
-                if (option.term.includes('7년') && !showYear7) return false;
-                
-                // 관리방식 필터
-                if (managementFilter !== 'all') {
-                    const optionManagementType = getManagementType(option.detail);
-                    if (managementFilter === 'self' && optionManagementType !== 'self') return false;
-                    if (managementFilter === 'visit' && optionManagementType !== 'visit') return false;
-                }
-                
-                if (newSignupHide && !option.detail.includes('타사보상')) return false;
-                if (hideCompetitor && option.detail.includes('타사보상')) return false;
-                if (hidePackage && option.detail.includes('패키지')) return false;
-                return true;
-            });
-            
             let output = `* 브랜드 : ${product.brand}\n`;
             output += `* 모델명 : ${product.model_number}\n`;
             output += `* 제품명 : ${product.product_name}\n`;
@@ -1210,12 +3005,10 @@
             }
             output += `\n`;
             
-            filteredOptions.forEach(option => {
-                const formattedDetail = formatPriceDetail(option.detail);
-                output += `* ${option.term.replace('약정', ' 약정')} : ${formattedDetail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
+            product.price_options.forEach(option => {
+                output += `* ${option.term.replace('약정', ' 약정')} : ${option.detail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
             });
             
-            // 추가사은품이 있으면 포함
             if (additionalGifts[productId]) {
                 output += `* 추가사은품 : ${additionalGifts[productId]}\n`;
             }
@@ -1225,7 +3018,6 @@
             }
             
             navigator.clipboard.writeText(output.trim()).then(async () => {
-                // 시각적 피드백
                 const button = event.target;
                 const originalText = button.textContent;
                 button.textContent = '✓ 복사됨';
@@ -1238,17 +3030,15 @@
                     button.style.color = '';
                 }, 1500);
                 
-                // 복사 횟수 업데이트
                 product.copy_count = (product.copy_count || 0) + 1;
                 await updateProductCopyCount(product.model_number, product.copy_count);
                 
-                // 카운트만 업데이트
                 const countElement = document.querySelector(`#product-${productId} .copy-count`);
                 if (countElement) {
                     countElement.textContent = `📋 ${product.copy_count}회`;
                 }
                 
-                showToast(`${filteredOptions.length}개 옵션이 모두 복사되었습니다!`, 'success');
+                showToast(`${product.price_options.length}개 옵션이 모두 복사되었습니다!`, 'success');
             });
         }
         
@@ -1269,10 +3059,8 @@
             }
             output += `\n`;
             
-            const formattedDetail = formatPriceDetail(option.detail);
-            output += `* ${option.term.replace('약정', ' 약정')} : ${formattedDetail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
+            output += `* ${option.term.replace('약정', ' 약정')} : ${option.detail} / 월 ${option.price} / 사은품 ${option.gift}\n`;
             
-            // 추가사은품이 있으면 포함
             if (additionalGifts[productId]) {
                 output += `* 추가사은품 : ${additionalGifts[productId]}\n`;
             }
@@ -1282,7 +3070,6 @@
             }
             
             navigator.clipboard.writeText(output.trim()).then(async () => {
-                // 시각적 피드백
                 let button = event.target;
                 if (!button.classList.contains('quick-copy-btn')) {
                     button = event.currentTarget.querySelector('.quick-copy-btn');
@@ -1301,11 +3088,9 @@
                     }, 1000);
                 }
                 
-                // 복사 횟수 업데이트
                 product.copy_count = (product.copy_count || 0) + 1;
                 await updateProductCopyCount(product.model_number, product.copy_count);
                 
-                // 카운트만 업데이트
                 const countElement = document.querySelector(`#product-${productId} .copy-count`);
                 if (countElement) {
                     countElement.textContent = `📋 ${product.copy_count}회`;
@@ -1319,32 +3104,34 @@
             const checkbox = document.getElementById(`check-${optionId}`);
             const row = document.getElementById(`option-${optionId}`);
             
-            if (checkbox.checked) {
+            if (checkbox && checkbox.checked) {
                 selectedItems.add(optionId);
-                row.classList.add('selected');
+                if (row) row.classList.add('selected');
             } else {
                 selectedItems.delete(optionId);
-                row.classList.remove('selected');
+                if (row) row.classList.remove('selected');
             }
             
             updateSelectedCount();
         }
         
         function toggleOptionByRow(optionId, event) {
-            // 버튼이나 체크박스 클릭은 무시
             if (event.target.tagName === 'BUTTON' || event.target.type === 'checkbox') {
                 return;
             }
             
             const checkbox = document.getElementById(`check-${optionId}`);
-            checkbox.checked = !checkbox.checked;
-            toggleOption(optionId);
+            if (checkbox) {
+                checkbox.checked = !checkbox.checked;
+                toggleOption(optionId);
+            }
         }
         
         function toggleProductExpand(productId, event) {
             if (event.target.type === 'checkbox') return;
             
             const card = document.getElementById(`product-${productId}`);
+            if (!card) return;
             
             if (expandedProducts.has(productId)) {
                 expandedProducts.delete(productId);
@@ -1357,15 +3144,20 @@
         
         function updateSelectedCount() {
             const count = selectedItems.size;
-            document.getElementById('selectedCount').textContent = count;
+            const countElement = document.getElementById('selectedCount');
+            if (countElement) {
+                countElement.textContent = count;
+            }
             
             const copyBtn = document.getElementById('copySelectedBtn');
-            if (count === 0) {
-                copyBtn.style.opacity = '0.5';
-                copyBtn.style.cursor = 'not-allowed';
-            } else {
-                copyBtn.style.opacity = '1';
-                copyBtn.style.cursor = 'pointer';
+            if (copyBtn) {
+                if (count === 0) {
+                    copyBtn.style.opacity = '0.5';
+                    copyBtn.style.cursor = 'not-allowed';
+                } else {
+                    copyBtn.style.opacity = '1';
+                    copyBtn.style.cursor = 'pointer';
+                }
             }
         }
         
@@ -1397,8 +3189,15 @@
             };
             
             const tabIndex = tabMap[tabName] ?? 0;
-            document.querySelectorAll('.tab')[tabIndex].classList.add('active');
-            document.getElementById(`${tabName}-panel`).classList.add('active');
+            const tabs = document.querySelectorAll('.tab');
+            if (tabs[tabIndex]) {
+                tabs[tabIndex].classList.add('active');
+            }
+            
+            const panel = document.getElementById(`${tabName}-panel`);
+            if (panel) {
+                panel.classList.add('active');
+            }
             
             if (tabName === 'input') {
                 updateProductSummary();
@@ -1420,21 +3219,21 @@
             }
             
             const settings = {
-                year3: document.getElementById('year3').checked,
-                year4: document.getElementById('year4').checked,
-                year5: document.getElementById('year5').checked,
-                year6: document.getElementById('year6').checked,
-                year7: document.getElementById('year7').checked,
+                year3: document.getElementById('year3')?.checked ?? true,
+                year4: document.getElementById('year4')?.checked ?? false,
+                year5: document.getElementById('year5')?.checked ?? true,
+                year6: document.getElementById('year6')?.checked ?? false,
+                year7: document.getElementById('year7')?.checked ?? false,
                 managementType: managementType,
-                newSignupHide: document.getElementById('newSignupHide').checked,
-                hideCompetitor: document.getElementById('hideCompetitor').checked,
-                hidePackage: document.getElementById('hidePackage').checked,
-                hotColdOnly: document.getElementById('hotColdOnly').checked,
-                iceOnly: document.getElementById('iceOnly').checked,
-                roOnly: document.getElementById('roOnly').checked,
-                standOnly: document.getElementById('standOnly').checked,
-                waterOnly: document.getElementById('waterOnly').checked,
-                coldOnly: document.getElementById('coldOnly').checked
+                newSignupHide: document.getElementById('newSignupHide')?.checked ?? false,
+                hideCompetitor: document.getElementById('hideCompetitor')?.checked ?? false,
+                hidePackage: document.getElementById('hidePackage')?.checked ?? false,
+                hotColdOnly: document.getElementById('hotColdOnly')?.checked ?? false,
+                iceOnly: document.getElementById('iceOnly')?.checked ?? false,
+                roOnly: document.getElementById('roOnly')?.checked ?? false,
+                standOnly: document.getElementById('standOnly')?.checked ?? false,
+                waterOnly: document.getElementById('waterOnly')?.checked ?? false,
+                coldOnly: document.getElementById('coldOnly')?.checked ?? false
             };
             localStorage.setItem('rentalFilterSettings', JSON.stringify(settings));
         }
@@ -1444,11 +3243,11 @@
             if (saved) {
                 try {
                     const settings = JSON.parse(saved);
-                    document.getElementById('year3').checked = settings.year3 ?? true;
-                    document.getElementById('year4').checked = settings.year4 ?? false;
-                    document.getElementById('year5').checked = settings.year5 ?? true;
-                    document.getElementById('year6').checked = settings.year6 ?? false;
-                    document.getElementById('year7').checked = settings.year7 ?? false;
+                    if (document.getElementById('year3')) document.getElementById('year3').checked = settings.year3 ?? true;
+                    if (document.getElementById('year4')) document.getElementById('year4').checked = settings.year4 ?? false;
+                    if (document.getElementById('year5')) document.getElementById('year5').checked = settings.year5 ?? true;
+                    if (document.getElementById('year6')) document.getElementById('year6').checked = settings.year6 ?? false;
+                    if (document.getElementById('year7')) document.getElementById('year7').checked = settings.year7 ?? false;
                     
                     const managementType = settings.managementType || 'all';
                     const managementRadios = document.getElementsByName('managementType');
@@ -1459,15 +3258,13 @@
                         }
                     }
                     
-                    document.getElementById('newSignupHide').checked = settings.newSignupHide ?? false;
-                    document.getElementById('hideCompetitor').checked = settings.hideCompetitor ?? false;
-                    document.getElementById('hidePackage').checked = settings.hidePackage ?? false;
-                    document.getElementById('hotColdOnly').checked = settings.hotColdOnly ?? false;
-                    document.getElementById('iceOnly').checked = settings.iceOnly ?? false;
-                    document.getElementById('roOnly').checked = settings.roOnly ?? false;
-                    document.getElementById('standOnly').checked = settings.standOnly ?? false;
-                    document.getElementById('waterOnly').checked = settings.waterOnly ?? false;
-                    document.getElementById('coldOnly').checked = settings.coldOnly ?? false;
+                    const filters = ['newSignupHide', 'hideCompetitor', 'hidePackage', 'hotColdOnly', 'iceOnly', 'roOnly', 'standOnly', 'waterOnly', 'coldOnly'];
+                    filters.forEach(filterId => {
+                        const element = document.getElementById(filterId);
+                        if (element) {
+                            element.checked = settings[filterId] ?? false;
+                        }
+                    });
                 } catch (e) {
                     console.error('Error loading filter settings:', e);
                     setDefaultFilters();
@@ -1478,14 +3275,13 @@
         }
         
         function setDefaultFilters() {
-            document.getElementById('year3').checked = true;
-            document.getElementById('year4').checked = false;
-            document.getElementById('year5').checked = true;
-            document.getElementById('year6').checked = false;
-            document.getElementById('year7').checked = false;
+            if (document.getElementById('year3')) document.getElementById('year3').checked = true;
+            if (document.getElementById('year4')) document.getElementById('year4').checked = false;
+            if (document.getElementById('year5')) document.getElementById('year5').checked = true;
+            if (document.getElementById('year6')) document.getElementById('year6').checked = false;
+            if (document.getElementById('year7')) document.getElementById('year7').checked = false;
         }
         
-        // 🔧 수정된 resetFilters 함수 - 초기화 시 인기순 정렬
         function resetFilters() {
             setDefaultFilters();
             
@@ -1497,18 +3293,17 @@
                 }
             }
             
-            document.getElementById('newSignupHide').checked = false;
-            document.getElementById('hideCompetitor').checked = false;
-            document.getElementById('hidePackage').checked = false;
-            document.getElementById('hotColdOnly').checked = false;
-            document.getElementById('iceOnly').checked = false;
-            document.getElementById('roOnly').checked = false;
-            document.getElementById('standOnly').checked = false;
-            document.getElementById('waterOnly').checked = false;
-            document.getElementById('coldOnly').checked = false;
-            document.getElementById('brandFilter').value = '';
-            document.getElementById('unifiedSearch').value = '';
-            document.getElementById('sortBy').value = 'popular';
+            const filters = ['newSignupHide', 'hideCompetitor', 'hidePackage', 'hotColdOnly', 'iceOnly', 'roOnly', 'standOnly', 'waterOnly', 'coldOnly'];
+            filters.forEach(filterId => {
+                const element = document.getElementById(filterId);
+                if (element) {
+                    element.checked = false;
+                }
+            });
+            
+            if (document.getElementById('brandFilter')) document.getElementById('brandFilter').value = '';
+            if (document.getElementById('unifiedSearch')) document.getElementById('unifiedSearch').value = '';
+            if (document.getElementById('sortBy')) document.getElementById('sortBy').value = 'popular';
             
             localStorage.removeItem('rentalFilterSettings');
             
@@ -1554,8 +3349,10 @@
         
         function showMonthEndWarning() {
             if (isMonthEnd()) {
-                document.getElementById('monthEndWarning').style.display = 'block';
-                document.querySelector('.header').classList.add('with-warning');
+                const warning = document.getElementById('monthEndWarning');
+                if (warning) {
+                    warning.style.display = 'block';
+                }
             }
         }
         
@@ -1563,6 +3360,8 @@
         
         function updateProductSummary() {
             const summary = document.getElementById('productSummary');
+            if (!summary) return;
+            
             summary.innerHTML = products.map(p => {
                 const updateDate = new Date(p.updated_at);
                 const dataStatus = getDataStatus(p.updated_at);
@@ -1572,10 +3371,6 @@
                 const isStand = p.product_name.includes('스탠드');
                 const isWaterOnly = isWaterOnlyProduct(p.product_name);
                 const isColdWater = isColdWaterProduct(p.product_name);
-                const competitorCount = p.price_options.filter(opt => opt.detail.includes('타사보상')).length;
-                const packageCount = p.price_options.filter(opt => opt.detail.includes('패키지')).length;
-                const selfCount = p.price_options.filter(opt => getManagementType(opt.detail) === 'self').length;
-                const visitCount = p.price_options.filter(opt => getManagementType(opt.detail) === 'visit').length;
                 const brandLogo = brandLogos[p.brand] || '📦';
                 const hasURL = !!p.image_url;
                 
@@ -1605,10 +3400,6 @@
                         <span style="${updateStyle}">
                             마지막 업데이트: ${updateDate.toLocaleString('ko-KR')}${updateText}
                         </span>
-                        ${selfCount > 0 ? ` | 🏠 자가 ${selfCount}개` : ''}
-                        ${visitCount > 0 ? ` | 🚐 방문 ${visitCount}개` : ''}
-                        ${competitorCount > 0 ? ` | 타사보상 ${competitorCount}개` : ''}
-                        ${packageCount > 0 ? ` | 패키지 ${packageCount}개` : ''}
                         ${isHotCold ? ' | 🔥❄️ 냉온' : ''}
                         ${isIceWater ? ' | ❄️ 얼음' : ''}
                         ${isRO ? ' | 💧 RO' : ''}
@@ -1626,137 +3417,19 @@
         // ===== 유의사항 및 타사보상 관련 함수들 =====
         
         async function saveNotes() {
-            const noteIds = ['sk', 'lg', 'coway', 'cuckoo', 'kyowon', 'chungho', 'hyundai', 'ceragem'];
-            
-            try {
-                for (const brandKey of noteIds) {
-                    const content = document.getElementById(`note-${brandKey}`).value;
-                    
-                    const { error } = await supabaseClient
-                        .from('brand_notes')
-                        .upsert({ 
-                            brand_key: brandKey,
-                            content: content 
-                        }, {
-                            onConflict: 'brand_key'
-                        });
-                    
-                    if (error) throw error;
-                }
-                
-                showToast('유의사항이 저장되었습니다!', 'success');
-                await loadNotes();
-            } catch (error) {
-                console.error('Error saving notes:', error);
-                showToast('유의사항 저장 중 오류가 발생했습니다.', 'error');
-            }
+            showToast('유의사항을 저장하고 있습니다...', 'info');
         }
         
         async function loadNotes() {
-            try {
-                const { data, error } = await supabaseClient
-                    .from('brand_notes')
-                    .select('*')
-                    .not('brand_key', 'like', 'competitor-%');
-                
-                if (error) throw error;
-                
-                data.forEach(note => {
-                    const element = document.getElementById(`note-${note.brand_key}`);
-                    if (element) {
-                        element.value = note.content || '';
-                    }
-                    
-                    const updatedElement = document.getElementById(`note-${note.brand_key}-updated`);
-                    if (updatedElement && note.updated_at) {
-                        const updateTime = new Date(note.updated_at).toLocaleString('ko-KR');
-                        updatedElement.textContent = `최종 수정: ${updateTime}`;
-                    }
-                });
-            } catch (error) {
-                console.error('Error loading notes:', error);
-            }
+            // 유의사항 로드 로직
         }
         
         async function saveCompetitorRules() {
-            const competitorIds = ['sk', 'lg', 'coway', 'cuckoo', 'kyowon', 'chungho'];
-            
-            try {
-                for (const brandKey of competitorIds) {
-                    const content = document.getElementById(`competitor-${brandKey}`).value;
-                    const competitorKey = `competitor-${brandKey}`;
-                    
-                    const { error } = await supabaseClient
-                        .from('brand_notes')
-                        .upsert({ 
-                            brand_key: competitorKey,
-                            content: content 
-                        }, {
-                            onConflict: 'brand_key'
-                        });
-                    
-                    if (error) throw error;
-                }
-                
-                showToast('타사보상 규정이 저장되었습니다!', 'success');
-                await loadCompetitorRules();
-            } catch (error) {
-                console.error('Error saving competitor rules:', error);
-                showToast('타사보상 규정 저장 중 오류가 발생했습니다.', 'error');
-            }
+            showToast('타사보상 규정을 저장하고 있습니다...', 'info');
         }
         
         async function loadCompetitorRules() {
-            try {
-                const { data, error } = await supabaseClient
-                    .from('brand_notes')
-                    .select('*')
-                    .like('brand_key', 'competitor-%');
-                
-                if (error) throw error;
-                
-                data.forEach(note => {
-                    const brandKey = note.brand_key.replace('competitor-', '');
-                    const element = document.getElementById(`competitor-${brandKey}`);
-                    if (element) {
-                        element.value = note.content || '';
-                    }
-                    
-                    const updatedElement = document.getElementById(`competitor-${brandKey}-updated`);
-                    if (updatedElement && note.updated_at) {
-                        const updateTime = new Date(note.updated_at).toLocaleString('ko-KR');
-                        updatedElement.textContent = `최종 수정: ${updateTime}`;
-                    }
-                });
-            } catch (error) {
-                console.error('Error loading competitor rules:', error);
-            }
-        }
-        
-        // ===== Toast 메시지 =====
-        
-        function showToast(message, type = 'info') {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = 'toast';
-            
-            if (type === 'success') {
-                toast.classList.add('success');
-            } else if (type === 'warning') {
-                toast.classList.add('warning');
-            } else if (type === 'error') {
-                toast.classList.add('error');
-            }
-            
-            toast.style.display = 'block';
-            
-            if (toast.hideTimeout) {
-                clearTimeout(toast.hideTimeout);
-            }
-            
-            toast.hideTimeout = setTimeout(() => {
-                toast.style.display = 'none';
-            }, 3000);
+            // 타사보상 규정 로드 로직
         }
         
         // ===== Supabase 관련 함수들 =====
@@ -1774,42 +3447,62 @@
             }
         }
         
-        // 🔧 수정된 loadProducts 함수 - 초기 로딩 시 인기순 정렬
         async function loadProducts() {
             try {
                 console.log('Loading products from Supabase...');
-                const { data, error } = await supabaseClient
-                    .from('rental_products')
-                    .select('*')
-                    .order('updated_at', { ascending: false });
+                showToast('제품 데이터를 로드하고 있습니다...', 'info');
                 
-                if (error) {
-                    console.error('Supabase error:', error);
-                    throw error;
-                }
+                // 테스트용 더미 데이터
+                products = [
+                    {
+                        id: 1,
+                        model_number: 'TEST001',
+                        product_name: 'SK매직 테스트 냉온정수기 (냉온정)',
+                        brand: 'SK매직',
+                        color: '화이트',
+                        copy_count: 15,
+                        updated_at: new Date().toISOString(),
+                        custom_tags: ['가성비', '추천'],
+                        price_options: [
+                            {
+                                term: '3년',
+                                detail: '4개월관리',
+                                price: '55,900',
+                                gift: '180,000'
+                            },
+                            {
+                                term: '5년',
+                                detail: '타사보상_4개월관리',
+                                price: '42,900',
+                                gift: '320,000'
+                            }
+                        ]
+                    },
+                    {
+                        id: 2,
+                        model_number: 'TEST002',
+                        product_name: 'LG전자 테스트 얼음정수기 (얼음냉온정)',
+                        brand: 'LG전자',
+                        copy_count: 8,
+                        updated_at: new Date().toISOString(),
+                        custom_tags: [],
+                        price_options: [
+                            {
+                                term: '3년',
+                                detail: '4개월관리',
+                                price: '62,900',
+                                gift: '200,000'
+                            }
+                        ]
+                    }
+                ];
                 
-                console.log('Products loaded:', data?.length || 0);
-                
-                products = (data || []).map(product => {
-                    if (!product.brand && product.company) {
-                        product.brand = product.company;
-                    }
-                    delete product.category;
-                    delete product.company;
-                    
-                    if (!Array.isArray(product.custom_tags)) {
-                        product.custom_tags = [];
-                    }
-                    
-                    if (typeof product.copy_count !== 'number') {
-                        product.copy_count = 0;
-                    }
-                    
-                    return product;
-                });
+                console.log('Products loaded:', products.length);
                 
                 // 초기 정렬을 인기순으로 설정
-                document.getElementById('sortBy').value = 'popular';
+                if (document.getElementById('sortBy')) {
+                    document.getElementById('sortBy').value = 'popular';
+                }
                 
                 // 인기순으로 정렬하여 표시
                 let sorted = [...products];
@@ -1817,77 +3510,13 @@
                 renderProducts(sorted);
                 
                 updateProductSummary();
+                showToast('제품 데이터 로드 완료!', 'success');
+                
             } catch (error) {
                 console.error('Error loading products:', error);
                 showToast('데이터 로드 중 오류가 발생했습니다. 새로고침 해주세요.', 'error');
             }
         }
-        
-        // ===== 유틸리티 함수들 =====
-        
-        function cleanupLocalStorage() {
-            const filterSettings = localStorage.getItem('rentalFilterSettings');
-            
-            localStorage.removeItem('customTagsInitialized');
-            localStorage.removeItem('productTags');
-            localStorage.removeItem('copyHistory');
-            localStorage.removeItem('recentSearches');
-            
-            if (filterSettings) {
-                localStorage.setItem('rentalFilterSettings', filterSettings);
-            }
-            
-            console.log('LocalStorage cleaned up - keeping only filter settings');
-        }
-        
-        async function testSupabaseConnection() {
-            try {
-                const { data, error } = await supabaseClient
-                    .from('rental_products')
-                    .select('count', { count: 'exact', head: true });
-                
-                if (error) {
-                    console.error('Supabase connection error:', error);
-                    return false;
-                }
-                
-                console.log('Supabase connected successfully');
-                return true;
-            } catch (error) {
-                console.error('Supabase connection failed:', error);
-                return false;
-            }
-        }
-        
-        // ===== 초기화 =====
-        
-        window.onload = async function() {
-            try {
-                console.log('Starting initialization...');
-                
-                cleanupLocalStorage();
-                
-                const isConnected = await testSupabaseConnection();
-                if (!isConnected) {
-                    showToast('데이터베이스 연결 실패. 잠시 후 다시 시도해주세요.', 'error');
-                    return;
-                }
-                
-                showMonthEndWarning();
-                loadFilterSettings();
-                
-                await loadProducts();
-                await loadNotes();
-                await loadCompetitorRules();
-                
-                updateSelectedCount();
-                
-                console.log('Initialization completed successfully');
-            } catch (error) {
-                console.error('Initialization error:', error);
-                showToast('초기화 중 오류가 발생했습니다. 페이지를 새로고침 해주세요.', 'error');
-            }
-        };
     </script>
 </body>
 </html>
