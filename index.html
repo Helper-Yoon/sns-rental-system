@@ -992,6 +992,403 @@
             letter-spacing: -0.2px;
         }
         
+        /* 태그 관리 스타일 */
+        .tags-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .tags-header {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .tags-header h2 {
+            color: var(--primary-blue);
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+        
+        .tags-header p {
+            color: #666;
+            font-size: 14px;
+            letter-spacing: -0.2px;
+        }
+        
+        .tag-input-section {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .tag-input-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 15px;
+            align-items: end;
+        }
+        
+        .tag-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+        }
+        
+        .tag-input-group label {
+            color: #999;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: -0.2px;
+        }
+        
+        .tag-input-group input {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: -0.2px;
+        }
+        
+        .tag-input-group input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 2px var(--primary-blue-light);
+        }
+        
+        .tag-add-btn {
+            background: linear-gradient(135deg, #ffd700, #ff9800);
+            border: none;
+            color: #111;
+            padding: 10px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            letter-spacing: -0.2px;
+            height: 42px;
+        }
+        
+        .tag-add-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+        
+        .product-tags-list {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .product-tags-list h3 {
+            color: #ffd700;
+            font-size: 16px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+        
+        .tagged-product {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .tagged-product-info {
+            flex: 1;
+        }
+        
+        .tagged-product-name {
+            color: #e0e0e0;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            letter-spacing: -0.2px;
+        }
+        
+        .tagged-product-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .tag-item {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 152, 0, 0.15));
+            color: #ffd700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: -0.1px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .tag-remove-btn {
+            background: none;
+            border: none;
+            color: #ff6b6b;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0 2px;
+            transition: all 0.2s;
+        }
+        
+        .tag-remove-btn:hover {
+            color: #ff0000;
+            transform: scale(1.2);
+        }
+        
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            margin-top: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+        }
+        
+        .search-suggestion-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 13px;
+            border-bottom: 1px solid #222;
+            transition: all 0.2s;
+        }
+        
+        .search-suggestion-item:hover {
+            background: rgba(0, 102, 255, 0.1);
+        }
+        
+        .search-suggestion-item:last-child {
+            border-bottom: none;
+        }
+        
+        .notes-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .notes-header {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .notes-header h2 {
+            color: var(--primary-blue);
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+        
+        .notes-header p {
+            color: #666;
+            font-size: 14px;
+            letter-spacing: -0.2px;
+        }
+        
+        .notes-grid {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .note-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .note-card:hover {
+            border-color: #333;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .note-header {
+            background: linear-gradient(135deg, var(--primary-blue-light), transparent);
+            padding: 15px 20px;
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .note-brand {
+            color: var(--primary-blue);
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.3px;
+        }
+        
+        .note-updated {
+            color: #666;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: -0.2px;
+        }
+        
+        .note-content {
+            background: #0a0a0a;
+            border: none;
+            padding: 20px;
+            min-height: 150px;
+            color: #e0e0e0;
+            font-size: 14px;
+            line-height: 1.8;
+            resize: vertical;
+            width: 100%;
+            font-family: inherit;
+            letter-spacing: -0.2px;
+        }
+        
+        .note-content:focus {
+            outline: none;
+            background: #0f0f0f;
+        }
+        
+        .note-content::placeholder {
+            color: #444;
+        }
+        
+        .save-notes-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0, 102, 255, 0.4);
+            transition: all 0.3s;
+            z-index: 50;
+            letter-spacing: -0.2px;
+        }
+        
+        .save-notes-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 102, 255, 0.6);
+        }
+        
+        .competitor-rules-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .competitor-rule-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        
+        .competitor-rule-card:hover {
+            border-color: #333;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .competitor-rule-header {
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), transparent);
+            padding: 15px 20px;
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .competitor-rule-brand {
+            color: #ff9800;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+        
+        .competitor-rule-content {
+            background: #0a0a0a;
+            border: none;
+            padding: 20px;
+            min-height: 200px;
+            color: #e0e0e0;
+            font-size: 14px;
+            line-height: 1.8;
+            resize: vertical;
+            width: 100%;
+            font-family: inherit;
+            letter-spacing: -0.2px;
+        }
+        
+        .competitor-rule-content:focus {
+            outline: none;
+            background: #0f0f0f;
+        }
+        
+        .competitor-rule-content::placeholder {
+            color: #444;
+        }
+        
+        .save-competitor-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ff9800;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 152, 0, 0.4);
+            transition: all 0.3s;
+            z-index: 50;
+            letter-spacing: -0.2px;
+        }
+        
+        .save-competitor-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255, 152, 0, 0.6);
+        }
+        
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -1071,6 +1468,183 @@
                 <button class="header-btn clear-btn" onclick="clearAllSelections()">🔄 선택 초기화</button>
                 <button class="header-btn clear-btn" onclick="resetFilters()">🔄 필터 초기화</button>
             </div>
+        
+        <!-- 태그 관리 탭 -->
+        <div id="tags-panel" class="tab-panel">
+            <div class="tags-container">
+                <div class="tags-header">
+                    <h2>🏷️ 태그 관리 시스템</h2>
+                    <p>상품에 커스텀 태그를 추가하여 분류하고 검색할 수 있습니다</p>
+                </div>
+                
+                <div class="tag-input-section">
+                    <div class="tag-input-grid">
+                        <div class="tag-input-group">
+                            <label>모델명/상품명 입력해서 선택하고</label>
+                            <input type="text" id="productSearchInput" placeholder="모델명 또는 상품명 검색..." 
+                                   onkeyup="searchProductsForTag()" onfocus="searchProductsForTag()">
+                            <div id="productSearchSuggestions" class="search-suggestions"></div>
+                        </div>
+                        <div class="tag-input-group">
+                            <label>붙이고 싶은 태그(예: 가성비)를 붙여주세요</label>
+                            <input type="text" id="tagInput" placeholder="태그명 입력...">
+                        </div>
+                        <button class="tag-add-btn" onclick="addTagToProduct()">✨ 태그 추가</button>
+                    </div>
+                </div>
+                
+                <div class="product-tags-list">
+                    <h3>📌 태그가 붙은 상품들</h3>
+                    <div id="taggedProductsList">
+                        <!-- 태그가 붙은 상품 목록이 여기에 표시됩니다 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 브랜드 유의사항 탭 -->
+        <div id="notes-panel" class="tab-panel">
+            <div class="notes-container">
+                <div class="notes-header">
+                    <h2>📌 브랜드별 유의사항</h2>
+                    <p>각 브랜드의 렌탈 진행 시 주의사항을 기록해주세요</p>
+                </div>
+                <div class="notes-grid">
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>SK매직</span>
+                            </div>
+                            <div class="note-updated" id="note-sk-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-sk" placeholder="SK매직 관련 유의사항을 입력하세요...
+예: 설치비, 프로모션 정보, 특별 조건 등"></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>LG전자</span>
+                            </div>
+                            <div class="note-updated" id="note-lg-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-lg" placeholder="LG전자 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>코웨이</span>
+                            </div>
+                            <div class="note-updated" id="note-coway-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-coway" placeholder="코웨이 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>교원웰스</span>
+                            </div>
+                            <div class="note-updated" id="note-kyowon-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-kyowon" placeholder="교원웰스 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>청호나이스</span>
+                            </div>
+                            <div class="note-updated" id="note-chungho-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-chungho" placeholder="청호나이스 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>현대큐밍</span>
+                            </div>
+                            <div class="note-updated" id="note-hyundai-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-hyundai" placeholder="현대큐밍 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>세라젬</span>
+                            </div>
+                            <div class="note-updated" id="note-ceragem-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-ceragem" placeholder="세라젬 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">
+                                <span>쿠쿠</span>
+                            </div>
+                            <div class="note-updated" id="note-cuckoo-updated"></div>
+                        </div>
+                        <textarea class="note-content" id="note-cuckoo" placeholder="쿠쿠 관련 유의사항을 입력하세요..."></textarea>
+                    </div>
+                </div>
+                <button class="save-notes-btn" onclick="saveNotes()">💾 유의사항 저장</button>
+            </div>
+        </div>
+        
+        <!-- 타사보상 규정 탭 -->
+        <div id="competitor-panel" class="tab-panel">
+            <div class="competitor-rules-container">
+                <div class="notes-header">
+                    <h2>🔄 브랜드별 타사보상 규정</h2>
+                    <p>각 브랜드의 타사보상 프로모션 규정과 조건을 기록해주세요</p>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">SK매직 타사보상</div>
+                        <div class="note-updated" id="competitor-sk-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-sk" placeholder="SK매직 타사보상 규정을 입력하세요...
+예: 
+- 타사보상 적용 대상 및 조건
+- 필요 서류 및 증빙 자료
+- 위약금 면제 범위
+- 프로모션 기간 및 제한사항"></textarea>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">LG전자 타사보상</div>
+                        <div class="note-updated" id="competitor-lg-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-lg" placeholder="LG전자 타사보상 규정을 입력하세요..."></textarea>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">코웨이 타사보상</div>
+                        <div class="note-updated" id="competitor-coway-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-coway" placeholder="코웨이 타사보상 규정을 입력하세요..."></textarea>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">쿠쿠 타사보상</div>
+                        <div class="note-updated" id="competitor-cuckoo-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-cuckoo" placeholder="쿠쿠 타사보상 규정을 입력하세요..."></textarea>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">교원웰스 타사보상</div>
+                        <div class="note-updated" id="competitor-kyowon-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-kyowon" placeholder="교원웰스 타사보상 규정을 입력하세요..."></textarea>
+                </div>
+                <div class="competitor-rule-card">
+                    <div class="competitor-rule-header">
+                        <div class="competitor-rule-brand">청호나이스 타사보상</div>
+                        <div class="note-updated" id="competitor-chungho-updated"></div>
+                    </div>
+                    <textarea class="competitor-rule-content" id="competitor-chungho" placeholder="청호나이스 타사보상 규정을 입력하세요..."></textarea>
+                </div>
+                <button class="save-competitor-btn" onclick="saveCompetitorRules()">💾 타사보상 규정 저장</button>
+            </div>
+        </div>
         </div>
     </div>
     
@@ -1078,6 +1652,9 @@
         <div class="tabs-container">
             <button class="tab active" onclick="switchTab('output')">📋 견적 출력</button>
             <button class="tab" onclick="switchTab('input')">✏️ 견적 입력</button>
+            <button class="tab" onclick="switchTab('tags')">🏷️ 태그 관리</button>
+            <button class="tab" onclick="switchTab('notes')">📌 브랜드 유의사항</button>
+            <button class="tab" onclick="switchTab('competitor')">🔄 타사보상 규정</button>
         </div>
     </div>
     
@@ -1260,6 +1837,7 @@ https://zero-rental.biz/product-image/51317"></textarea>
         let selectedItems = new Set();
         let expandedProducts = new Set();
         let additionalGifts = {};
+        let selectedProductForTag = null;
         
         // 브랜드별 로고 매핑
         const brandLogos = {
@@ -1294,7 +1872,10 @@ https://zero-rental.biz/product-image/51317"></textarea>
             
             const tabMap = {
                 'output': 0,
-                'input': 1
+                'input': 1,
+                'tags': 2,
+                'notes': 3,
+                'competitor': 4
             };
             
             const tabIndex = tabMap[tabName] ?? 0;
@@ -1310,6 +1891,8 @@ https://zero-rental.biz/product-image/51317"></textarea>
             
             if (tabName === 'input') {
                 updateProductSummary();
+            } else if (tabName === 'tags') {
+                updateTaggedProductsList();
             }
         }
         
@@ -1639,6 +2222,7 @@ https://zero-rental.biz/product-image/51317"></textarea>
                 renderProducts(sorted);
                 
                 updateProductSummary();
+                updateTaggedProductsList();
                 showToast(products.length + '개 제품 데이터 로드 완료!', 'success');
                 
             } catch (error) {
@@ -1693,7 +2277,12 @@ https://zero-rental.biz/product-image/51317"></textarea>
                                       product.product_name.toLowerCase().includes(unifiedSearchTerm) ||
                                       product.brand.toLowerCase().includes(unifiedSearchTerm);
                     
-                    if (!basicMatch) return false;
+                    const tagMatch = product.custom_tags && 
+                                    product.custom_tags.some(tag => 
+                                        tag.toLowerCase().includes(unifiedSearchTerm)
+                                    );
+                    
+                    if (!basicMatch && !tagMatch) return false;
                 }
                 
                 if (hasProductTypeFilter) {
@@ -1858,6 +2447,14 @@ https://zero-rental.biz/product-image/51317"></textarea>
                 else if (rank === 2) popularMark = '🥈 ';
                 else if (rank === 3) popularMark = '🥉 ';
                 
+                // 커스텀 태그 HTML 생성
+                let customTagsHtml = '';
+                if (product.custom_tags && product.custom_tags.length > 0) {
+                    product.custom_tags.forEach(tag => {
+                        customTagsHtml += '<span class="custom-tag-badge">✨ ' + tag + '</span>';
+                    });
+                }
+                
                 const card = document.createElement('div');
                 card.className = 'product-card ' + (expandedProducts.has(product.id) ? 'expanded' : '') + ' ' + (isTop3 ? 'popular' : '');
                 card.id = 'product-' + product.id;
@@ -1922,6 +2519,7 @@ https://zero-rental.biz/product-image/51317"></textarea>
                                     (isStand ? '<span class="stand-badge">🏢 스탠드</span>' : '') +
                                     (isWaterOnly ? '<span class="water-only-badge">💧 정수전용</span>' : '') +
                                     (isColdWater ? '<span class="cold-water-badge">❄️💧 냉정수기</span>' : '') +
+                                    customTagsHtml +
                                 '</div>' +
                             '</div>' +
                         '</div>' +
@@ -2154,6 +2752,50 @@ https://zero-rental.biz/product-image/51317"></textarea>
             const product = products.find(p => p.id === productId);
             if (!product) return;
             
+            // 현재 필터 설정에 따라 표시되는 옵션들만 가져오기
+            const showYear3 = document.getElementById('year3').checked;
+            const showYear4 = document.getElementById('year4').checked;
+            const showYear5 = document.getElementById('year5').checked;
+            const showYear6 = document.getElementById('year6').checked;
+            const showYear7 = document.getElementById('year7').checked;
+            const newSignupHide = document.getElementById('newSignupHide').checked;
+            const hideCompetitor = document.getElementById('hideCompetitor').checked;
+            const hidePackage = document.getElementById('hidePackage').checked;
+            
+            let managementFilter = 'all';
+            const managementRadios = document.getElementsByName('managementType');
+            for (let i = 0; i < managementRadios.length; i++) {
+                if (managementRadios[i].checked) {
+                    managementFilter = managementRadios[i].value;
+                    break;
+                }
+            }
+            
+            // 필터가 적용된 옵션들만 선택
+            let filteredOptions = product.price_options.filter(option => {
+                if (option.term.includes('3년') && !showYear3) return false;
+                if (option.term.includes('4년') && !showYear4) return false;
+                if (option.term.includes('5년') && !showYear5) return false;
+                if (option.term.includes('6년') && !showYear6) return false;
+                if (option.term.includes('7년') && !showYear7) return false;
+                
+                if (managementFilter !== 'all') {
+                    const optionManagementType = getManagementType(option.detail);
+                    if (managementFilter === 'self' && optionManagementType !== 'self') return false;
+                    if (managementFilter === 'visit' && optionManagementType !== 'visit') return false;
+                }
+                
+                if (newSignupHide && !option.detail.includes('타사보상')) return false;
+                if (hideCompetitor && option.detail.includes('타사보상')) return false;
+                if (hidePackage && option.detail.includes('패키지')) return false;
+                return true;
+            });
+            
+            if (filteredOptions.length === 0) {
+                showToast('복사할 옵션이 없습니다.', 'warning');
+                return;
+            }
+            
             let output = '* 브랜드 : ' + product.brand + '\n';
             output += '* 모델명 : ' + product.model_number + '\n';
             output += '* 제품명 : ' + product.product_name + '\n';
@@ -2162,7 +2804,7 @@ https://zero-rental.biz/product-image/51317"></textarea>
             }
             output += '\n';
             
-            product.price_options.forEach(option => {
+            filteredOptions.forEach(option => {
                 output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
             });
             
@@ -2195,7 +2837,7 @@ https://zero-rental.biz/product-image/51317"></textarea>
                     countElement.textContent = '📋 ' + product.copy_count + '회';
                 }
                 
-                showToast(product.price_options.length + '개 옵션이 모두 복사되었습니다!', 'success');
+                showToast(filteredOptions.length + '개 옵션이 모두 복사되었습니다!', 'success');
             });
         }
         
@@ -2478,12 +3120,306 @@ https://zero-rental.biz/product-image/51317"></textarea>
             summaryDiv.innerHTML = html;
         }
         
+        // 태그 관련 함수들
+        function searchProductsForTag() {
+            const input = document.getElementById('productSearchInput');
+            const suggestions = document.getElementById('productSearchSuggestions');
+            const searchTerm = input.value.toLowerCase().trim();
+            
+            if (searchTerm.length < 1) {
+                suggestions.style.display = 'none';
+                return;
+            }
+            
+            const matches = products.filter(product => 
+                product.model_number.toLowerCase().includes(searchTerm) ||
+                product.product_name.toLowerCase().includes(searchTerm)
+            ).slice(0, 10);
+            
+            if (matches.length === 0) {
+                suggestions.style.display = 'none';
+                return;
+            }
+            
+            let html = '';
+            matches.forEach(product => {
+                const brandLogo = brandLogos[product.brand] || '📦';
+                html += '<div class="search-suggestion-item" onclick="selectProductForTag(' + product.id + ')">' +
+                        '<div style="color: #e0e0e0; font-weight: 500; font-size: 13px;">' +
+                            brandLogo + ' ' + product.model_number +
+                        '</div>' +
+                        '<div style="color: #999; font-size: 12px; margin-top: 2px;">' +
+                            product.product_name +
+                        '</div>' +
+                    '</div>';
+            });
+            
+            suggestions.innerHTML = html;
+            suggestions.style.display = 'block';
+        }
+        
+        function selectProductForTag(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                selectedProductForTag = product;
+                const input = document.getElementById('productSearchInput');
+                const suggestions = document.getElementById('productSearchSuggestions');
+                const brandLogo = brandLogos[product.brand] || '📦';
+                input.value = brandLogo + ' ' + product.model_number + ' - ' + product.product_name;
+                suggestions.style.display = 'none';
+            }
+        }
+        
+        async function addTagToProduct() {
+            const tagInput = document.getElementById('tagInput');
+            const tag = tagInput.value.trim();
+            
+            if (!selectedProductForTag) {
+                showToast('제품을 먼저 선택해주세요.', 'warning');
+                return;
+            }
+            
+            if (!tag) {
+                showToast('태그를 입력해주세요.', 'warning');
+                return;
+            }
+            
+            try {
+                const currentTags = selectedProductForTag.custom_tags || [];
+                if (currentTags.includes(tag)) {
+                    showToast('이미 추가된 태그입니다.', 'warning');
+                    return;
+                }
+                
+                const updatedTags = [...currentTags, tag];
+                
+                const { error } = await supabaseClient
+                    .from('rental_products')
+                    .update({ custom_tags: updatedTags })
+                    .eq('id', selectedProductForTag.id);
+                
+                if (error) throw error;
+                
+                selectedProductForTag.custom_tags = updatedTags;
+                const productIndex = products.findIndex(p => p.id === selectedProductForTag.id);
+                if (productIndex !== -1) {
+                    products[productIndex].custom_tags = updatedTags;
+                }
+                
+                tagInput.value = '';
+                document.getElementById('productSearchInput').value = '';
+                selectedProductForTag = null;
+                
+                updateTaggedProductsList();
+                showToast('태그 "' + tag + '"가 추가되었습니다!', 'success');
+                
+            } catch (error) {
+                console.error('Error adding tag:', error);
+                showToast('태그 추가 중 오류가 발생했습니다.', 'error');
+            }
+        }
+        
+        function updateTaggedProductsList() {
+            const listDiv = document.getElementById('taggedProductsList');
+            if (!listDiv) return;
+            
+            const productsWithTags = products.filter(product => 
+                product.custom_tags && product.custom_tags.length > 0
+            );
+            
+            if (productsWithTags.length === 0) {
+                listDiv.innerHTML = '<div style="color: #666; text-align: center; padding: 20px;">태그가 붙은 제품이 없습니다.</div>';
+                return;
+            }
+            
+            let html = '';
+            productsWithTags.forEach(product => {
+                const brandLogo = brandLogos[product.brand] || '📦';
+                
+                html += '<div class="tagged-product">' +
+                        '<div class="tagged-product-info">' +
+                            '<div class="tagged-product-name">' +
+                                brandLogo + ' ' + product.model_number + ' - ' + product.product_name +
+                            '</div>' +
+                            '<div class="tagged-product-tags">';
+                
+                product.custom_tags.forEach(tag => {
+                    html += '<span class="tag-item">' +
+                                '✨ ' + tag +
+                                '<button class="tag-remove-btn" onclick="removeTagFromProduct(' + product.id + ', \'' + tag + '\')">×</button>' +
+                            '</span>';
+                });
+                
+                html += '</div>' +
+                        '</div>' +
+                    '</div>';
+            });
+            
+            listDiv.innerHTML = html;
+        }
+        
+        async function removeTagFromProduct(productId, tagToRemove) {
+            try {
+                const product = products.find(p => p.id === productId);
+                if (!product) return;
+                
+                const updatedTags = product.custom_tags.filter(tag => tag !== tagToRemove);
+                
+                const { error } = await supabaseClient
+                    .from('rental_products')
+                    .update({ custom_tags: updatedTags })
+                    .eq('id', productId);
+                
+                if (error) throw error;
+                
+                const productIndex = products.findIndex(p => p.id === productId);
+                if (productIndex !== -1) {
+                    products[productIndex].custom_tags = updatedTags;
+                }
+                
+                updateTaggedProductsList();
+                showToast('태그 "' + tagToRemove + '"가 제거되었습니다.', 'success');
+                
+            } catch (error) {
+                console.error('Error removing tag:', error);
+                showToast('태그 제거 중 오류가 발생했습니다.', 'error');
+            }
+        }
+        
+        // 유의사항 저장 함수
+        async function saveNotes() {
+            const notes = {
+                sk: document.getElementById('note-sk').value,
+                lg: document.getElementById('note-lg').value,
+                coway: document.getElementById('note-coway').value,
+                kyowon: document.getElementById('note-kyowon').value,
+                chungho: document.getElementById('note-chungho').value,
+                hyundai: document.getElementById('note-hyundai').value,
+                ceragem: document.getElementById('note-ceragem').value,
+                cuckoo: document.getElementById('note-cuckoo').value
+            };
+            
+            try {
+                localStorage.setItem('brandNotes', JSON.stringify(notes));
+                
+                const now = new Date().toLocaleString('ko-KR');
+                Object.keys(notes).forEach(brand => {
+                    const updatedElement = document.getElementById('note-' + brand + '-updated');
+                    if (updatedElement) {
+                        updatedElement.textContent = '수정: ' + now;
+                    }
+                });
+                
+                showToast('브랜드 유의사항이 저장되었습니다!', 'success');
+            } catch (error) {
+                console.error('Error saving notes:', error);
+                showToast('유의사항 저장 중 오류가 발생했습니다.', 'error');
+            }
+        }
+        
+        // 타사보상 규정 저장 함수
+        async function saveCompetitorRules() {
+            const rules = {
+                sk: document.getElementById('competitor-sk').value,
+                lg: document.getElementById('competitor-lg').value,
+                coway: document.getElementById('competitor-coway').value,
+                cuckoo: document.getElementById('competitor-cuckoo').value,
+                kyowon: document.getElementById('competitor-kyowon').value,
+                chungho: document.getElementById('competitor-chungho').value
+            };
+            
+            try {
+                localStorage.setItem('competitorRules', JSON.stringify(rules));
+                
+                const now = new Date().toLocaleString('ko-KR');
+                Object.keys(rules).forEach(brand => {
+                    const updatedElement = document.getElementById('competitor-' + brand + '-updated');
+                    if (updatedElement) {
+                        updatedElement.textContent = '수정: ' + now;
+                    }
+                });
+                
+                showToast('타사보상 규정이 저장되었습니다!', 'success');
+            } catch (error) {
+                console.error('Error saving competitor rules:', error);
+                showToast('타사보상 규정 저장 중 오류가 발생했습니다.', 'error');
+            }
+        }
+        
+        // 저장된 데이터 로드 함수들
+        function loadSavedNotes() {
+            try {
+                const savedNotes = localStorage.getItem('brandNotes');
+                if (savedNotes) {
+                    const notes = JSON.parse(savedNotes);
+                    Object.keys(notes).forEach(brand => {
+                        const textarea = document.getElementById('note-' + brand);
+                        if (textarea && notes[brand]) {
+                            textarea.value = notes[brand];
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading notes:', error);
+            }
+        }
+        
+        function loadSavedCompetitorRules() {
+            try {
+                const savedRules = localStorage.getItem('competitorRules');
+                if (savedRules) {
+                    const rules = JSON.parse(savedRules);
+                    Object.keys(rules).forEach(brand => {
+                        const textarea = document.getElementById('competitor-' + brand);
+                        if (textarea && rules[brand]) {
+                            textarea.value = rules[brand];
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading competitor rules:', error);
+            }
+        }
+        
+        // 외부 클릭 이벤트 핸들러
+        document.addEventListener('click', function(event) {
+            const suggestions = document.getElementById('productSearchSuggestions');
+            const searchInput = document.getElementById('productSearchInput');
+            
+            if (suggestions && searchInput && 
+                !suggestions.contains(event.target) && 
+                !searchInput.contains(event.target)) {
+                suggestions.style.display = 'none';
+            }
+        });
+        
         // 페이지 로드 시 초기화
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM Content Loaded');
             
             loadFilterSettings();
+            loadSavedNotes();
+            loadSavedCompetitorRules();
             loadProducts();
+            
+            // 엔터 키 이벤트 핸들러
+            const tagInput = document.getElementById('tagInput');
+            if (tagInput) {
+                tagInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        addTagToProduct();
+                    }
+                });
+            }
+            
+            const productSearchInput = document.getElementById('productSearchInput');
+            if (productSearchInput) {
+                productSearchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Escape') {
+                        document.getElementById('productSearchSuggestions').style.display = 'none';
+                    }
+                });
+            }
         });
     </script>
 </body>
