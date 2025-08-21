@@ -2,12 +2,8 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <meta name="description" content="SNS센터 렌탈견적 시스템 - 정수기 렌탈 견적 관리">
-    <meta name="keywords" content="렌탈, 정수기, 견적, SK매직, LG전자, 코웨이">
-    <meta name="theme-color" content="#0066FF">
-    <title>SNS센터 렌탈견적 시스템 - 정수기 편</title>
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>렌탈 견적 시스템</title>
     <style>
         * {
             margin: 0;
@@ -16,980 +12,377 @@
         }
         
         body {
-            font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-            background: #0a0a0a;
-            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            letter-spacing: -0.3px;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            padding: 20px;
         }
         
-        :root {
-            --primary-blue: #0066FF;
-            --primary-blue-hover: #0052CC;
-            --primary-blue-light: rgba(0, 102, 255, 0.1);
-            --primary-blue-glow: rgba(0, 102, 255, 0.5);
-            --year3-color: #4CAF50;
-            --year4-color: #2196F3;
-            --year5-color: #9C27B0;
-            --year6-color: #FF9800;
-            --year7-color: #E91E63;
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
         }
         
         .header {
-            background: #111;
-            border-bottom: 1px solid #222;
-            padding: 20px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .header-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--primary-blue);
-            text-shadow: 0 0 20px var(--primary-blue-glow);
-            letter-spacing: -0.5px;
-        }
-        
-        .header-buttons {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .header-btn {
-            background: var(--primary-blue-light);
-            border: 1px solid var(--primary-blue);
-            color: var(--primary-blue);
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: -0.2px;
-        }
-        
-        .header-btn:hover {
-            background: rgba(0, 102, 255, 0.2);
-            box-shadow: 0 0 15px rgba(0, 102, 255, 0.3);
-        }
-        
-        .header-btn.clear-btn {
-            background: rgba(255, 152, 0, 0.1);
-            border-color: #ff9800;
-            color: #ff9800;
-        }
-        
-        .header-btn.clear-btn:hover {
-            background: rgba(255, 152, 0, 0.2);
-            box-shadow: 0 0 15px rgba(255, 152, 0, 0.3);
-        }
-        
-        #copySelectedBtn {
-            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-hover));
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            font-weight: 600;
-            padding: 10px 20px;
-            box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3);
+            padding: 30px;
+            text-align: center;
         }
         
-        #copySelectedBtn:hover {
-            background: linear-gradient(135deg, var(--primary-blue-hover), #0044AA);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 102, 255, 0.5);
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
         }
         
         .tabs {
-            background: #111;
-            border-bottom: 1px solid #222;
-            padding: 0 20px;
+            background: #f8f9fa;
+            padding: 0;
+            border-bottom: 2px solid #e0e0e0;
         }
         
         .tabs-container {
-            max-width: 1400px;
-            margin: 0 auto;
             display: flex;
+            justify-content: center;
             gap: 10px;
+            padding: 15px;
         }
         
         .tab {
-            background: transparent;
-            color: #666;
-            border: none;
-            padding: 15px 30px;
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            position: relative;
             transition: all 0.3s;
-            letter-spacing: -0.3px;
+            font-weight: 600;
+            font-size: 14px;
         }
         
         .tab:hover {
-            color: #999;
+            background: #f0f0f0;
+            transform: translateY(-2px);
         }
         
         .tab.active {
-            color: var(--primary-blue);
-        }
-        
-        .tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--primary-blue);
-            box-shadow: 0 0 10px var(--primary-blue-glow);
-        }
-        
-        .content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 30px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
         }
         
         .tab-panel {
             display: none;
+            padding: 20px;
         }
         
         .tab-panel.active {
             display: block;
         }
         
-        .filters {
-            background: #111;
-            border: 1px solid #222;
-            border-radius: 12px;
+        .filters-section {
+            background: #f8f9fa;
             padding: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .filter-section-title {
-            color: var(--primary-blue);
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .filter-main-row {
-            display: flex;
-            gap: 40px;
-            align-items: flex-start;
+            border-radius: 15px;
             margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #222;
-        }
-        
-        .filter-section-inline {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .filter-divider {
-            width: 1px;
-            background: #333;
-            margin: 0;
-            align-self: stretch;
-        }
-        
-        .filter-additional-row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            padding: 8px 0;
-            margin-top: -5px;
-        }
-        
-        .filter-additional-row .checkbox-label {
-            background: transparent;
-            border-color: #333;
-            font-size: 13px;
-            padding: 5px 10px;
-        }
-        
-        .filter-additional-row .checkbox-label:hover {
-            background: rgba(0, 102, 255, 0.08);
-            border-color: rgba(0, 102, 255, 0.3);
-        }
-        
-        .filter-additional-row .checkbox-label input:checked {
-            accent-color: var(--primary-blue);
-        }
-        
-        .filter-additional-row .checkbox-label input:checked ~ span {
-            color: var(--primary-blue);
-            font-weight: 600;
-        }
-        
-        .year-filters {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-        
-        .management-filters {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-        
-        .year-filters .checkbox-label input:checked ~ span {
-            transition: all 0.3s;
-        }
-        
-        .year-filters .checkbox-label:nth-child(1) input:checked ~ span {
-            color: var(--year3-color);
-            font-weight: 600;
-        }
-        
-        .year-filters .checkbox-label:nth-child(1) input:checked {
-            accent-color: var(--year3-color);
-        }
-        
-        .year-filters .checkbox-label:nth-child(2) input:checked ~ span {
-            color: var(--year4-color);
-            font-weight: 600;
-        }
-        
-        .year-filters .checkbox-label:nth-child(2) input:checked {
-            accent-color: var(--year4-color);
-        }
-        
-        .year-filters .checkbox-label:nth-child(3) input:checked ~ span {
-            color: var(--year5-color);
-            font-weight: 600;
-        }
-        
-        .year-filters .checkbox-label:nth-child(3) input:checked {
-            accent-color: var(--year5-color);
-        }
-        
-        .year-filters .checkbox-label:nth-child(4) input:checked ~ span {
-            color: var(--year6-color);
-            font-weight: 600;
-        }
-        
-        .year-filters .checkbox-label:nth-child(4) input:checked {
-            accent-color: var(--year6-color);
-        }
-        
-        .year-filters .checkbox-label:nth-child(5) input:checked ~ span {
-            color: var(--year7-color);
-            font-weight: 600;
-        }
-        
-        .year-filters .checkbox-label:nth-child(5) input:checked {
-            accent-color: var(--year7-color);
-        }
-        
-        .radio-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            padding: 6px 12px;
-            border-radius: 8px;
-            transition: all 0.2s;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid transparent;
-        }
-        
-        .radio-label:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        .radio-label input[type="radio"] {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--primary-blue);
-            cursor: pointer;
-        }
-        
-        .radio-label input[type="radio"]:checked + span {
-            color: var(--primary-blue);
-            font-weight: 600;
-        }
-        
-        .radio-label span {
-            color: #e0e0e0;
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: -0.2px;
-        }
-        
-        .filter-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #222;
         }
         
         .filter-group {
+            margin-bottom: 20px;
+        }
+        
+        .filter-group h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 1.2em;
+        }
+        
+        .checkbox-group {
             display: flex;
-            flex-direction: column;
-            gap: 5px;
-            flex: 1;
+            flex-wrap: wrap;
+            gap: 15px;
         }
         
-        .filter-group label {
-            font-size: 12px;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 500;
-        }
-        
-        .filter-group select,
-        .filter-group input {
-            background: #1a1a1a;
-            border: 1px solid #333;
-            color: #e0e0e0;
-            padding: 10px;
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px 15px;
+            background: white;
             border-radius: 8px;
             transition: all 0.3s;
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: -0.2px;
+            border: 2px solid #e0e0e0;
         }
         
-        .filter-group select:focus,
-        .filter-group input:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 2px var(--primary-blue-light);
+        .checkbox-group label:hover {
+            background: #f0f0f0;
+            border-color: #764ba2;
         }
         
-        .checkbox-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            padding: 6px 12px;
-            border-radius: 8px;
-            transition: all 0.2s;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid transparent;
-            white-space: nowrap;
-        }
-        
-        .checkbox-label:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        .checkbox-label input[type="checkbox"] {
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 8px;
             width: 18px;
             height: 18px;
-            accent-color: var(--primary-blue);
             cursor: pointer;
         }
         
-        .checkbox-label span {
-            color: #e0e0e0;
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: -0.2px;
+        .checkbox-group input[type="checkbox"]:checked + span {
+            color: #764ba2;
+            font-weight: 600;
+        }
+        
+        .search-section {
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #764ba2;
+        }
+        
+        .search-btn, .copy-all-btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.3s;
+        }
+        
+        .search-btn:hover, .copy-all-btn:hover {
+            transform: translateY(-2px);
         }
         
         .products-grid {
             display: grid;
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
         }
         
         .product-card {
-            background: linear-gradient(145deg, #111, #0f0f0f);
-            border: 1px solid #222;
-            border-radius: 12px;
-            overflow: hidden;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
             transition: all 0.3s;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
         
         .product-card:hover {
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-            border-color: #333;
-        }
-        
-        .product-card.expanded {
-            border-color: #444;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-color: #764ba2;
         }
         
         .product-header {
-            padding: 15px 20px;
-            cursor: pointer;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .product-header h3 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .product-badges {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.3s;
-        }
-        
-        .product-header:hover {
-            background: rgba(255, 255, 255, 0.02);
-        }
-        
-        .product-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex: 1;
-            min-width: 0;
-        }
-        
-        .product-info {
-            flex: 1;
-            min-width: 0;
-        }
-        
-        .product-info h3 {
-            color: #fff;
-            font-size: 15px;
-            margin-bottom: 5px;
-            font-weight: 600;
-            line-height: 1.4;
-            word-break: keep-all;
-            letter-spacing: -0.3px;
-        }
-        
-        .product-card.popular {
-            border-color: rgba(255, 215, 0, 0.3);
-            background: linear-gradient(145deg, #111, #0f0f0f);
-        }
-        
-        .product-card.popular .product-header {
-            background: linear-gradient(to right, rgba(255, 215, 0, 0.05), transparent);
-        }
-        
-        .product-card.popular .product-info h3 {
-            color: #ffd700;
-            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
-        }
-        
-        .product-meta {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-top: 5px;
+            gap: 5px;
             flex-wrap: wrap;
         }
         
-        .brand-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: #222;
-            color: #888;
+        .product-badges span {
             padding: 3px 8px;
-            border-radius: 6px;
+            border-radius: 12px;
             font-size: 11px;
-            font-weight: 500;
-            letter-spacing: -0.1px;
-        }
-        
-        .hot-cold-badge {
-            background: rgba(245, 101, 101, 0.1);
-            color: #f56565;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: -0.1px;
-        }
-        
-        .ice-badge {
-            background: rgba(0, 188, 212, 0.1);
-            color: #00bcd4;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: -0.1px;
-        }
-        
-        .ro-badge {
-            background: rgba(96, 165, 250, 0.1);
-            color: #60a5fa;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: -0.1px;
+            font-weight: 600;
         }
         
         .stand-badge {
-            background: rgba(147, 51, 234, 0.1);
-            color: #9333ea;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: -0.1px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
         }
         
         .water-only-badge {
-            background: rgba(34, 197, 94, 0.1);
-            color: #22c55e;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: -0.1px;
+            background: linear-gradient(135deg, #00c9ff 0%, #92fe9d 100%);
+            color: white;
         }
         
         .cold-water-badge {
-            background: rgba(59, 130, 246, 0.1);
-            color: #3b82f6;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: -0.1px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
         }
         
-        .custom-tag-badge {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 152, 0, 0.1));
-            color: #ffd700;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: -0.1px;
-            border: 1px solid rgba(255, 215, 0, 0.3);
+        .tag-badge {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #333;
         }
         
-        .copy-count {
-            background: rgba(76, 175, 80, 0.1);
-            color: #4caf50;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            font-family: 'Pretendard Variable', Pretendard, sans-serif;
-            letter-spacing: -0.2px;
+        .product-info {
+            margin-bottom: 15px;
         }
         
-        .update-date {
+        .product-info p {
             color: #666;
-            font-size: 12px;
-            transition: all 0.3s;
-            font-weight: 500;
-            letter-spacing: -0.2px;
+            margin-bottom: 5px;
+            font-size: 14px;
         }
         
-        .expand-icon {
-            color: #666;
-            font-size: 20px;
-            transition: transform 0.3s;
-            font-weight: 600;
+        .product-info strong {
+            color: #333;
         }
         
-        .product-card.expanded .expand-icon {
-            transform: rotate(180deg);
+        .rental-options {
+            margin-top: 15px;
         }
         
-        .product-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-            background: #0a0a0a;
-            border-top: 1px solid #222;
-        }
-        
-        .product-card.expanded .product-content {
-            max-height: 2000px;
-            overflow: visible;
-        }
-        
-        .price-table {
-            padding: 20px;
-        }
-        
-        .price-row {
-            display: grid;
-            grid-template-columns: 40px 110px 80px 1fr 130px 140px 80px;
-            align-items: center;
+        .rental-option {
+            background: #f8f9fa;
             padding: 12px;
             border-radius: 8px;
-            margin-bottom: 8px;
-            transition: all 0.3s;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            cursor: pointer;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
         }
         
-        .price-row:hover {
-            background: rgba(0, 102, 255, 0.08);
-            border-color: rgba(0, 102, 255, 0.3);
-            transform: translateX(3px);
+        .rental-option:hover {
+            background: #e8e9ea;
         }
         
-        .price-row.selected {
-            background: rgba(0, 102, 255, 0.15);
-            border-color: var(--primary-blue);
-            border-left: 4px solid var(--primary-blue);
+        .option-info {
+            flex: 1;
         }
         
-        .price-row.competitor-option {
-            background: rgba(255, 152, 0, 0.05);
-            border-left: 4px solid #ff9800;
-        }
-        
-        .price-row.competitor-option:hover {
-            background: rgba(255, 152, 0, 0.12);
-            border-color: rgba(255, 152, 0, 0.3);
-        }
-        
-        .price-row.competitor-option.selected {
-            background: rgba(255, 152, 0, 0.18);
-            border-left: 4px solid #ff9800;
-        }
-        
-        .price-row.package-option {
-            background: rgba(76, 175, 80, 0.05);
-            border-left: 4px solid #4CAF50;
-        }
-        
-        .price-row.package-option:hover {
-            background: rgba(76, 175, 80, 0.12);
-            border-color: rgba(76, 175, 80, 0.3);
-        }
-        
-        .price-row.package-option.selected {
-            background: rgba(76, 175, 80, 0.18);
-            border-left: 4px solid #4CAF50;
-        }
-        
-        .price-checkbox {
-            width: 20px;
-            height: 20px;
-            accent-color: var(--primary-blue);
-            cursor: pointer;
-            margin-right: 8px;
-        }
-        
-        .management-badge {
-            font-size: 11px;
-            padding: 3px 6px;
-            border-radius: 4px;
-            white-space: nowrap;
-            font-weight: 500;
-            letter-spacing: -0.1px;
-        }
-        
-        .management-self {
-            background: rgba(34, 197, 94, 0.15);
-            color: #22c55e;
-        }
-        
-        .management-visit {
-            background: rgba(168, 85, 247, 0.15);
-            color: #a855f7;
-        }
-        
-        .term {
+        .option-title {
             font-weight: 600;
-            font-size: 14px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            white-space: nowrap;
-            letter-spacing: -0.2px;
+            color: #333;
+            margin-bottom: 5px;
         }
         
-        .term-3year {
-            background: rgba(76, 175, 80, 0.15);
-            color: var(--year3-color);
+        .option-details {
+            font-size: 13px;
+            color: #666;
         }
         
-        .term-4year {
-            background: rgba(33, 150, 243, 0.15);
-            color: var(--year4-color);
-        }
-        
-        .term-5year {
-            background: rgba(156, 39, 176, 0.15);
-            color: var(--year5-color);
-        }
-        
-        .term-6year {
-            background: rgba(255, 152, 0, 0.15);
-            color: var(--year6-color);
-        }
-        
-        .term-7year {
-            background: rgba(233, 30, 99, 0.15);
-            color: var(--year7-color);
-        }
-        
-        .management {
-            color: #e0e0e0;
-            font-size: 14px;
-            padding: 0 10px;
-            letter-spacing: -0.2px;
-        }
-        
-        .price {
-            color: #fff;
-            font-weight: 700;
-            font-size: 15px;
-            font-family: 'Pretendard Variable', Pretendard, sans-serif;
-            letter-spacing: -0.3px;
-        }
-        
-        .gift {
+        .copy-btn {
+            padding: 8px 16px;
             background: linear-gradient(135deg, #4CAF50, #45a049);
             color: white;
-            font-weight: 600;
-            font-size: 14px;
-            padding: 5px 10px;
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
-            letter-spacing: -0.2px;
-        }
-        
-        .quick-copy-btn {
-            background: linear-gradient(135deg, #333, #444);
-            border: 1px solid #555;
-            color: #e0e0e0;
-            padding: 6px 14px;
+            border: none;
             border-radius: 6px;
             cursor: pointer;
             font-size: 12px;
-            font-weight: 600;
-            transition: all 0.3s;
-            letter-spacing: -0.2px;
+            transition: transform 0.2s;
         }
         
-        .quick-copy-btn:hover {
-            background: var(--primary-blue);
-            border-color: var(--primary-blue);
-            color: white;
-            transform: scale(1.08);
-            box-shadow: 0 2px 10px rgba(0, 102, 255, 0.4);
-        }
-        
-        .product-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        .select-copy-btn {
-            background: var(--primary-blue);
-            border: none;
-            color: white;
-            padding: 6px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            transition: all 0.3s;
-            letter-spacing: -0.2px;
-        }
-        
-        .select-copy-btn:hover {
-            background: var(--primary-blue-hover);
+        .copy-btn:hover {
             transform: scale(1.05);
-        }
-        
-        .copy-all-btn {
-            background: rgba(76, 175, 80, 0.1);
-            border: 1px solid #4caf50;
-            color: #4caf50;
-            padding: 6px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            transition: all 0.3s;
-            letter-spacing: -0.2px;
-        }
-        
-        .copy-all-btn:hover {
-            background: #4caf50;
-            color: white;
-            transform: scale(1.05);
-        }
-        
-        .additional-gift-section {
-            padding: 15px;
-            background: #0a0a0a;
-            border-top: 1px solid #222;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        .additional-gift-input {
-            flex: 1;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            color: #e0e0e0;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 500;
-            letter-spacing: -0.2px;
-        }
-        
-        .additional-gift-input:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 2px var(--primary-blue-light);
-        }
-        
-        .additional-gift-btn {
-            background: #ff9800;
-            border: none;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            transition: all 0.3s;
-            letter-spacing: -0.2px;
-        }
-        
-        .additional-gift-btn:hover {
-            background: #f57c00;
-            transform: scale(1.05);
-        }
-        
-        .input-container {
-            display: grid;
-            grid-template-columns: 2fr 1.5fr;
-            gap: 30px;
-        }
-        
-        .input-panel {
-            background: #111;
-            border: 1px solid #222;
-            border-radius: 12px;
-            padding: 25px;
-        }
-        
-        .input-panel h3 {
-            color: var(--primary-blue);
-            margin-bottom: 20px;
-            font-size: 18px;
-            font-weight: 600;
-            letter-spacing: -0.3px;
-        }
-        
-        .paste-area {
-            width: 100%;
-            min-height: 400px;
-            background: #0a0a0a;
-            border: 1px solid #333;
-            color: #e0e0e0;
-            padding: 15px;
-            border-radius: 8px;
-            font-family: 'D2Coding', 'Courier New', monospace;
-            font-size: 13px;
-            resize: vertical;
-            line-height: 1.6;
-        }
-        
-        .paste-area:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 2px var(--primary-blue-light);
-        }
-        
-        .btn-primary {
-            background: var(--primary-blue);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
-            margin-top: 15px;
-            letter-spacing: -0.3px;
-        }
-        
-        .btn-primary:hover {
-            background: var(--primary-blue-hover);
-            box-shadow: 0 0 20px var(--primary-blue-glow);
         }
         
         .toast {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background: var(--primary-blue);
+            background: #333;
             color: white;
             padding: 15px 25px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            display: none;
-            animation: slideUp 0.3s ease-out;
-            box-shadow: 0 5px 20px rgba(0, 102, 255, 0.4);
-            z-index: 2000;
-            letter-spacing: -0.2px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
         }
         
         .toast.success {
-            background: #4caf50;
-            box-shadow: 0 5px 20px rgba(76, 175, 80, 0.4);
-        }
-        
-        .toast.warning {
-            background: #ff9800;
-            box-shadow: 0 5px 20px rgba(255, 152, 0, 0.4);
+            background: linear-gradient(135deg, #4CAF50, #45a049);
         }
         
         .toast.error {
-            background: #f44336;
-            box-shadow: 0 5px 20px rgba(244, 67, 54, 0.4);
+            background: linear-gradient(135deg, #f44336, #da190b);
         }
         
-        @keyframes slideUp {
-            from {
-                transform: translateY(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+        .product-summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
-        .no-results {
-            text-align: center;
-            padding: 80px 20px;
-            color: #666;
-            background: linear-gradient(145deg, #111, #0f0f0f);
-            border: 1px solid #222;
-            border-radius: 12px;
-            margin: 20px 0;
+        .input-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .input-section h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .input-section textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+        }
+        
+        .input-section textarea:focus {
+            outline: none;
+            border-color: #764ba2;
+        }
+        
+        .save-btn {
+            margin-top: 15px;
+            padding: 12px 40px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
             font-size: 16px;
-            font-weight: 500;
-            letter-spacing: -0.2px;
+            transition: transform 0.3s;
+        }
+        
+        .save-btn:hover {
+            transform: translateY(-2px);
         }
         
         /* 태그 관리 스타일 */
@@ -999,113 +392,109 @@
         }
         
         .tags-header {
-            background: #111;
-            border: 1px solid #222;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 30px;
             text-align: center;
+            margin-bottom: 30px;
         }
         
         .tags-header h2 {
-            color: var(--primary-blue);
-            font-size: 20px;
             margin-bottom: 10px;
-            font-weight: 600;
-            letter-spacing: -0.3px;
-        }
-        
-        .tags-header p {
-            color: #666;
-            font-size: 14px;
-            letter-spacing: -0.2px;
+            color: #333;
         }
         
         .tag-input-section {
-            background: #111;
-            border: 1px solid #222;
-            border-radius: 12px;
-            padding: 25px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             margin-bottom: 30px;
         }
         
         .tag-input-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr auto;
-            gap: 15px;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 20px;
             align-items: end;
         }
         
         .tag-input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
             position: relative;
         }
         
         .tag-input-group label {
-            color: #999;
-            font-size: 13px;
-            font-weight: 500;
-            letter-spacing: -0.2px;
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
         }
         
         .tag-input-group input {
-            background: #1a1a1a;
-            border: 1px solid #333;
-            color: #e0e0e0;
-            padding: 10px 15px;
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 14px;
-            font-weight: 500;
-            letter-spacing: -0.2px;
         }
         
-        .tag-input-group input:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 2px var(--primary-blue-light);
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .search-suggestions.active {
+            display: block;
+        }
+        
+        .suggestion-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .suggestion-item:hover {
+            background: #f5f5f5;
         }
         
         .tag-add-btn {
-            background: linear-gradient(135deg, #ffd700, #ff9800);
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             border: none;
-            color: #111;
-            padding: 10px 25px;
             border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
             font-weight: 600;
-            transition: all 0.3s;
-            letter-spacing: -0.2px;
-            height: 42px;
+            cursor: pointer;
+            transition: transform 0.2s;
         }
         
         .tag-add-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+            transform: translateY(-2px);
         }
         
         .product-tags-list {
-            background: #111;
-            border: 1px solid #222;
-            border-radius: 12px;
-            padding: 20px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
         .product-tags-list h3 {
-            color: #ffd700;
-            font-size: 16px;
-            margin-bottom: 15px;
-            font-weight: 600;
-            letter-spacing: -0.3px;
+            margin-bottom: 20px;
+            color: #333;
         }
         
-        .tagged-product {
-            background: #0a0a0a;
-            border: 1px solid #333;
-            border-radius: 8px;
+        .tagged-product-item {
             padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
             margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
@@ -1116,358 +505,239 @@
             flex: 1;
         }
         
-        .tagged-product-name {
-            color: #e0e0e0;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 8px;
-            letter-spacing: -0.2px;
+        .product-model {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
         }
         
-        .tagged-product-tags {
+        .product-name {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .product-tag-badges {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
         }
         
-        .tag-item {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 152, 0, 0.15));
-            color: #ffd700;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: -0.1px;
-            border: 1px solid rgba(255, 215, 0, 0.3);
+        .product-tag-badges .tag-badge {
             display: inline-flex;
             align-items: center;
             gap: 5px;
+            padding: 4px 10px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #333;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
         }
         
-        .tag-remove-btn {
-            background: none;
-            border: none;
-            color: #ff6b6b;
+        .tag-remove {
             cursor: pointer;
-            font-size: 14px;
-            padding: 0 2px;
-            transition: all 0.2s;
+            color: #666;
+            font-weight: bold;
         }
         
-        .tag-remove-btn:hover {
-            color: #ff0000;
-            transform: scale(1.2);
+        .tag-remove:hover {
+            color: #ff4444;
         }
         
-        .search-suggestions {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 8px;
-            margin-top: 5px;
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 100;
-            display: none;
-        }
-        
-        .search-suggestion-item {
-            padding: 10px 15px;
-            cursor: pointer;
-            font-size: 13px;
-            border-bottom: 1px solid #222;
-            transition: all 0.2s;
-        }
-        
-        .search-suggestion-item:hover {
-            background: rgba(0, 102, 255, 0.1);
-        }
-        
-        .search-suggestion-item:last-child {
-            border-bottom: none;
-        }
-        
-        .notes-container {
+        /* 브랜드 유의사항 스타일 */
+        .notes-container, .competitor-rules-container {
             max-width: 1200px;
             margin: 0 auto;
         }
         
         .notes-header {
-            background: #111;
-            border: 1px solid #222;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 30px;
             text-align: center;
+            margin-bottom: 30px;
         }
         
         .notes-header h2 {
-            color: var(--primary-blue);
-            font-size: 20px;
             margin-bottom: 10px;
-            font-weight: 600;
-            letter-spacing: -0.3px;
+            color: #333;
         }
         
-        .notes-header p {
-            color: #666;
-            font-size: 14px;
-            letter-spacing: -0.2px;
-        }
-        
-        .notes-grid {
+        .notes-grid, .competitor-rules-grid {
             display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 20px;
+            margin-bottom: 30px;
         }
         
-        .note-card {
-            background: #111;
-            border: 1px solid #222;
-            border-radius: 12px;
-            overflow: hidden;
-            transition: all 0.3s;
+        .note-card, .competitor-rule-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
-        .note-card:hover {
-            border-color: #333;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-        }
-        
-        .note-header {
-            background: linear-gradient(135deg, var(--primary-blue-light), transparent);
-            padding: 15px 20px;
-            border-bottom: 1px solid #222;
+        .note-header, .competitor-rule-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
         }
         
-        .note-brand {
-            color: var(--primary-blue);
-            font-size: 18px;
+        .note-brand, .competitor-rule-brand {
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            letter-spacing: -0.3px;
+            font-size: 16px;
+            color: #333;
         }
         
         .note-updated {
-            color: #666;
             font-size: 12px;
-            font-weight: 500;
-            letter-spacing: -0.2px;
+            color: #999;
         }
         
-        .note-content {
-            background: #0a0a0a;
-            border: none;
-            padding: 20px;
+        .note-content, .competitor-rule-content {
+            width: 100%;
             min-height: 150px;
-            color: #e0e0e0;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
             font-size: 14px;
-            line-height: 1.8;
             resize: vertical;
-            width: 100%;
             font-family: inherit;
-            letter-spacing: -0.2px;
         }
         
-        .note-content:focus {
-            outline: none;
-            background: #0f0f0f;
-        }
-        
-        .note-content::placeholder {
-            color: #444;
-        }
-        
-        .save-notes-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: var(--primary-blue);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            box-shadow: 0 5px 20px rgba(0, 102, 255, 0.4);
-            transition: all 0.3s;
-            z-index: 50;
-            letter-spacing: -0.2px;
-        }
-        
-        .save-notes-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(0, 102, 255, 0.6);
-        }
-        
-        .competitor-rules-container {
-            max-width: 1200px;
+        .save-notes-btn, .save-competitor-btn {
+            display: block;
             margin: 0 auto;
-        }
-        
-        .competitor-rule-card {
-            background: #111;
-            border: 1px solid #222;
-            border-radius: 12px;
-            overflow: hidden;
-            transition: all 0.3s;
-            margin-bottom: 20px;
-        }
-        
-        .competitor-rule-card:hover {
-            border-color: #333;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-        }
-        
-        .competitor-rule-header {
-            background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), transparent);
-            padding: 15px 20px;
-            border-bottom: 1px solid #222;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .competitor-rule-brand {
-            color: #ff9800;
-            font-size: 18px;
-            font-weight: 600;
-            letter-spacing: -0.3px;
-        }
-        
-        .competitor-rule-content {
-            background: #0a0a0a;
-            border: none;
-            padding: 20px;
-            min-height: 200px;
-            color: #e0e0e0;
-            font-size: 14px;
-            line-height: 1.8;
-            resize: vertical;
-            width: 100%;
-            font-family: inherit;
-            letter-spacing: -0.2px;
-        }
-        
-        .competitor-rule-content:focus {
-            outline: none;
-            background: #0f0f0f;
-        }
-        
-        .competitor-rule-content::placeholder {
-            color: #444;
-        }
-        
-        .save-competitor-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: #ff9800;
+            padding: 12px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 15px 30px;
-            border-radius: 30px;
+            border-radius: 8px;
             font-weight: 600;
-            font-size: 14px;
             cursor: pointer;
-            box-shadow: 0 5px 20px rgba(255, 152, 0, 0.4);
-            transition: all 0.3s;
-            z-index: 50;
-            letter-spacing: -0.2px;
+            transition: transform 0.2s;
         }
         
-        .save-competitor-btn:hover {
+        .save-notes-btn:hover, .save-competitor-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(255, 152, 0, 0.6);
         }
         
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .header-buttons {
-                width: 100%;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            .product-info h3 {
-                font-size: 14px;
-            }
-            
-            .price-row {
-                grid-template-columns: 35px 80px 60px 1fr;
-                grid-template-rows: auto auto;
-                gap: 8px;
-            }
-            
-            .product-actions {
-                flex-wrap: wrap;
-                gap: 8px;
-            }
-            
-            .filter-row {
-                flex-direction: column;
-            }
-            
-            .filter-group {
-                width: 100% !important;
-                flex: 1 !important;
-            }
-            
-            .filter-main-row {
-                flex-direction: column;
-                gap: 20px;
-                align-items: stretch;
-            }
-            
-            .filter-section-inline {
-                width: 100%;
-            }
-            
-            .filter-divider {
-                display: none;
-            }
-            
-            .year-filters,
-            .management-filters {
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-            
-            .filter-additional-row {
-                gap: 15px;
-                overflow-x: auto;
-                padding-bottom: 10px;
-            }
-            
-            .checkbox-label {
-                white-space: nowrap;
-            }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="header-content">
-            <div class="logo">📋 SNS센터 렌탈견적 시스템 - 정수기 편</div>
-            <div class="header-buttons">
-                <button class="header-btn" id="copySelectedBtn" onclick="copySelectedItems()">
-                    📋 선택 복사 (<span id="selectedCount">0</span>)
-                </button>
-                <button class="header-btn clear-btn" onclick="clearAllSelections()">🔄 선택 초기화</button>
-                <button class="header-btn clear-btn" onclick="resetFilters()">🔄 필터 초기화</button>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 렌탈 견적 시스템</h1>
+            <p>효율적인 렌탈 상품 관리 및 견적 생성 도구</p>
+        </div>
+        
+        <div class="tabs">
+            <div class="tabs-container">
+                <button class="tab active" onclick="switchTab('output')">📋 견적 출력</button>
+                <button class="tab" onclick="switchTab('input')">✏️ 견적 입력</button>
+                <button class="tab" onclick="switchTab('tags')">🏷️ 태그 관리</button>
+                <button class="tab" onclick="switchTab('notes')">📌 브랜드 유의사항</button>
+                <button class="tab" onclick="switchTab('competitor')">🔄 타사보상 규정</button>
             </div>
+        </div>
+        
+        <!-- 견적 출력 탭 -->
+        <div id="output-panel" class="tab-panel active">
+            <div class="search-section">
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-input" placeholder="모델명, 제품명, 브랜드, 태그로 검색..." onkeyup="searchProducts()">
+                    <button class="search-btn" onclick="searchProducts()">🔍 검색</button>
+                    <button class="copy-all-btn" onclick="copyAllFiltered()">📋 전체복사</button>
+                </div>
+                <div class="product-summary" id="productSummary">
+                    <span>전체 제품: <strong id="totalCount">0</strong>개</span>
+                    <span>검색 결과: <strong id="filteredCount">0</strong>개</span>
+                </div>
+            </div>
+            
+            <div class="filters-section">
+                <div class="filter-group">
+                    <h3>📅 렌탈 기간</h3>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" id="year3" checked>
+                            <span>3년 약정</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" id="year5" checked>
+                            <span>5년 약정</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" id="year6" checked>
+                            <span>6년 약정</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <h3>🔧 관리 방식</h3>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" id="manage4" checked>
+                            <span>4개월 관리</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" id="manage2" checked>
+                            <span>2개월 관리</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" id="filterSend" checked>
+                            <span>필터발송</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <h3>🎯 타사보상</h3>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" id="hideCompetitor">
+                            <span>타사보상 숨기기</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="products-grid" id="productsGrid">
+                <div class="loading">데이터를 불러오는 중...</div>
+            </div>
+        </div>
+        
+        <!-- 견적 입력 탭 -->
+        <div id="input-panel" class="tab-panel">
+            <div class="input-section">
+                <h2>📝 CRM 데이터 입력</h2>
+                <p style="margin-bottom: 15px; color: #666;">CRM에서 복사한 제품 정보를 아래에 붙여넣으세요</p>
+                <textarea id="crmInput" placeholder="예시:
+* 모델명: WPUIAC425S
+* 제품명: SK매직 원코크 플러스 얼음물 냉온정수기 (얼음냉온정)
+
+* 3년약정: 4개월관리 / 월 55,900 / 사은품 180,000
+* 5년약정: 6M반값_4개월관리 / 월 50,400 / 사은품 330,000
+
+상품 안내페이지 : https://zero-rental.biz/product-image/51317"></textarea>
+                <button class="save-btn" onclick="saveProduct()">💾 제품 저장</button>
+            </div>
+        </div>
         
         <!-- 태그 관리 탭 -->
         <div id="tags-panel" class="tab-panel">
@@ -1510,79 +780,7 @@
                     <p>각 브랜드의 렌탈 진행 시 주의사항을 기록해주세요</p>
                 </div>
                 <div class="notes-grid">
-                    <div class="note-card">
-                        <div class="note-header">
-                            <div class="note-brand">
-                                <span>SK매직</span>
-                            </div>
-                            <div class="note-updated" id="note-sk-updated"></div>
-                        </div>
-                        <textarea class="note-content" id="note-sk" placeholder="SK매직 관련 유의사항을 입력하세요...
-예: 설치비, 프로모션 정보, 특별 조건 등"></textarea>
-                    </div>
-                    <div class="note-card">
-                        <div class="note-header">
-                            <div class="note-brand">
-                                <span>LG전자</span>
-                            </div>
-                            <div class="note-updated" id="note-lg-updated"></div>
-                        </div>
-                        <textarea class="note-content" id="note-lg" placeholder="LG전자 관련 유의사항을 입력하세요..."></textarea>
-                    </div>
-                    <div class="note-card">
-                        <div class="note-header">
-                            <div class="note-brand">
-                                <span>코웨이</span>
-                            </div>
-                            <div class="note-updated" id="note-coway-updated"></div>
-                        </div>
-                        <textarea class="note-content" id="note-coway" placeholder="코웨이 관련 유의사항을 입력하세요..."></textarea>
-                    </div>
-                    <div class="note-card">
-                        <div class="note-header">
-                            <div class="note-brand">
-                                <span>교원웰스</span>
-                            </div>
-                            <div class="note-updated" id="note-kyowon-updated"></div>
-                        </div>
-                        <textarea class="note-content" id="note-kyowon" placeholder="교원웰스 관련 유의사항을 입력하세요..."></textarea>
-                    </div>
-                    <div class="note-card">
-                        <div class="note-header">
-                            <div class="note-brand">
-                                <span>청호나이스</span>
-                            </div>
-                            <div class="note-updated" id="note-chungho-updated"></div>
-                        </div>
-                        <textarea class="note-content" id="note-chungho" placeholder="청호나이스 관련 유의사항을 입력하세요..."></textarea>
-                    </div>
-                    <div class="note-card">
-                        <div class="note-header">
-                            <div class="note-brand">
-                                <span>현대큐밍</span>
-                            </div>
-                            <div class="note-updated" id="note-hyundai-updated"></div>
-                        </div>
-                        <textarea class="note-content" id="note-hyundai" placeholder="현대큐밍 관련 유의사항을 입력하세요..."></textarea>
-                    </div>
-                    <div class="note-card">
-                        <div class="note-header">
-                            <div class="note-brand">
-                                <span>세라젬</span>
-                            </div>
-                            <div class="note-updated" id="note-ceragem-updated"></div>
-                        </div>
-                        <textarea class="note-content" id="note-ceragem" placeholder="세라젬 관련 유의사항을 입력하세요..."></textarea>
-                    </div>
-                    <div class="note-card">
-                        <div class="note-header">
-                            <div class="note-brand">
-                                <span>쿠쿠</span>
-                            </div>
-                            <div class="note-updated" id="note-cuckoo-updated"></div>
-                        </div>
-                        <textarea class="note-content" id="note-cuckoo" placeholder="쿠쿠 관련 유의사항을 입력하세요..."></textarea>
-                    </div>
+                    <!-- 유의사항 카드들이 동적으로 생성됩니다 -->
                 </div>
                 <button class="save-notes-btn" onclick="saveNotes()">💾 유의사항 저장</button>
             </div>
@@ -1595,1831 +793,625 @@
                     <h2>🔄 브랜드별 타사보상 규정</h2>
                     <p>각 브랜드의 타사보상 프로모션 규정과 조건을 기록해주세요</p>
                 </div>
-                <div class="competitor-rule-card">
-                    <div class="competitor-rule-header">
-                        <div class="competitor-rule-brand">SK매직 타사보상</div>
-                        <div class="note-updated" id="competitor-sk-updated"></div>
-                    </div>
-                    <textarea class="competitor-rule-content" id="competitor-sk" placeholder="SK매직 타사보상 규정을 입력하세요...
-예: 
-- 타사보상 적용 대상 및 조건
-- 필요 서류 및 증빙 자료
-- 위약금 면제 범위
-- 프로모션 기간 및 제한사항"></textarea>
-                </div>
-                <div class="competitor-rule-card">
-                    <div class="competitor-rule-header">
-                        <div class="competitor-rule-brand">LG전자 타사보상</div>
-                        <div class="note-updated" id="competitor-lg-updated"></div>
-                    </div>
-                    <textarea class="competitor-rule-content" id="competitor-lg" placeholder="LG전자 타사보상 규정을 입력하세요..."></textarea>
-                </div>
-                <div class="competitor-rule-card">
-                    <div class="competitor-rule-header">
-                        <div class="competitor-rule-brand">코웨이 타사보상</div>
-                        <div class="note-updated" id="competitor-coway-updated"></div>
-                    </div>
-                    <textarea class="competitor-rule-content" id="competitor-coway" placeholder="코웨이 타사보상 규정을 입력하세요..."></textarea>
-                </div>
-                <div class="competitor-rule-card">
-                    <div class="competitor-rule-header">
-                        <div class="competitor-rule-brand">쿠쿠 타사보상</div>
-                        <div class="note-updated" id="competitor-cuckoo-updated"></div>
-                    </div>
-                    <textarea class="competitor-rule-content" id="competitor-cuckoo" placeholder="쿠쿠 타사보상 규정을 입력하세요..."></textarea>
-                </div>
-                <div class="competitor-rule-card">
-                    <div class="competitor-rule-header">
-                        <div class="competitor-rule-brand">교원웰스 타사보상</div>
-                        <div class="note-updated" id="competitor-kyowon-updated"></div>
-                    </div>
-                    <textarea class="competitor-rule-content" id="competitor-kyowon" placeholder="교원웰스 타사보상 규정을 입력하세요..."></textarea>
-                </div>
-                <div class="competitor-rule-card">
-                    <div class="competitor-rule-header">
-                        <div class="competitor-rule-brand">청호나이스 타사보상</div>
-                        <div class="note-updated" id="competitor-chungho-updated"></div>
-                    </div>
-                    <textarea class="competitor-rule-content" id="competitor-chungho" placeholder="청호나이스 타사보상 규정을 입력하세요..."></textarea>
+                <div class="competitor-rules-grid">
+                    <!-- 타사보상 규정 카드들이 동적으로 생성됩니다 -->
                 </div>
                 <button class="save-competitor-btn" onclick="saveCompetitorRules()">💾 타사보상 규정 저장</button>
-            </div>
-        </div>
-        </div>
-    </div>
-    
-    <div class="tabs">
-        <div class="tabs-container">
-            <button class="tab active" onclick="switchTab('output')">📋 견적 출력</button>
-            <button class="tab" onclick="switchTab('input')">✏️ 견적 입력</button>
-            <button class="tab" onclick="switchTab('tags')">🏷️ 태그 관리</button>
-            <button class="tab" onclick="switchTab('notes')">📌 브랜드 유의사항</button>
-            <button class="tab" onclick="switchTab('competitor')">🔄 타사보상 규정</button>
-        </div>
-    </div>
-    
-    <div class="content">
-        <!-- 견적 출력 탭 -->
-        <div id="output-panel" class="tab-panel active">
-            <div class="filters">
-                <div class="filter-row">
-                    <div class="filter-group" style="flex: 3;">
-                        <label>🔍 통합 검색</label>
-                        <input type="text" id="unifiedSearch" placeholder="검색어를 입력하세요... (모델명, 제품명, 브랜드)" 
-                               oninput="handleUnifiedSearch()">
-                    </div>
-                    <div class="filter-group" style="flex: 1;">
-                        <label>브랜드</label>
-                        <select id="brandFilter" onchange="filterProducts()">
-                            <option value="">전체</option>
-                            <option value="SK매직">🔵 SK매직</option>
-                            <option value="LG전자">🔴 LG전자</option>
-                            <option value="코웨이">💧 코웨이</option>
-                            <option value="쿠쿠">🍚 쿠쿠</option>
-                            <option value="교원웰스">📚 교원웰스</option>
-                            <option value="청호나이스">💎 청호나이스</option>
-                            <option value="현대큐밍">🏢 현대큐밍</option>
-                            <option value="세라젬">♨️ 세라젬</option>
-                        </select>
-                    </div>
-                    <div class="filter-group" style="flex: 1;">
-                        <label>정렬</label>
-                        <select id="sortBy" onchange="applySort()">
-                            <option value="popular">인기순</option>
-                            <option value="name">이름순</option>
-                            <option value="brand">브랜드순</option>
-                            <option value="recent">최신순</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="filter-main-row">
-                    <div class="filter-section-inline">
-                        <div class="filter-section-title">📅 약정기간</div>
-                        <div class="year-filters">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="year3" checked onchange="saveFilterSettings(); filterProducts()">
-                                <span>3년</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="year4" onchange="saveFilterSettings(); filterProducts()">
-                                <span>4년</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="year5" checked onchange="saveFilterSettings(); filterProducts()">
-                                <span>5년</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="year6" onchange="saveFilterSettings(); filterProducts()">
-                                <span>6년</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="year7" onchange="saveFilterSettings(); filterProducts()">
-                                <span>7년</span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-divider"></div>
-                    
-                    <div class="filter-section-inline">
-                        <div class="filter-section-title">🔧 관리방식</div>
-                        <div class="management-filters">
-                            <label class="radio-label">
-                                <input type="radio" name="managementType" value="all" checked onchange="saveFilterSettings(); filterProducts()">
-                                <span>전체</span>
-                            </label>
-                            <label class="radio-label">
-                                <input type="radio" name="managementType" value="self" onchange="saveFilterSettings(); filterProducts()">
-                                <span>🏠 자가관리</span>
-                            </label>
-                            <label class="radio-label">
-                                <input type="radio" name="managementType" value="visit" onchange="saveFilterSettings(); filterProducts()">
-                                <span>🚐 방문관리</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="filter-additional-row">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="newSignupHide" onchange="saveFilterSettings(); filterProducts()">
-                        <span>신규가입 숨기기</span>
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="hideCompetitor" onchange="saveFilterSettings(); filterProducts()">
-                        <span>타사보상 숨기기</span>
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="hidePackage" onchange="saveFilterSettings(); filterProducts()">
-                        <span>패키지 숨기기</span>
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="hotColdOnly" onchange="saveFilterSettings(); filterProducts()">
-                        <span>🔥❄️ 냉온정수기만</span>
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="iceOnly" onchange="saveFilterSettings(); filterProducts()">
-                        <span>❄️ 얼음정수기만</span>
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="roOnly" onchange="saveFilterSettings(); filterProducts()">
-                        <span>💧 RO필터만</span>
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="standOnly" onchange="saveFilterSettings(); filterProducts()">
-                        <span>🏢 스탠드형만</span>
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="waterOnly" onchange="saveFilterSettings(); filterProducts()">
-                        <span>💧 정수전용만</span>
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="coldOnly" onchange="saveFilterSettings(); filterProducts()">
-                        <span>❄️💧 냉정수기만</span>
-                    </label>
-                </div>
-            </div>
-            
-            <div class="products-grid" id="productsList">
-                <div class="no-results">
-                    제품 데이터를 불러오는 중입니다...
-                </div>
-            </div>
-        </div>
-        
-        <!-- 견적 입력 탭 -->
-        <div id="input-panel" class="tab-panel">
-            <div class="input-container">
-                <div class="input-panel">
-                    <h3>📝 견적 입력</h3>
-                    <textarea class="paste-area" id="pasteArea" placeholder="💡 CRM에서 복사한 데이터를 여기에 붙여넣으세요...
-
-예시:
-* 모델명 : WPUIAC425S
-* 제품명 : SK매직 원코크 플러스 얼음물 냉온정수기 (얼음냉온정)
-* 색명칭: 선택안함(화이트실버(WS)/다크실버(DSL)/그레이스화이트(GWH)/그레이스핑크(GPK))
-
-* 3년 약정 : 4개월관리 / 월 55,900 / 사은품 180,000
-* 4년 약정 : 4개월필터발송 12개월관리 / 월 51,900 / 사은품 200,000
-* 5년 약정 : 6M반값_4개월관리 / 월 50,400 / 사은품 330,000
-* 5년 약정 : 타사보상_4개월관리 / 월 42,900 / 사은품 320,000
-* 5년 약정 : 패키지_4개월관리 / 월 39,900 / 사은품 350,000
-* 6년 약정 : 타사보상_4개월관리 / 월 41,400 / 사은품 340,000
-* 7년 약정 : 프리미엄_4개월관리 / 월 38,900 / 사은품 380,000
-
-https://zero-rental.biz/product-image/51317"></textarea>
-                    <button class="btn-primary" onclick="parseAndAdd()">견적 추가/업데이트</button>
-                </div>
-                
-                <div class="input-panel">
-                    <h3>📊 등록된 상품 목록</h3>
-                    <div id="productSummary" style="max-height: 600px; overflow-y: auto;">
-                        <!-- 등록된 상품 목록이 표시됩니다 -->
-                    </div>
-                </div>
             </div>
         </div>
     </div>
     
     <div class="toast" id="toast"></div>
     
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Supabase 초기화
-        const supabaseUrl = 'https://bhtqjipygkawoyieidgp.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJodHFqaXB5Z2thd295aWVpZGdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0ODg5NjgsImV4cCI6MjA3MDA2NDk2OH0.hu2EAj9RCq436QBtfbEVF4aGOau4WWomLMDKahN4iAA';
-        const { createClient } = supabase;
-        const supabaseClient = createClient(supabaseUrl, supabaseKey);
+        // Supabase 설정
+        const SUPABASE_URL = 'https://luxzmdcpobdecpfmdmjs.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1eHptZGNwb2JkZWNwZm1kbWpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQxNTA0NTUsImV4cCI6MjA0OTcyNjQ1NX0.6Fb4cd_Hc4O-3FenNXALBMzD2-qrYbA6lMgH8HGIZGY';
         
-        // 전역 변수
         let products = [];
-        let selectedItems = new Set();
-        let expandedProducts = new Set();
-        let additionalGifts = {};
+        let productTags = {};
         let selectedProductForTag = null;
-        
-        // 브랜드별 로고 매핑
-        const brandLogos = {
-            'SK매직': '🔵',
-            'LG전자': '🔴',
-            '코웨이': '💧',
-            '쿠쿠': '🍚',
-            '교원웰스': '📚',
-            '청호나이스': '💎',
-            '현대큐밍': '🏢',
-            '세라젬': '♨️'
-        };
-        
-        // 토스트 메시지 표시 함수
-        function showToast(message, type = 'info') {
-            const toast = document.getElementById('toast');
-            if (toast) {
-                toast.textContent = message;
-                toast.className = 'toast ' + type;
-                toast.style.display = 'block';
-                
-                setTimeout(() => {
-                    toast.style.display = 'none';
-                }, 3000);
-            }
-        }
         
         // 탭 전환 함수
         function switchTab(tabName) {
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+            // 모든 탭 버튼 비활성화
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
             
-            const tabMap = {
-                'output': 0,
-                'input': 1,
-                'tags': 2,
-                'notes': 3,
-                'competitor': 4
-            };
+            // 모든 패널 숨기기
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
             
-            const tabIndex = tabMap[tabName] ?? 0;
-            const tabs = document.querySelectorAll('.tab');
-            if (tabs[tabIndex]) {
-                tabs[tabIndex].classList.add('active');
-            }
+            // 선택된 탭 활성화
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-panel').classList.add('active');
             
-            const panel = document.getElementById(tabName + '-panel');
-            if (panel) {
-                panel.classList.add('active');
-            }
-            
-            if (tabName === 'input') {
-                updateProductSummary();
+            // 각 탭별 초기화
+            if (tabName === 'output') {
+                renderProducts(products);
             } else if (tabName === 'tags') {
                 updateTaggedProductsList();
+            } else if (tabName === 'notes') {
+                loadNotesUI();
+            } else if (tabName === 'competitor') {
+                loadCompetitorUI();
             }
         }
         
-        // 필터 설정 저장 함수
-        function saveFilterSettings() {
-            const filterSettings = {
+        // 토스트 메시지 표시
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast show ${type}`;
+            
+            setTimeout(() => {
+                toast.className = 'toast';
+            }, 3000);
+        }
+        
+        // 제품 렌더링
+        function renderProducts(productList) {
+            const grid = document.getElementById('productsGrid');
+            
+            if (!productList || productList.length === 0) {
+                grid.innerHTML = '<div class="loading">제품이 없습니다.</div>';
+                return;
+            }
+            
+            // 필터 설정 가져오기
+            const filters = {
                 year3: document.getElementById('year3').checked,
-                year4: document.getElementById('year4').checked,
                 year5: document.getElementById('year5').checked,
                 year6: document.getElementById('year6').checked,
-                year7: document.getElementById('year7').checked,
-                managementType: document.querySelector('input[name="managementType"]:checked')?.value || 'all',
-                newSignupHide: document.getElementById('newSignupHide').checked,
-                hideCompetitor: document.getElementById('hideCompetitor').checked,
-                hidePackage: document.getElementById('hidePackage').checked,
-                hotColdOnly: document.getElementById('hotColdOnly').checked,
-                iceOnly: document.getElementById('iceOnly').checked,
-                roOnly: document.getElementById('roOnly').checked,
-                standOnly: document.getElementById('standOnly').checked,
-                waterOnly: document.getElementById('waterOnly').checked,
-                coldOnly: document.getElementById('coldOnly').checked
+                manage4: document.getElementById('manage4').checked,
+                manage2: document.getElementById('manage2').checked,
+                filterSend: document.getElementById('filterSend').checked,
+                hideCompetitor: document.getElementById('hideCompetitor').checked
             };
             
-            localStorage.setItem('rentalQuoteFilters', JSON.stringify(filterSettings));
-        }
-        
-        // 필터 설정 로드 함수
-        function loadFilterSettings() {
-            try {
-                const savedSettings = localStorage.getItem('rentalQuoteFilters');
-                if (savedSettings) {
-                    const settings = JSON.parse(savedSettings);
+            grid.innerHTML = productList.map(product => {
+                try {
+                    const productCard = document.createElement('div');
+                    productCard.className = 'product-card';
                     
-                    document.getElementById('year3').checked = settings.year3 ?? true;
-                    document.getElementById('year4').checked = settings.year4 ?? false;
-                    document.getElementById('year5').checked = settings.year5 ?? true;
-                    document.getElementById('year6').checked = settings.year6 ?? false;
-                    document.getElementById('year7').checked = settings.year7 ?? false;
+                    // 제품 타입 체크
+                    const isStand = product.name && product.name.includes('스탠드');
+                    const isWaterOnly = product.name && (product.name.includes('(정수)') || product.name.includes('(정수전용)'));
+                    const isColdWater = product.name && product.name.includes('냉정수기');
                     
-                    const managementRadio = document.querySelector('input[name="managementType"][value="' + (settings.managementType || 'all') + '"]');
-                    if (managementRadio) managementRadio.checked = true;
+                    // 배지 생성
+                    let badges = '';
+                    if (isStand) badges += '<span class="stand-badge">🏢 스탠드</span>';
+                    if (isWaterOnly) badges += '<span class="water-only-badge">💧 정수전용</span>';
+                    if (isColdWater) badges += '<span class="cold-water-badge">❄️💧 냉정수기</span>';
                     
-                    document.getElementById('newSignupHide').checked = settings.newSignupHide ?? false;
-                    document.getElementById('hideCompetitor').checked = settings.hideCompetitor ?? false;
-                    document.getElementById('hidePackage').checked = settings.hidePackage ?? false;
-                    document.getElementById('hotColdOnly').checked = settings.hotColdOnly ?? false;
-                    document.getElementById('iceOnly').checked = settings.iceOnly ?? false;
-                    document.getElementById('roOnly').checked = settings.roOnly ?? false;
-                    document.getElementById('standOnly').checked = settings.standOnly ?? false;
-                    document.getElementById('waterOnly').checked = settings.waterOnly ?? false;
-                    document.getElementById('coldOnly').checked = settings.coldOnly ?? false;
+                    // 커스텀 태그 추가
+                    const customTags = productTags[product.model] || [];
+                    const customTagsHtml = customTags.map(tag => 
+                        `<span class="tag-badge">✨ ${tag}</span>`
+                    ).join('');
+                    
+                    productCard.innerHTML = `
+                        <div class="product-header">
+                            <h3>${product.model}</h3>
+                            <div class="product-badges">
+                                ${badges}
+                                ${customTagsHtml}
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <p><strong>${product.name}</strong></p>
+                            <p>브랜드: ${product.brand}</p>
+                            ${product.url ? `<p><a href="${product.url}" target="_blank">🔗 상품 페이지</a></p>` : ''}
+                        </div>
+                        <div class="rental-options">
+                            ${generateOptions(product, filters)}
+                        </div>
+                    `;
+                    
+                    return productCard.outerHTML;
+                } catch (error) {
+                    console.error('제품 렌더링 오류:', error, product);
+                    return '';
                 }
-            } catch (error) {
-                console.error('Error loading filter settings:', error);
-            }
-        }
-        
-        // 필터 초기화 함수
-        function resetFilters() {
-            document.getElementById('brandFilter').value = '';
-            document.getElementById('unifiedSearch').value = '';
-            document.getElementById('sortBy').value = 'popular';
+            }).join('');
             
-            document.getElementById('year3').checked = true;
-            document.getElementById('year4').checked = false;
-            document.getElementById('year5').checked = true;
-            document.getElementById('year6').checked = false;
-            document.getElementById('year7').checked = false;
+            updateProductSummary();
+        }
+        
+        // 옵션 생성
+        function generateOptions(product, filters) {
+            let optionsHtml = '';
             
-            document.querySelector('input[name="managementType"][value="all"]').checked = true;
+            if (!product.options) return '<p>옵션 정보가 없습니다.</p>';
             
-            document.getElementById('newSignupHide').checked = false;
-            document.getElementById('hideCompetitor').checked = false;
-            document.getElementById('hidePackage').checked = false;
-            document.getElementById('hotColdOnly').checked = false;
-            document.getElementById('iceOnly').checked = false;
-            document.getElementById('roOnly').checked = false;
-            document.getElementById('standOnly').checked = false;
-            document.getElementById('waterOnly').checked = false;
-            document.getElementById('coldOnly').checked = false;
+            product.options.forEach(option => {
+                // 필터링 로직
+                const yearMatch = (option.period === '3년약정' && filters.year3) ||
+                                 (option.period === '5년약정' && filters.year5) ||
+                                 (option.period === '6년약정' && filters.year6);
+                
+                if (!yearMatch) return;
+                
+                const isCompetitor = option.management && option.management.includes('타사보상');
+                if (filters.hideCompetitor && isCompetitor) return;
+                
+                const manageMatch = (option.management && option.management.includes('4개월') && filters.manage4) ||
+                                   (option.management && option.management.includes('2개월') && filters.manage2) ||
+                                   (option.management && option.management.includes('필터발송') && filters.filterSend);
+                
+                if (!manageMatch) return;
+                
+                optionsHtml += `
+                    <div class="rental-option">
+                        <div class="option-info">
+                            <div class="option-title">${option.period}</div>
+                            <div class="option-details">
+                                ${option.management} | 월 ${option.price ? option.price.toLocaleString() : '0'}원
+                                ${option.gift ? ` | 사은품 ${option.gift.toLocaleString()}원` : ''}
+                            </div>
+                        </div>
+                        <button class="copy-btn" onclick="copyOption('${product.model}', '${product.name}', '${option.period}', '${option.management}', ${option.price}, ${option.gift || 0})">복사</button>
+                    </div>
+                `;
+            });
             
-            saveFilterSettings();
-            filterProducts();
-            showToast('필터가 초기화되었습니다.', 'info');
+            return optionsHtml || '<p>선택된 필터에 해당하는 옵션이 없습니다.</p>';
         }
         
-        // 정수전용 판별 함수
-        function isWaterOnlyProduct(productName) {
-            const bracketMatch = productName.match(/\(([^)]+)\)$/);
-            if (bracketMatch) {
-                const bracketContent = bracketMatch[1];
-                if (bracketContent === '정수' || bracketContent === '정수전용' || 
-                    bracketContent.includes('정수전용') || bracketContent === '상온정수') {
-                    return true;
-                }
-            }
-            return false;
+        // 옵션 복사
+        function copyOption(model, name, period, management, price, gift) {
+            const text = `* 모델명: ${model}
+* 제품명: ${name}
+
+* ${period}: ${management} / 월 ${price.toLocaleString()} / 사은품 ${gift.toLocaleString()}`;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('견적이 복사되었습니다!', 'success');
+            });
         }
         
-        // 냉정수기 판별 함수
-        function isColdWaterProduct(productName) {
-            const bracketMatch = productName.match(/\(([^)]+)\)$/);
-            if (bracketMatch) {
-                const bracketContent = bracketMatch[1];
-                if (bracketContent === '냉정' || bracketContent === '냉정수' || 
-                    bracketContent === '냉정수기') {
-                    return true;
-                }
-            }
-            return false;
-        }
-        
-        // 냉온정수기 판별 함수
-        function isHotColdProduct(productName) {
-            const bracketMatch = productName.match(/\(([^)]+)\)$/);
-            if (bracketMatch) {
-                const bracketContent = bracketMatch[1];
-                if (bracketContent.includes('냉온') || 
-                    bracketContent === '냉온정' || 
-                    bracketContent === '냉온정수' ||
-                    bracketContent === '냉온정수기') {
-                    return true;
-                }
-            }
-            return productName.includes('냉온');
-        }
-        
-        // RO 필터 판별 함수
-        function isROProduct(productName) {
-            const upperName = productName.toUpperCase();
-            return /\bRO\b/.test(upperName) || 
-                   upperName.includes(' RO ') || 
-                   upperName.includes('(RO') || 
-                   upperName.includes('RO)') ||
-                   upperName.includes('[RO') || 
-                   upperName.includes('RO]') ||
-                   upperName.includes('RO필터') ||
-                   upperName.includes('RO 필터');
-        }
-        
-        // 관리방식 판별 함수
-        function getManagementType(detail) {
-            if (detail.includes('필터발송')) {
-                return 'self';
-            }
-            if (detail.includes('관리')) {
-                return 'visit';
-            }
-            return 'unknown';
-        }
-        
-        // 브랜드 자동 인식 함수
-        function detectBrand(productName) {
-            const brandMap = {
-                'SK매직': 'SK매직',
-                'SK 매직': 'SK매직',
-                'LG': 'LG전자',
-                '엘지': 'LG전자',
-                '코웨이': '코웨이',
-                'COWAY': '코웨이',
-                '쿠쿠': '쿠쿠',
-                'CUCKOO': '쿠쿠',
-                '교원': '교원웰스',
-                '웰스': '교원웰스',
-                '청호': '청호나이스',
-                '청호나이스': '청호나이스',
-                '현대큐밍': '현대큐밍',
-                '현대': '현대큐밍',
-                '세라젬': '세라젬',
-                'CERAGEM': '세라젬'
+        // 전체 복사 (필터 적용)
+        function copyAllFiltered() {
+            const filters = {
+                year3: document.getElementById('year3').checked,
+                year5: document.getElementById('year5').checked,
+                year6: document.getElementById('year6').checked,
+                manage4: document.getElementById('manage4').checked,
+                manage2: document.getElementById('manage2').checked,
+                filterSend: document.getElementById('filterSend').checked,
+                hideCompetitor: document.getElementById('hideCompetitor').checked
             };
             
-            for (const keyword in brandMap) {
-                if (productName.toUpperCase().includes(keyword.toUpperCase())) {
-                    return brandMap[keyword];
-                }
-            }
-            return null;
-        }
-        
-        // URL 추출 헬퍼 함수
-        function extractURL(text) {
-            text = text.trim();
+            let allText = '';
+            let copiedCount = 0;
             
-            const urlPatterns = [
-                /https?:\/\/[^\s<>"{}|\\^`\[\]]+/gi,
-                /www\.[^\s<>"{}|\\^`\[\]]+/gi,
-                /zero-rental\.biz\/[^\s<>"{}|\\^`\[\]]*/gi
-            ];
-            
-            for (let i = 0; i < urlPatterns.length; i++) {
-                const matches = text.match(urlPatterns[i]);
-                if (matches && matches.length > 0) {
-                    let url = matches[0].trim();
-                    
-                    if (url.startsWith('www.')) {
-                        url = 'https://' + url;
-                    }
-                    
-                    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                        if (url.includes('.') && url.includes('/')) {
-                            url = 'https://' + url;
-                        }
-                    }
-                    
-                    try {
-                        new URL(url);
-                        return url;
-                    } catch {
-                        continue;
-                    }
-                }
-            }
-            
-            return null;
-        }
-        
-        // 색상 정보 파싱 함수
-        function parseColorInfo(colorText) {
-            if (!colorText) return null;
-            
-            colorText = colorText.replace(/선택안함/g, '').trim();
-            
-            const parenthesisMatch = colorText.match(/\(([^)]+)\)/);
-            if (parenthesisMatch) {
-                const colorContent = parenthesisMatch[1];
-                
-                if (colorContent.includes('/')) {
-                    const cleanedColors = colorContent
-                        .replace(/\([^)]+\)/g, '')
-                        .split('/')
-                        .map(c => c.trim())
-                        .filter(c => c.length > 0)
-                        .join(' / ');
-                    
-                    return cleanedColors;
-                } else {
-                    const cleanedColor = colorContent
-                        .replace(/\([^)]+\)/g, '')
-                        .trim();
-                    
-                    return cleanedColor || colorContent.trim();
-                }
-            }
-            
-            return colorText.trim();
-        }
-        
-        // 약정 옵션 텍스트 포맷팅
-        function formatPriceDetail(detail) {
-            detail = detail.replace(/(\d+)M반값/g, '$1개월 반값');
-            detail = detail.replace(/(\d+)M면제/g, '$1개월 면제');
-            detail = detail.replace(/(\d+)M무료/g, '$1개월 무료');
-            detail = detail.replace(/(\d+)M할인/g, '$1개월 할인');
-            
-            if (!detail.includes('프로모션')) {
-                if (detail.includes('개월 반값') || detail.includes('개월 면제') || 
-                    detail.includes('개월 무료') || detail.includes('개월 할인')) {
-                    const underscoreIndex = detail.indexOf('_');
-                    if (underscoreIndex > -1) {
-                        detail = detail.substring(0, underscoreIndex) + ' 프로모션' + detail.substring(underscoreIndex);
-                    } else {
-                        detail = detail + ' 프로모션';
-                    }
-                }
-            }
-            
-            detail = detail.replace(/_/g, ' / ');
-            return detail;
-        }
-        
-        // 디바운싱 함수
-        function debounce(func, delay) {
-            let timeoutId;
-            return function(...args) {
-                clearTimeout(timeoutId);
-                timeoutId = setTimeout(() => func.apply(this, args), delay);
-            };
-        }
-        
-        // 통합 검색 처리
-        const debouncedFilter = debounce(filterProducts, 300);
-        
-        function handleUnifiedSearch() {
-            debouncedFilter();
-        }
-        
-        // 데이터 로드 함수
-        async function loadProducts() {
-            try {
-                console.log('Loading products from Supabase...');
-                showToast('제품 데이터를 로드하고 있습니다...', 'info');
-                
-                const { data, error } = await supabaseClient
-                    .from('rental_products')
-                    .select('*')
-                    .order('copy_count', { ascending: false });
-                
-                if (error) {
-                    console.error('Supabase error:', error);
-                    throw error;
-                }
-                
-                if (!data || data.length === 0) {
-                    console.log('No products found in database');
-                    products = [];
-                    renderProducts([]);
-                    showToast('등록된 제품이 없습니다. 견적 입력 탭에서 제품을 추가해주세요.', 'warning');
-                    return;
-                }
-                
-                products = data.map(product => ({
-                    ...product,
-                    custom_tags: product.custom_tags || []
-                }));
-                
-                console.log('Products loaded:', products.length);
-                
-                // 초기 정렬을 인기순으로 설정
-                if (document.getElementById('sortBy')) {
-                    document.getElementById('sortBy').value = 'popular';
-                }
-                
-                // 인기순으로 정렬하여 표시
-                let sorted = [...products];
-                sorted.sort((a, b) => (b.copy_count || 0) - (a.copy_count || 0));
-                renderProducts(sorted);
-                
-                updateProductSummary();
-                updateTaggedProductsList();
-                showToast(products.length + '개 제품 데이터 로드 완료!', 'success');
-                
-            } catch (error) {
-                console.error('Error loading products:', error);
-                showToast('데이터 로드 중 오류가 발생했습니다. 새로고침 해주세요.', 'error');
-                
-                // 오류 발생 시 빈 배열로 초기화
-                products = [];
-                renderProducts([]);
-            }
-        }
-        
-        // 필터링 함수
-        function filterProducts() {
-            const brand = document.getElementById('brandFilter').value;
-            const unifiedSearchTerm = document.getElementById('unifiedSearch').value.toLowerCase();
-            const hotColdOnly = document.getElementById('hotColdOnly').checked;
-            const iceOnly = document.getElementById('iceOnly').checked;
-            const roOnly = document.getElementById('roOnly').checked;
-            const standOnly = document.getElementById('standOnly').checked;
-            const waterOnly = document.getElementById('waterOnly').checked;
-            const coldOnly = document.getElementById('coldOnly').checked;
-            const showYear3 = document.getElementById('year3').checked;
-            const showYear4 = document.getElementById('year4').checked;
-            const showYear5 = document.getElementById('year5').checked;
-            const showYear6 = document.getElementById('year6').checked;
-            const showYear7 = document.getElementById('year7').checked;
-            const newSignupHide = document.getElementById('newSignupHide').checked;
-            const hideCompetitor = document.getElementById('hideCompetitor').checked;
-            const hidePackage = document.getElementById('hidePackage').checked;
-
-            const managementRadios = document.getElementsByName('managementType');
-            let managementFilter = 'all';
-            for (let i = 0; i < managementRadios.length; i++) {
-                if (managementRadios[i].checked) {
-                    managementFilter = managementRadios[i].value;
-                    break;
-                }
-            }
-
-            const hasProductTypeFilter = hotColdOnly || iceOnly || roOnly || standOnly || waterOnly || coldOnly;
-            const hasYearFilter = showYear3 || showYear4 || showYear5 || showYear6 || showYear7;
-            const hasOptionFilter = newSignupHide || hideCompetitor || hidePackage;
-            const hasManagementFilter = managementFilter !== 'all';
-            const hasAnyFilter = brand || unifiedSearchTerm || hasProductTypeFilter || hasYearFilter || hasOptionFilter || hasManagementFilter;
-
-            let filtered = products.filter(product => {
-                if (brand && product.brand !== brand) return false;
-                
-                if (unifiedSearchTerm) {
-                    const basicMatch = product.model_number.toLowerCase().includes(unifiedSearchTerm) ||
-                                      product.product_name.toLowerCase().includes(unifiedSearchTerm) ||
-                                      product.brand.toLowerCase().includes(unifiedSearchTerm);
-                    
-                    const tagMatch = product.custom_tags && 
-                                    product.custom_tags.some(tag => 
-                                        tag.toLowerCase().includes(unifiedSearchTerm)
-                                    );
-                    
-                    if (!basicMatch && !tagMatch) return false;
-                }
-                
-                if (hasProductTypeFilter) {
-                    if (hotColdOnly && !isHotColdProduct(product.product_name)) return false;
-                    if (iceOnly && !product.product_name.includes('얼음')) return false;
-                    if (roOnly && !isROProduct(product.product_name)) return false;
-                    if (standOnly && !product.product_name.includes('스탠드')) return false;
-                    if (waterOnly && !isWaterOnlyProduct(product.product_name)) return false;
-                    if (coldOnly && !isColdWaterProduct(product.product_name)) return false;
-                }
-                
-                if (!hasAnyFilter) return true;
-                
-                const hasValidOption = product.price_options && product.price_options.some(option => {
-                    if (hasYearFilter) {
-                        let yearMatch = false;
-                        if (option.term.includes('3년') && showYear3) yearMatch = true;
-                        if (option.term.includes('4년') && showYear4) yearMatch = true;
-                        if (option.term.includes('5년') && showYear5) yearMatch = true;
-                        if (option.term.includes('6년') && showYear6) yearMatch = true;
-                        if (option.term.includes('7년') && showYear7) yearMatch = true;
-                        
-                        if (!yearMatch) return false;
-                    }
-                    
-                    if (hasManagementFilter) {
-                        const optionManagementType = getManagementType(option.detail);
-                        if (managementFilter === 'self' && optionManagementType !== 'self') return false;
-                        if (managementFilter === 'visit' && optionManagementType !== 'visit') return false;
-                    }
-                    
-                    if (hasOptionFilter) {
-                        if (newSignupHide && !option.detail.includes('타사보상')) return false;
-                        if (hideCompetitor && option.detail.includes('타사보상')) return false;
-                        if (hidePackage && option.detail.includes('패키지')) return false;
-                    }
-                    
-                    return true;
-                });
-                
-                return hasValidOption;
-            });
-
-            const sortBy = document.getElementById('sortBy').value;
-            applySort(filtered, sortBy);
-        }
-        
-        // 정렬 함수
-        function applySort(productsToSort, sortBy) {
-            if (!productsToSort) productsToSort = products;
-            
-            let sorted = [...productsToSort];
-            
-            switch(sortBy) {
-                case 'popular':
-                    sorted.sort((a, b) => (b.copy_count || 0) - (a.copy_count || 0));
-                    break;
-                case 'name':
-                    sorted.sort((a, b) => a.product_name.localeCompare(b.product_name, 'ko', { numeric: true }));
-                    break;
-                case 'brand':
-                    sorted.sort((a, b) => {
-                        const brandCompare = a.brand.localeCompare(b.brand, 'ko', { numeric: true });
-                        if (brandCompare !== 0) return brandCompare;
-                        return a.product_name.localeCompare(b.product_name, 'ko', { numeric: true });
-                    });
-                    break;
-                case 'recent':
-                    sorted.sort((a, b) => new Date(b.updated_at || 0) - new Date(a.updated_at || 0));
-                    break;
-            }
-            
-            renderProducts(sorted);
-        }
-        
-        // 제품 렌더링 함수
-        function renderProducts(productsToRender) {
-            if (!productsToRender) productsToRender = products;
-            
-            const productsList = document.getElementById('productsList');
-            
-            if (!productsList) {
-                console.error('Products list element not found');
-                return;
-            }
-            
-            productsList.innerHTML = '';
-            
-            if (productsToRender.length === 0) {
-                productsList.innerHTML = '<div class="no-results">검색 결과가 없습니다</div>';
-                return;
-            }
-            
-            // Top 3 인기 상품 찾기
-            const topProductsMap = new Map();
-            [...products]
-                .sort((a, b) => (b.copy_count || 0) - (a.copy_count || 0))
-                .slice(0, 3)
-                .forEach((p, index) => {
-                    topProductsMap.set(p.id, index + 1);
-                });
-            
-            const showYear3 = document.getElementById('year3').checked;
-            const showYear4 = document.getElementById('year4').checked;
-            const showYear5 = document.getElementById('year5').checked;
-            const showYear6 = document.getElementById('year6').checked;
-            const showYear7 = document.getElementById('year7').checked;
-            const newSignupHide = document.getElementById('newSignupHide').checked;
-            const hideCompetitor = document.getElementById('hideCompetitor').checked;
-            const hidePackage = document.getElementById('hidePackage').checked;
-            
-            let managementFilter = 'all';
-            const managementRadios = document.getElementsByName('managementType');
-            for (let i = 0; i < managementRadios.length; i++) {
-                if (managementRadios[i].checked) {
-                    managementFilter = managementRadios[i].value;
-                    break;
-                }
-            }
-            
-            productsToRender.forEach(product => {
-                if (!product.price_options || !Array.isArray(product.price_options)) {
-                    return;
-                }
-                
-                let filteredOptions = product.price_options.filter(option => {
-                    if (option.term.includes('3년') && !showYear3) return false;
-                    if (option.term.includes('4년') && !showYear4) return false;
-                    if (option.term.includes('5년') && !showYear5) return false;
-                    if (option.term.includes('6년') && !showYear6) return false;
-                    if (option.term.includes('7년') && !showYear7) return false;
-                    
-                    if (managementFilter !== 'all') {
-                        const optionManagementType = getManagementType(option.detail);
-                        if (managementFilter === 'self' && optionManagementType !== 'self') return false;
-                        if (managementFilter === 'visit' && optionManagementType !== 'visit') return false;
-                    }
-                    
-                    if (newSignupHide && !option.detail.includes('타사보상')) return false;
-                    if (hideCompetitor && option.detail.includes('타사보상')) return false;
-                    if (hidePackage && option.detail.includes('패키지')) return false;
-                    return true;
-                });
-                
-                if (filteredOptions.length === 0) return;
-                
-                const updateDate = new Date(product.updated_at);
-                const dateStr = (updateDate.getMonth() + 1) + '/' + updateDate.getDate();
-                
-                // 특징 표시
-                const isHotCold = isHotColdProduct(product.product_name);
-                const isIceWater = product.product_name.includes('얼음');
-                const isRO = isROProduct(product.product_name);
-                const isStand = product.product_name.includes('스탠드');
-                const isWaterOnly = isWaterOnlyProduct(product.product_name);
-                const isColdWater = isColdWaterProduct(product.product_name);
-                const brandLogo = brandLogos[product.brand] || '📦';
-                const rank = topProductsMap.get(product.id);
-                const isTop3 = !!rank;
-                let popularMark = '';
-                if (rank === 1) popularMark = '🥇 ';
-                else if (rank === 2) popularMark = '🥈 ';
-                else if (rank === 3) popularMark = '🥉 ';
-                
-                // 커스텀 태그 HTML 생성
-                let customTagsHtml = '';
-                if (product.custom_tags && product.custom_tags.length > 0) {
-                    product.custom_tags.forEach(tag => {
-                        customTagsHtml += '<span class="custom-tag-badge">✨ ' + tag + '</span>';
-                    });
-                }
-                
-                const card = document.createElement('div');
-                card.className = 'product-card ' + (expandedProducts.has(product.id) ? 'expanded' : '') + ' ' + (isTop3 ? 'popular' : '');
-                card.id = 'product-' + product.id;
-                
-                let priceRowsHtml = '';
-                filteredOptions.forEach((option, index) => {
-                    const originalIndex = product.price_options.indexOf(option);
-                    const isCompetitor = option.detail.includes('타사보상');
-                    const isPackage = option.detail.includes('패키지');
-                    const optionId = product.id + '-' + originalIndex;
-                    const isSelected = selectedItems.has(optionId);
-                    const managementType = getManagementType(option.detail);
-                    
-                    let termClass = '';
-                    if (option.term.includes('3년')) termClass = 'term-3year';
-                    else if (option.term.includes('4년')) termClass = 'term-4year';
-                    else if (option.term.includes('5년')) termClass = 'term-5year';
-                    else if (option.term.includes('6년')) termClass = 'term-6year';
-                    else if (option.term.includes('7년')) termClass = 'term-7year';
-                    
-                    let rowClass = '';
-                    if (isCompetitor) rowClass = 'competitor-option';
-                    else if (isPackage) rowClass = 'package-option';
-                    
-                    let managementBadge = '';
-                    if (managementType === 'self') {
-                        managementBadge = '<div class="management-badge management-self">🏠 자가</div>';
-                    } else if (managementType === 'visit') {
-                        managementBadge = '<div class="management-badge management-visit">🚐 방문</div>';
-                    }
-                    
-                    priceRowsHtml += '<div class="price-row ' + rowClass + (isSelected ? ' selected' : '') + '" ' +
-                                     'id="option-' + optionId + '" ' +
-                                     'onclick="toggleOptionByRow(\'' + optionId + '\', event)" ' +
-                                     'style="cursor: pointer;">' +
-                                     '<input type="checkbox" class="price-checkbox" ' +
-                                           'id="check-' + optionId + '" ' +
-                                           (isSelected ? 'checked' : '') + ' ' +
-                                           'onchange="toggleOption(\'' + optionId + '\')" ' +
-                                           'onclick="event.stopPropagation()">' +
-                                     '<div class="term ' + termClass + '">' + option.term.replace('약정', ' 약정') + '</div>' +
-                                     managementBadge +
-                                     '<div class="management">' + formatPriceDetail(option.detail) + '</div>' +
-                                     '<div class="price">월 ' + Number(option.price.replace(/,/g, '')).toLocaleString() + '</div>' +
-                                     '<div class="gift">사은품 ' + Number(option.gift.replace(/,/g, '')).toLocaleString() + '</div>' +
-                                     '<button class="quick-copy-btn" onclick="quickCopy(' + product.id + ', ' + originalIndex + ', event)">복사</button>' +
-                                     '</div>';
-                });
-                
-                card.innerHTML = '<div class="product-header" onclick="toggleProductExpand(' + product.id + ', event)">' +
-                        '<div class="product-left">' +
-                            '<div class="product-info">' +
-                                '<h3>' + popularMark + product.model_number + ' / ' + product.product_name + '</h3>' +
-                                '<div class="product-meta">' +
-                                    '<span class="brand-badge">' +
-                                        '<span class="brand-logo">' + brandLogo + '</span>' +
-                                        product.brand +
-                                    '</span>' +
-                                    (isHotCold ? '<span class="hot-cold-badge">🔥❄️ 냉온</span>' : '') +
-                                    (isIceWater ? '<span class="ice-badge">❄️ 얼음</span>' : '') +
-                                    (isRO ? '<span class="ro-badge">💧 RO</span>' : '') +
-                                    (isStand ? '<span class="stand-badge">🏢 스탠드</span>' : '') +
-                                    (isWaterOnly ? '<span class="water-only-badge">💧 정수전용</span>' : '') +
-                                    (isColdWater ? '<span class="cold-water-badge">❄️💧 냉정수기</span>' : '') +
-                                    customTagsHtml +
-                                '</div>' +
-                            '</div>' +
-                        '</div>' +
-                        '<div class="product-actions">' +
-                            '<button class="select-copy-btn" onclick="copySelectedInProduct(' + product.id + ', event)">선택복사</button>' +
-                            '<button class="copy-all-btn" onclick="copyAllOptions(' + product.id + ', event)">전체복사</button>' +
-                            '<div class="copy-count">📋 ' + (product.copy_count || 0) + '회</div>' +
-                            '<div class="update-date">업데이트: ' + dateStr + '</div>' +
-                            '<div class="expand-icon">▼</div>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="product-content">' +
-                        '<div class="price-table">' +
-                            (product.color ? '<div style="padding: 10px 12px; margin-bottom: 10px; background: rgba(218, 165, 32, 0.05); border-left: 3px solid #daa520; color: #e0e0e0; font-size: 13px;">' +
-                                '<strong style="color: #daa520;">🎨 색상:</strong> ' + product.color +
-                            '</div>' : '') +
-                            priceRowsHtml +
-                        '</div>' +
-                        '<div class="additional-gift-section">' +
-                            '<input type="text" id="additional-gift-' + product.id + '" ' +
-                                   'placeholder="추가 사은품 입력 (예: 100000)" ' +
-                                   'value="' + (additionalGifts[product.id] || '') + '" ' +
-                                   'class="additional-gift-input" ' +
-                                   'onkeyup="formatAdditionalGift(' + product.id + ')" ' +
-                                   'title="빈 값으로 저장하면 삭제됩니다">' +
-                            '<button class="additional-gift-btn" onclick="saveAdditionalGift(' + product.id + ')">저장</button>' +
-                        '</div>' +
-                    '</div>';
-                
-                productsList.appendChild(card);
-            });
-            
-            updateSelectedCount();
-        }
-        
-        // 옵션 선택 함수들
-        function toggleOption(optionId) {
-            const checkbox = document.getElementById('check-' + optionId);
-            const row = document.getElementById('option-' + optionId);
-            
-            if (checkbox && checkbox.checked) {
-                selectedItems.add(optionId);
-                if (row) row.classList.add('selected');
-            } else {
-                selectedItems.delete(optionId);
-                if (row) row.classList.remove('selected');
-            }
-            
-            updateSelectedCount();
-        }
-        
-        function toggleOptionByRow(optionId, event) {
-            if (event.target.tagName === 'BUTTON' || event.target.type === 'checkbox') {
-                return;
-            }
-            
-            const checkbox = document.getElementById('check-' + optionId);
-            if (checkbox) {
-                checkbox.checked = !checkbox.checked;
-                toggleOption(optionId);
-            }
-        }
-        
-        function toggleProductExpand(productId, event) {
-            if (event.target.type === 'checkbox') return;
-            
-            const card = document.getElementById('product-' + productId);
-            if (!card) return;
-            
-            if (expandedProducts.has(productId)) {
-                expandedProducts.delete(productId);
-                card.classList.remove('expanded');
-            } else {
-                expandedProducts.add(productId);
-                card.classList.add('expanded');
-            }
-        }
-        
-        function updateSelectedCount() {
-            const count = selectedItems.size;
-            const countElement = document.getElementById('selectedCount');
-            if (countElement) {
-                countElement.textContent = count;
-            }
-        }
-        
-        function clearAllSelections() {
-            selectedItems.clear();
-            document.querySelectorAll('.price-checkbox').forEach(checkbox => {
-                checkbox.checked = false;
-            });
-            document.querySelectorAll('.price-row.selected').forEach(row => {
-                row.classList.remove('selected');
-            });
-            updateSelectedCount();
-            showToast('선택이 초기화되었습니다.', 'info');
-        }
-        
-        // 복사 관련 함수들
-        async function updateProductCopyCount(modelNumber, copyCount) {
-            try {
-                const { error } = await supabaseClient
-                    .from('rental_products')
-                    .update({ copy_count: copyCount })
-                    .eq('model_number', modelNumber);
-                
-                if (error) throw error;
-            } catch (error) {
-                console.error('Error updating copy count:', error);
-            }
-        }
-        
-        async function copySelectedItems() {
-            if (selectedItems.size === 0) {
-                showToast('선택된 항목이 없습니다.', 'warning');
-                return;
-            }
-            
-            const grouped = {};
-            selectedItems.forEach(optionId => {
-                const parts = optionId.split('-');
-                const productId = Number(parts[0]);
-                const optionIndex = Number(parts[1]);
-                if (!grouped[productId]) {
-                    grouped[productId] = [];
-                }
-                grouped[productId].push(optionIndex);
-            });
-            
-            let output = '';
-            let isFirst = true;
-            
-            for (const productId in grouped) {
-                const product = products.find(p => p.id === Number(productId));
-                if (!product) continue;
-                
-                if (!isFirst) {
-                    output += '\n\n';
-                }
-                isFirst = false;
-                
-                output += '* 브랜드 : ' + product.brand + '\n';
-                output += '* 모델명 : ' + product.model_number + '\n';
-                output += '* 제품명 : ' + product.product_name + '\n';
-                if (product.color) {
-                    output += '* 색상 : ' + product.color + '\n';
-                }
-                output += '\n';
-                
-                grouped[productId].sort((a, b) => a - b).forEach(optionIndex => {
-                    const option = product.price_options[optionIndex];
-                    if (option) {
-                        output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
-                    }
-                });
-                
-                if (additionalGifts[productId]) {
-                    output += '* 추가사은품 : ' + additionalGifts[productId] + '\n';
-                }
-                
-                if (product.image_url) {
-                    output += '\n상품 안내페이지 : ' + product.image_url;
-                }
-                
-                product.copy_count = (product.copy_count || 0) + 1;
-                await updateProductCopyCount(product.model_number, product.copy_count);
-            }
-            
-            navigator.clipboard.writeText(output.trim()).then(() => {
-                showToast(selectedItems.size + '개 항목이 복사되었습니다!', 'success');
-                loadProducts();
-            });
-        }
-        
-        async function copySelectedInProduct(productId, event) {
-            event.stopPropagation();
-            
-            const product = products.find(p => p.id === productId);
-            if (!product) return;
-            
-            const selectedOptions = [];
-            product.price_options.forEach((option, index) => {
-                const optionId = productId + '-' + index;
-                if (selectedItems.has(optionId)) {
-                    selectedOptions.push(option);
-                }
-            });
-            
-            if (selectedOptions.length === 0) {
-                showToast('선택된 옵션이 없습니다.', 'warning');
-                return;
-            }
-            
-            let output = '* 브랜드 : ' + product.brand + '\n';
-            output += '* 모델명 : ' + product.model_number + '\n';
-            output += '* 제품명 : ' + product.product_name + '\n';
-            if (product.color) {
-                output += '* 색상 : ' + product.color + '\n';
-            }
-            output += '\n';
-            
-            selectedOptions.forEach(option => {
-                output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
-            });
-            
-            if (additionalGifts[productId]) {
-                output += '* 추가사은품 : ' + additionalGifts[productId] + '\n';
-            }
-            
-            if (product.image_url) {
-                output += '\n상품 안내페이지 : ' + product.image_url + '\n';
-            }
-            
-            navigator.clipboard.writeText(output.trim()).then(async () => {
-                showToast(selectedOptions.length + '개 옵션이 복사되었습니다!', 'success');
-                
-                product.copy_count = (product.copy_count || 0) + 1;
-                await updateProductCopyCount(product.model_number, product.copy_count);
-                
-                const countElement = document.querySelector('#product-' + productId + ' .copy-count');
-                if (countElement) {
-                    countElement.textContent = '📋 ' + product.copy_count + '회';
-                }
-            });
-        }
-        
-        async function copyAllOptions(productId, event) {
-            event.stopPropagation();
-            
-            const product = products.find(p => p.id === productId);
-            if (!product) return;
-            
-            // 현재 필터 설정에 따라 표시되는 옵션들만 가져오기
-            const showYear3 = document.getElementById('year3').checked;
-            const showYear4 = document.getElementById('year4').checked;
-            const showYear5 = document.getElementById('year5').checked;
-            const showYear6 = document.getElementById('year6').checked;
-            const showYear7 = document.getElementById('year7').checked;
-            const newSignupHide = document.getElementById('newSignupHide').checked;
-            const hideCompetitor = document.getElementById('hideCompetitor').checked;
-            const hidePackage = document.getElementById('hidePackage').checked;
-            
-            let managementFilter = 'all';
-            const managementRadios = document.getElementsByName('managementType');
-            for (let i = 0; i < managementRadios.length; i++) {
-                if (managementRadios[i].checked) {
-                    managementFilter = managementRadios[i].value;
-                    break;
-                }
-            }
-            
-            // 필터가 적용된 옵션들만 선택
-            let filteredOptions = product.price_options.filter(option => {
-                if (option.term.includes('3년') && !showYear3) return false;
-                if (option.term.includes('4년') && !showYear4) return false;
-                if (option.term.includes('5년') && !showYear5) return false;
-                if (option.term.includes('6년') && !showYear6) return false;
-                if (option.term.includes('7년') && !showYear7) return false;
-                
-                if (managementFilter !== 'all') {
-                    const optionManagementType = getManagementType(option.detail);
-                    if (managementFilter === 'self' && optionManagementType !== 'self') return false;
-                    if (managementFilter === 'visit' && optionManagementType !== 'visit') return false;
-                }
-                
-                if (newSignupHide && !option.detail.includes('타사보상')) return false;
-                if (hideCompetitor && option.detail.includes('타사보상')) return false;
-                if (hidePackage && option.detail.includes('패키지')) return false;
-                return true;
-            });
-            
-            if (filteredOptions.length === 0) {
-                showToast('복사할 옵션이 없습니다.', 'warning');
-                return;
-            }
-            
-            let output = '* 브랜드 : ' + product.brand + '\n';
-            output += '* 모델명 : ' + product.model_number + '\n';
-            output += '* 제품명 : ' + product.product_name + '\n';
-            if (product.color) {
-                output += '* 색상 : ' + product.color + '\n';
-            }
-            output += '\n';
-            
-            filteredOptions.forEach(option => {
-                output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
-            });
-            
-            if (additionalGifts[productId]) {
-                output += '* 추가사은품 : ' + additionalGifts[productId] + '\n';
-            }
-            
-            if (product.image_url) {
-                output += '\n상품 안내페이지 : ' + product.image_url + '\n';
-            }
-            
-            navigator.clipboard.writeText(output.trim()).then(async () => {
-                const button = event.target;
-                const originalText = button.textContent;
-                button.textContent = '✓ 복사됨';
-                button.style.background = '#4caf50';
-                button.style.color = 'white';
-                
-                setTimeout(() => {
-                    button.textContent = originalText;
-                    button.style.background = '';
-                    button.style.color = '';
-                }, 1500);
-                
-                product.copy_count = (product.copy_count || 0) + 1;
-                await updateProductCopyCount(product.model_number, product.copy_count);
-                
-                const countElement = document.querySelector('#product-' + productId + ' .copy-count');
-                if (countElement) {
-                    countElement.textContent = '📋 ' + product.copy_count + '회';
-                }
-                
-                showToast(filteredOptions.length + '개 옵션이 모두 복사되었습니다!', 'success');
-            });
-        }
-        
-        async function quickCopy(productId, optionIndex, event) {
-            event.stopPropagation();
-            
-            const product = products.find(p => p.id === productId);
-            if (!product) return;
-            
-            const option = product.price_options[optionIndex];
-            if (!option) return;
-            
-            let output = '* 브랜드 : ' + product.brand + '\n';
-            output += '* 모델명 : ' + product.model_number + '\n';
-            output += '* 제품명 : ' + product.product_name + '\n';
-            if (product.color) {
-                output += '* 색상 : ' + product.color + '\n';
-            }
-            output += '\n';
-            
-            output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
-            
-            if (additionalGifts[productId]) {
-                output += '* 추가사은품 : ' + additionalGifts[productId] + '\n';
-            }
-            
-            if (product.image_url) {
-                output += '\n상품 안내페이지 : ' + product.image_url + '\n';
-            }
-            
-            navigator.clipboard.writeText(output.trim()).then(async () => {
-                let button = event.target;
-                if (!button.classList.contains('quick-copy-btn')) {
-                    button = event.currentTarget.querySelector('.quick-copy-btn');
-                }
-                
-                if (button) {
-                    const originalText = button.textContent;
-                    button.textContent = '✓ 복사됨';
-                    button.style.background = '#4caf50';
-                    button.style.color = 'white';
-                    
-                    setTimeout(() => {
-                        button.textContent = originalText;
-                        button.style.background = '';
-                        button.style.color = '';
-                    }, 1000);
-                }
-                
-                product.copy_count = (product.copy_count || 0) + 1;
-                await updateProductCopyCount(product.model_number, product.copy_count);
-                
-                const countElement = document.querySelector('#product-' + productId + ' .copy-count');
-                if (countElement) {
-                    countElement.textContent = '📋 ' + product.copy_count + '회';
-                }
-            });
-        }
-        
-        // 추가 사은품 관련 함수들
-        function saveAdditionalGift(productId) {
-            const input = document.getElementById('additional-gift-' + productId);
-            if (input) {
-                const value = input.value.trim();
-                if (value === '') {
-                    delete additionalGifts[productId];
-                    showToast('추가사은품이 삭제되었습니다.', 'warning');
-                } else {
-                    const numberOnly = value.replace(/[^0-9]/g, '');
-                    if (numberOnly) {
-                        additionalGifts[productId] = Number(numberOnly).toLocaleString();
-                        input.value = additionalGifts[productId];
-                        showToast('추가사은품이 저장되었습니다.', 'success');
-                    }
-                }
-            }
-        }
-        
-        function formatAdditionalGift(productId) {
-            const input = document.getElementById('additional-gift-' + productId);
-            if (input) {
-                const numberOnly = input.value.replace(/[^0-9]/g, '');
-                if (numberOnly) {
-                    const formattedValue = Number(numberOnly).toLocaleString();
-                    input.value = formattedValue;
-                }
-            }
-        }
-        
-        // 견적 파싱 및 추가 함수
-        async function parseAndAdd() {
-            const pasteArea = document.getElementById('pasteArea');
-            const text = pasteArea.value;
-            
-            if (!text.trim()) {
-                showToast('견적 정보를 입력해주세요.', 'warning');
-                return;
-            }
-            
-            const lines = text.split('\n');
-            let parsedProduct = {
-                copy_count: 0,
-                price_options: [],
-                has_competitor: false,
-                color: null
-            };
-            
-            let foundURL = null;
-            
-            lines.forEach(line => {
-                const originalLine = line;
-                line = line.replace(/^[\*\-]\s*/, '').trim();
-                
-                if (!foundURL) {
-                    const extractedURL = extractURL(originalLine);
-                    if (extractedURL) {
-                        foundURL = extractedURL;
-                    }
-                }
-                
-                if (line.includes('브랜드') && line.includes(':') && !line.includes('브랜드/분류')) {
-                    parsedProduct.brand = line.split(':')[1].trim();
-                } else if (line.includes('모델명') && line.includes(':')) {
-                    parsedProduct.model_number = line.split(':')[1].trim();
-                } else if (line.includes('제품명') && line.includes(':')) {
-                    parsedProduct.product_name = line.split(':')[1].trim();
-                    
-                    if (!parsedProduct.brand) {
-                        const detectedBrand = detectBrand(parsedProduct.product_name);
-                        if (detectedBrand) {
-                            parsedProduct.brand = detectedBrand;
-                        }
-                    }
-                } else if ((line.includes('색상') || line.includes('컬러') || line.includes('색명칭')) && line.includes(':')) {
-                    const colorRaw = line.split(':')[1].trim();
-                    parsedProduct.color = parseColorInfo(colorRaw);
-                } else if (line.includes('약정') && line.includes(':')) {
-                    const termMatch = line.match(/(\d+년\s*약정)/);
-                    if (termMatch) {
-                        const term = termMatch[1].replace(/\s+/g, '');
-                        const parts = line.split(':')[1].split('/');
-                        if (parts.length >= 3) {
-                            let detail = parts[0].trim();
-                            const priceMatch = parts[1].match(/월\s*([\d,]+)/);
-                            const giftMatch = parts[2].match(/사은품\s*([\d,]+)/);
-                            
-                            if (priceMatch && giftMatch) {
-                                detail = formatPriceDetail(detail);
-                                
-                                if (detail.includes('타사보상')) {
-                                    parsedProduct.has_competitor = true;
-                                }
-                                
-                                parsedProduct.price_options.push({
-                                    term: term,
-                                    detail: detail,
-                                    price: priceMatch[1],
-                                    gift: giftMatch[1]
-                                });
-                            }
-                        }
-                    }
-                }
-            });
-            
-            if (foundURL) {
-                parsedProduct.image_url = foundURL;
-            }
-            
-            if (!parsedProduct.model_number || !parsedProduct.product_name) {
-                showToast('모델명과 제품명이 필요합니다.', 'error');
-                return;
-            }
-            
-            if (!parsedProduct.brand) {
-                showToast('브랜드 정보를 찾을 수 없습니다.', 'error');
-                return;
-            }
-            
-            if (parsedProduct.price_options.length === 0) {
-                showToast('가격 옵션을 찾을 수 없습니다.', 'error');
-                return;
-            }
-            
-            try {
-                const existingProduct = products.find(p => p.model_number === parsedProduct.model_number);
-                
-                if (existingProduct) {
-                    const { error } = await supabaseClient
-                        .from('rental_products')
-                        .update({
-                            product_name: parsedProduct.product_name,
-                            brand: parsedProduct.brand,
-                            price_options: parsedProduct.price_options,
-                            image_url: parsedProduct.image_url,
-                            color: parsedProduct.color,
-                            has_competitor: parsedProduct.has_competitor,
-                            updated_at: new Date().toISOString()
-                        })
-                        .eq('model_number', parsedProduct.model_number);
-                    
-                    if (error) throw error;
-                    showToast(parsedProduct.model_number + ' 제품이 업데이트되었습니다!', 'success');
-                } else {
-                    const { error } = await supabaseClient
-                        .from('rental_products')
-                        .insert([{
-                            model_number: parsedProduct.model_number,
-                            product_name: parsedProduct.product_name,
-                            brand: parsedProduct.brand,
-                            price_options: parsedProduct.price_options,
-                            image_url: parsedProduct.image_url,
-                            color: parsedProduct.color,
-                            copy_count: 0,
-                            has_competitor: parsedProduct.has_competitor,
-                            custom_tags: []
-                        }]);
-                    
-                    if (error) throw error;
-                    showToast(parsedProduct.model_number + ' 제품이 추가되었습니다!', 'success');
-                }
-                
-                pasteArea.value = '';
-                await loadProducts();
-                
-            } catch (error) {
-                console.error('Error saving product:', error);
-                showToast('제품 저장 중 오류가 발생했습니다.', 'error');
-            }
-        }
-        
-        // 제품 요약 업데이트 함수
-        function updateProductSummary() {
-            const summaryDiv = document.getElementById('productSummary');
-            if (!summaryDiv) return;
-            
-            if (products.length === 0) {
-                summaryDiv.innerHTML = '<div style="color: #666; text-align: center; padding: 20px;">등록된 제품이 없습니다.</div>';
-                return;
-            }
-            
-            const groupedByBrand = {};
             products.forEach(product => {
-                if (!groupedByBrand[product.brand]) {
-                    groupedByBrand[product.brand] = [];
-                }
-                groupedByBrand[product.brand].push(product);
-            });
-            
-            let html = '';
-            Object.keys(groupedByBrand).sort().forEach(brand => {
-                const brandProducts = groupedByBrand[brand];
-                const brandLogo = brandLogos[brand] || '📦';
+                let productText = '';
+                let hasOptions = false;
                 
-                html += '<div style="margin-bottom: 20px; background: #0a0a0a; border: 1px solid #333; border-radius: 8px; padding: 15px;">' +
-                        '<h4 style="color: var(--primary-blue); margin-bottom: 10px; font-size: 16px;">' +
-                            brandLogo + ' ' + brand + ' (' + brandProducts.length + '개)' +
-                        '</h4>' +
-                        '<div style="display: grid; gap: 8px;">';
-                
-                brandProducts.forEach(product => {
-                    const updateDate = new Date(product.updated_at);
-                    const dateStr = (updateDate.getMonth() + 1) + '/' + updateDate.getDate();
+                product.options.forEach(option => {
+                    const yearMatch = (option.period === '3년약정' && filters.year3) ||
+                                     (option.period === '5년약정' && filters.year5) ||
+                                     (option.period === '6년약정' && filters.year6);
                     
-                    html += '<div style="background: rgba(255, 255, 255, 0.02); padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">' +
-                            '<div>' +
-                                '<span style="color: #e0e0e0; font-weight: 500; font-size: 13px;">' + product.model_number + '</span>' +
-                                '<span style="color: #999; font-size: 12px; margin-left: 8px;">' + product.product_name + '</span>' +
-                            '</div>' +
-                            '<div style="display: flex; gap: 10px; align-items: center;">' +
-                                '<span style="color: #4caf50; font-size: 11px;">📋 ' + (product.copy_count || 0) + '회</span>' +
-                                '<span style="color: #666; font-size: 11px;">' + dateStr + '</span>' +
-                            '</div>' +
-                        '</div>';
+                    if (!yearMatch) return;
+                    
+                    const isCompetitor = option.management && option.management.includes('타사보상');
+                    if (filters.hideCompetitor && isCompetitor) return;
+                    
+                    const manageMatch = (option.management && option.management.includes('4개월') && filters.manage4) ||
+                                       (option.management && option.management.includes('2개월') && filters.manage2) ||
+                                       (option.management && option.management.includes('필터발송') && filters.filterSend);
+                    
+                    if (!manageMatch) return;
+                    
+                    if (!hasOptions) {
+                        productText = `* 모델명: ${product.model}\n* 제품명: ${product.name}\n\n`;
+                        hasOptions = true;
+                    }
+                    
+                    productText += `* ${option.period}: ${option.management} / 월 ${option.price.toLocaleString()} / 사은품 ${option.gift ? option.gift.toLocaleString() : 0}\n`;
+                    copiedCount++;
                 });
                 
-                html += '</div></div>';
+                if (hasOptions) {
+                    allText += productText + '\n---\n\n';
+                }
             });
             
-            summaryDiv.innerHTML = html;
+            if (allText) {
+                navigator.clipboard.writeText(allText).then(() => {
+                    showToast(`${copiedCount}개 옵션이 복사되었습니다!`, 'success');
+                });
+            } else {
+                showToast('복사할 옵션이 없습니다.', 'error');
+            }
         }
         
-        // 태그 관련 함수들
-        function searchProductsForTag() {
-            const input = document.getElementById('productSearchInput');
-            const suggestions = document.getElementById('productSearchSuggestions');
-            const searchTerm = input.value.toLowerCase().trim();
+        // 통합 검색 함수
+        function searchProducts() {
+            const searchValue = document.getElementById('searchInput').value.toLowerCase();
             
-            if (searchTerm.length < 1) {
-                suggestions.style.display = 'none';
+            if (!searchValue) {
+                renderProducts(products);
                 return;
             }
             
-            const matches = products.filter(product => 
-                product.model_number.toLowerCase().includes(searchTerm) ||
-                product.product_name.toLowerCase().includes(searchTerm)
+            const filtered = products.filter(product => {
+                // 모델명, 제품명, 브랜드로 검색
+                const basicMatch = product.model.toLowerCase().includes(searchValue) ||
+                       product.name.toLowerCase().includes(searchValue) ||
+                       product.brand.toLowerCase().includes(searchValue);
+                
+                // 태그로 검색
+                const tags = productTags[product.model] || [];
+                const tagMatch = tags.some(tag => tag.toLowerCase().includes(searchValue));
+                
+                return basicMatch || tagMatch;
+            });
+            
+            renderProducts(filtered);
+        }
+        
+        // 제품 요약 업데이트
+        function updateProductSummary() {
+            const totalCount = document.getElementById('totalCount');
+            const filteredCount = document.getElementById('filteredCount');
+            
+            totalCount.textContent = products.length;
+            
+            const visibleCards = document.querySelectorAll('.product-card').length;
+            filteredCount.textContent = visibleCards;
+        }
+        
+        // 태그 관리 함수들
+        function searchProductsForTag() {
+            const searchValue = document.getElementById('productSearchInput').value.toLowerCase();
+            const suggestionsDiv = document.getElementById('productSearchSuggestions');
+            
+            if (searchValue.length < 2) {
+                suggestionsDiv.classList.remove('active');
+                return;
+            }
+            
+            const matches = products.filter(p => 
+                p.model.toLowerCase().includes(searchValue) || 
+                p.name.toLowerCase().includes(searchValue)
             ).slice(0, 10);
             
-            if (matches.length === 0) {
-                suggestions.style.display = 'none';
-                return;
-            }
-            
-            let html = '';
-            matches.forEach(product => {
-                const brandLogo = brandLogos[product.brand] || '📦';
-                html += '<div class="search-suggestion-item" onclick="selectProductForTag(' + product.id + ')">' +
-                        '<div style="color: #e0e0e0; font-weight: 500; font-size: 13px;">' +
-                            brandLogo + ' ' + product.model_number +
-                        '</div>' +
-                        '<div style="color: #999; font-size: 12px; margin-top: 2px;">' +
-                            product.product_name +
-                        '</div>' +
-                    '</div>';
-            });
-            
-            suggestions.innerHTML = html;
-            suggestions.style.display = 'block';
-        }
-        
-        function selectProductForTag(productId) {
-            const product = products.find(p => p.id === productId);
-            if (product) {
-                selectedProductForTag = product;
-                const input = document.getElementById('productSearchInput');
-                const suggestions = document.getElementById('productSearchSuggestions');
-                const brandLogo = brandLogos[product.brand] || '📦';
-                input.value = brandLogo + ' ' + product.model_number + ' - ' + product.product_name;
-                suggestions.style.display = 'none';
+            if (matches.length > 0) {
+                suggestionsDiv.innerHTML = matches.map(p => `
+                    <div class="suggestion-item" onclick="selectProductForTag('${p.model}', '${p.name.replace(/'/g, "\\'")}')">
+                        <strong>${p.model}</strong> - ${p.name}
+                    </div>
+                `).join('');
+                suggestionsDiv.classList.add('active');
+            } else {
+                suggestionsDiv.classList.remove('active');
             }
         }
         
-        async function addTagToProduct() {
-            const tagInput = document.getElementById('tagInput');
-            const tag = tagInput.value.trim();
-            
+        function selectProductForTag(model, name) {
+            selectedProductForTag = { model, name };
+            document.getElementById('productSearchInput').value = `${model} - ${name}`;
+            document.getElementById('productSearchSuggestions').classList.remove('active');
+        }
+        
+        function addTagToProduct() {
             if (!selectedProductForTag) {
-                showToast('제품을 먼저 선택해주세요.', 'warning');
+                showToast('상품을 먼저 선택해주세요', 'error');
                 return;
             }
             
-            if (!tag) {
-                showToast('태그를 입력해주세요.', 'warning');
+            const tagName = document.getElementById('tagInput').value.trim();
+            if (!tagName) {
+                showToast('태그명을 입력해주세요', 'error');
                 return;
             }
             
-            try {
-                const currentTags = selectedProductForTag.custom_tags || [];
-                if (currentTags.includes(tag)) {
-                    showToast('이미 추가된 태그입니다.', 'warning');
-                    return;
-                }
+            const productKey = selectedProductForTag.model;
+            if (!productTags[productKey]) {
+                productTags[productKey] = [];
+            }
+            
+            if (!productTags[productKey].includes(tagName)) {
+                productTags[productKey].push(tagName);
+                localStorage.setItem('productTags', JSON.stringify(productTags));
                 
-                const updatedTags = [...currentTags, tag];
-                
-                const { error } = await supabaseClient
-                    .from('rental_products')
-                    .update({ custom_tags: updatedTags })
-                    .eq('id', selectedProductForTag.id);
-                
-                if (error) throw error;
-                
-                selectedProductForTag.custom_tags = updatedTags;
-                const productIndex = products.findIndex(p => p.id === selectedProductForTag.id);
-                if (productIndex !== -1) {
-                    products[productIndex].custom_tags = updatedTags;
-                }
-                
-                tagInput.value = '';
+                // 입력 필드 초기화
                 document.getElementById('productSearchInput').value = '';
+                document.getElementById('tagInput').value = '';
                 selectedProductForTag = null;
                 
                 updateTaggedProductsList();
-                showToast('태그 "' + tag + '"가 추가되었습니다!', 'success');
-                
-            } catch (error) {
-                console.error('Error adding tag:', error);
-                showToast('태그 추가 중 오류가 발생했습니다.', 'error');
+                showToast(`"${tagName}" 태그가 추가되었습니다`, 'success');
+            } else {
+                showToast('이미 존재하는 태그입니다', 'error');
+            }
+        }
+        
+        function removeTagFromProduct(model, tag) {
+            if (productTags[model]) {
+                productTags[model] = productTags[model].filter(t => t !== tag);
+                if (productTags[model].length === 0) {
+                    delete productTags[model];
+                }
+                localStorage.setItem('productTags', JSON.stringify(productTags));
+                updateTaggedProductsList();
+                renderProducts(products); // 메인 화면 업데이트
+                showToast('태그가 삭제되었습니다', 'success');
             }
         }
         
         function updateTaggedProductsList() {
             const listDiv = document.getElementById('taggedProductsList');
-            if (!listDiv) return;
+            const taggedProducts = Object.keys(productTags).filter(key => productTags[key].length > 0);
             
-            const productsWithTags = products.filter(product => 
-                product.custom_tags && product.custom_tags.length > 0
-            );
-            
-            if (productsWithTags.length === 0) {
-                listDiv.innerHTML = '<div style="color: #666; text-align: center; padding: 20px;">태그가 붙은 제품이 없습니다.</div>';
+            if (taggedProducts.length === 0) {
+                listDiv.innerHTML = '<p style="text-align: center; color: #999;">아직 태그가 붙은 상품이 없습니다</p>';
                 return;
             }
             
-            let html = '';
-            productsWithTags.forEach(product => {
-                const brandLogo = brandLogos[product.brand] || '📦';
+            listDiv.innerHTML = taggedProducts.map(model => {
+                const product = products.find(p => p.model === model);
+                if (!product) return '';
                 
-                html += '<div class="tagged-product">' +
-                        '<div class="tagged-product-info">' +
-                            '<div class="tagged-product-name">' +
-                                brandLogo + ' ' + product.model_number + ' - ' + product.product_name +
-                            '</div>' +
-                            '<div class="tagged-product-tags">';
+                return `
+                    <div class="tagged-product-item">
+                        <div class="tagged-product-info">
+                            <div class="product-model">${product.model}</div>
+                            <div class="product-name">${product.name}</div>
+                            <div class="product-tag-badges">
+                                ${productTags[model].map(tag => `
+                                    <span class="tag-badge">
+                                        ✨ ${tag}
+                                        <span class="tag-remove" onclick="removeTagFromProduct('${model}', '${tag}')">×</span>
+                                    </span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // 브랜드 유의사항 함수들
+        function loadNotesUI() {
+            const brands = ['SK매직', 'LG전자', '코웨이', '교원웰스', '청호나이스', '쿠쿠', '세라젬'];
+            const notesGrid = document.querySelector('.notes-grid');
+            
+            notesGrid.innerHTML = brands.map(brand => {
+                const brandKey = brand.toLowerCase().replace(/[^a-z가-힣]/g, '');
+                const savedNote = localStorage.getItem(`note_${brandKey}`) || '';
+                const savedDate = localStorage.getItem(`note_${brandKey}_date`) || '';
                 
-                product.custom_tags.forEach(tag => {
-                    html += '<span class="tag-item">' +
-                                '✨ ' + tag +
-                                '<button class="tag-remove-btn" onclick="removeTagFromProduct(' + product.id + ', \'' + tag + '\')">×</button>' +
-                            '</span>';
-                });
-                
-                html += '</div>' +
-                        '</div>' +
-                    '</div>';
+                return `
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-brand">${brand}</div>
+                            <div class="note-updated" id="note-${brandKey}-updated">${savedDate ? `수정: ${savedDate}` : ''}</div>
+                        </div>
+                        <textarea class="note-content" id="note-${brandKey}" placeholder="${brand} 관련 유의사항을 입력하세요...">${savedNote}</textarea>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function saveNotes() {
+            const brands = ['SK매직', 'LG전자', '코웨이', '교원웰스', '청호나이스', '쿠쿠', '세라젬'];
+            const now = new Date().toLocaleDateString('ko-KR');
+            
+            brands.forEach(brand => {
+                const brandKey = brand.toLowerCase().replace(/[^a-z가-힣]/g, '');
+                const textarea = document.getElementById(`note-${brandKey}`);
+                if (textarea) {
+                    const content = textarea.value.trim();
+                    if (content) {
+                        localStorage.setItem(`note_${brandKey}`, content);
+                        localStorage.setItem(`note_${brandKey}_date`, now);
+                        document.getElementById(`note-${brandKey}-updated`).textContent = `수정: ${now}`;
+                    }
+                }
             });
             
-            listDiv.innerHTML = html;
+            showToast('유의사항이 저장되었습니다', 'success');
         }
         
-        async function removeTagFromProduct(productId, tagToRemove) {
-            try {
-                const product = products.find(p => p.id === productId);
-                if (!product) return;
+        // 타사보상 규정 함수들
+        function loadCompetitorUI() {
+            const brands = ['SK매직', 'LG전자', '코웨이', '교원웰스', '청호나이스', '쿠쿠', '세라젬'];
+            const rulesGrid = document.querySelector('.competitor-rules-grid');
+            
+            rulesGrid.innerHTML = brands.map(brand => {
+                const brandKey = brand.toLowerCase().replace(/[^a-z가-힣]/g, '');
+                const savedRule = localStorage.getItem(`competitor_${brandKey}`) || '';
+                const savedDate = localStorage.getItem(`competitor_${brandKey}_date`) || '';
                 
-                const updatedTags = product.custom_tags.filter(tag => tag !== tagToRemove);
-                
-                const { error } = await supabaseClient
-                    .from('rental_products')
-                    .update({ custom_tags: updatedTags })
-                    .eq('id', productId);
-                
-                if (error) throw error;
-                
-                const productIndex = products.findIndex(p => p.id === productId);
-                if (productIndex !== -1) {
-                    products[productIndex].custom_tags = updatedTags;
+                return `
+                    <div class="competitor-rule-card">
+                        <div class="competitor-rule-header">
+                            <div class="competitor-rule-brand">${brand} 타사보상</div>
+                            <div class="note-updated" id="competitor-${brandKey}-updated">${savedDate ? `수정: ${savedDate}` : ''}</div>
+                        </div>
+                        <textarea class="competitor-rule-content" id="competitor-${brandKey}" placeholder="${brand} 타사보상 규정을 입력하세요...
+예: 
+- 타사보상 적용 대상 및 조건
+- 필요 서류 및 증빙 자료
+- 위약금 면제 범위
+- 프로모션 기간 및 제한사항">${savedRule}</textarea>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function saveCompetitorRules() {
+            const brands = ['SK매직', 'LG전자', '코웨이', '교원웰스', '청호나이스', '쿠쿠', '세라젬'];
+            const now = new Date().toLocaleDateString('ko-KR');
+            
+            brands.forEach(brand => {
+                const brandKey = brand.toLowerCase().replace(/[^a-z가-힣]/g, '');
+                const textarea = document.getElementById(`competitor-${brandKey}`);
+                if (textarea) {
+                    const content = textarea.value.trim();
+                    if (content) {
+                        localStorage.setItem(`competitor_${brandKey}`, content);
+                        localStorage.setItem(`competitor_${brandKey}_date`, now);
+                        document.getElementById(`competitor-${brandKey}-updated`).textContent = `수정: ${now}`;
+                    }
                 }
+            });
+            
+            showToast('타사보상 규정이 저장되었습니다', 'success');
+        }
+        
+        // 제품 저장 (CRM 입력)
+        async function saveProduct() {
+            const crmText = document.getElementById('crmInput').value;
+            
+            if (!crmText.trim()) {
+                showToast('데이터를 입력해주세요', 'error');
+                return;
+            }
+            
+            try {
+                const parsed = parseCRMData(crmText);
                 
-                updateTaggedProductsList();
-                showToast('태그 "' + tagToRemove + '"가 제거되었습니다.', 'success');
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/rental_products`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Prefer': 'return=representation'
+                    },
+                    body: JSON.stringify(parsed)
+                });
                 
+                if (response.ok) {
+                    document.getElementById('crmInput').value = '';
+                    showToast('제품이 성공적으로 저장되었습니다!', 'success');
+                    await loadFromSupabase();
+                } else {
+                    const error = await response.text();
+                    console.error('저장 실패:', error);
+                    showToast('저장에 실패했습니다', 'error');
+                }
             } catch (error) {
-                console.error('Error removing tag:', error);
-                showToast('태그 제거 중 오류가 발생했습니다.', 'error');
+                console.error('파싱 오류:', error);
+                showToast('데이터 형식이 올바르지 않습니다', 'error');
             }
         }
         
-        // 유의사항 저장 함수
-        async function saveNotes() {
-            const notes = {
-                sk: document.getElementById('note-sk').value,
-                lg: document.getElementById('note-lg').value,
-                coway: document.getElementById('note-coway').value,
-                kyowon: document.getElementById('note-kyowon').value,
-                chungho: document.getElementById('note-chungho').value,
-                hyundai: document.getElementById('note-hyundai').value,
-                ceragem: document.getElementById('note-ceragem').value,
-                cuckoo: document.getElementById('note-cuckoo').value
+        // CRM 데이터 파싱
+        function parseCRMData(text) {
+            const lines = text.split('\n').filter(line => line.trim());
+            const product = {
+                model: '',
+                name: '',
+                brand: '',
+                url: '',
+                options: []
             };
             
-            try {
-                localStorage.setItem('brandNotes', JSON.stringify(notes));
+            lines.forEach(line => {
+                line = line.trim();
                 
-                const now = new Date().toLocaleString('ko-KR');
-                Object.keys(notes).forEach(brand => {
-                    const updatedElement = document.getElementById('note-' + brand + '-updated');
-                    if (updatedElement) {
-                        updatedElement.textContent = '수정: ' + now;
+                if (line.startsWith('* 모델명:')) {
+                    product.model = line.replace('* 모델명:', '').trim();
+                } else if (line.startsWith('* 제품명:')) {
+                    const fullName = line.replace('* 제품명:', '').trim();
+                    product.name = fullName;
+                    
+                    // 브랜드 추출
+                    if (fullName.includes('SK매직')) product.brand = 'SK매직';
+                    else if (fullName.includes('LG')) product.brand = 'LG전자';
+                    else if (fullName.includes('코웨이')) product.brand = '코웨이';
+                    else if (fullName.includes('웰스')) product.brand = '교원웰스';
+                    else if (fullName.includes('청호')) product.brand = '청호나이스';
+                    else if (fullName.includes('쿠쿠')) product.brand = '쿠쿠';
+                    else if (fullName.includes('세라젬')) product.brand = '세라젬';
+                    else product.brand = '기타';
+                } else if (line.includes('약정:')) {
+                    const parts = line.split('/').map(p => p.trim());
+                    const period = parts[0].replace('*', '').trim().split(':')[0];
+                    const management = parts[0].split(':')[1]?.trim() || '';
+                    const price = parseInt(parts[1]?.replace(/[^0-9]/g, '') || 0);
+                    const gift = parseInt(parts[2]?.replace(/[^0-9]/g, '') || 0);
+                    
+                    product.options.push({
+                        period,
+                        management,
+                        price,
+                        gift
+                    });
+                } else if (line.includes('상품 안내페이지')) {
+                    product.url = line.split(':').slice(1).join(':').trim();
+                }
+            });
+            
+            return product;
+        }
+        
+        // Supabase에서 데이터 로드
+        async function loadFromSupabase() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/rental_products`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
                     }
                 });
                 
-                showToast('브랜드 유의사항이 저장되었습니다!', 'success');
-            } catch (error) {
-                console.error('Error saving notes:', error);
-                showToast('유의사항 저장 중 오류가 발생했습니다.', 'error');
-            }
-        }
-        
-        // 타사보상 규정 저장 함수
-        async function saveCompetitorRules() {
-            const rules = {
-                sk: document.getElementById('competitor-sk').value,
-                lg: document.getElementById('competitor-lg').value,
-                coway: document.getElementById('competitor-coway').value,
-                cuckoo: document.getElementById('competitor-cuckoo').value,
-                kyowon: document.getElementById('competitor-kyowon').value,
-                chungho: document.getElementById('competitor-chungho').value
-            };
-            
-            try {
-                localStorage.setItem('competitorRules', JSON.stringify(rules));
-                
-                const now = new Date().toLocaleString('ko-KR');
-                Object.keys(rules).forEach(brand => {
-                    const updatedElement = document.getElementById('competitor-' + brand + '-updated');
-                    if (updatedElement) {
-                        updatedElement.textContent = '수정: ' + now;
-                    }
-                });
-                
-                showToast('타사보상 규정이 저장되었습니다!', 'success');
-            } catch (error) {
-                console.error('Error saving competitor rules:', error);
-                showToast('타사보상 규정 저장 중 오류가 발생했습니다.', 'error');
-            }
-        }
-        
-        // 저장된 데이터 로드 함수들
-        function loadSavedNotes() {
-            try {
-                const savedNotes = localStorage.getItem('brandNotes');
-                if (savedNotes) {
-                    const notes = JSON.parse(savedNotes);
-                    Object.keys(notes).forEach(brand => {
-                        const textarea = document.getElementById('note-' + brand);
-                        if (textarea && notes[brand]) {
-                            textarea.value = notes[brand];
+                if (response.ok) {
+                    const data = await response.json();
+                    products = data;
+                    
+                    // 브랜드 순서 정의
+                    const brandOrder = ['SK매직', 'LG전자', '코웨이', '교원웰스', '청호나이스', '쿠쿠', '세라젬', '기타'];
+                    
+                    // 브랜드별로 정렬
+                    const sorted = products.sort((a, b) => {
+                        const brandA = brandOrder.indexOf(a.brand);
+                        const brandB = brandOrder.indexOf(b.brand);
+                        
+                        if (brandA !== brandB) {
+                            return brandA - brandB;
                         }
+                        
+                        return a.model.localeCompare(b.model);
                     });
+                    
+                    renderProducts(sorted);
+                    
+                    updateProductSummary();
+                    updateTaggedProductsList();
+                    showToast(products.length + '개 제품 데이터 로드 완료!', 'success');
+                } else {
+                    console.error('데이터 로드 실패');
+                    showToast('데이터 로드에 실패했습니다', 'error');
                 }
             } catch (error) {
-                console.error('Error loading notes:', error);
+                console.error('로드 오류:', error);
+                showToast('데이터 로드 중 오류가 발생했습니다', 'error');
             }
         }
-        
-        function loadSavedCompetitorRules() {
-            try {
-                const savedRules = localStorage.getItem('competitorRules');
-                if (savedRules) {
-                    const rules = JSON.parse(savedRules);
-                    Object.keys(rules).forEach(brand => {
-                        const textarea = document.getElementById('competitor-' + brand);
-                        if (textarea && rules[brand]) {
-                            textarea.value = rules[brand];
-                        }
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading competitor rules:', error);
-            }
-        }
-        
-        // 외부 클릭 이벤트 핸들러
-        document.addEventListener('click', function(event) {
-            const suggestions = document.getElementById('productSearchSuggestions');
-            const searchInput = document.getElementById('productSearchInput');
-            
-            if (suggestions && searchInput && 
-                !suggestions.contains(event.target) && 
-                !searchInput.contains(event.target)) {
-                suggestions.style.display = 'none';
-            }
-        });
         
         // 페이지 로드 시 초기화
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM Content Loaded');
+        window.addEventListener('DOMContentLoaded', function() {
+            // 태그 데이터 로드
+            productTags = JSON.parse(localStorage.getItem('productTags') || '{}');
             
-            loadFilterSettings();
-            loadSavedNotes();
-            loadSavedCompetitorRules();
-            loadProducts();
+            // Supabase에서 데이터 로드
+            loadFromSupabase();
             
-            // 엔터 키 이벤트 핸들러
-            const tagInput = document.getElementById('tagInput');
-            if (tagInput) {
-                tagInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        addTagToProduct();
-                    }
-                });
-            }
-            
-            const productSearchInput = document.getElementById('productSearchInput');
-            if (productSearchInput) {
-                productSearchInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Escape') {
-                        document.getElementById('productSearchSuggestions').style.display = 'none';
-                    }
-                });
-            }
+            // 필터 이벤트 리스너 추가
+            const filterCheckboxes = document.querySelectorAll('.checkbox-group input[type="checkbox"]');
+            filterCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', () => renderProducts(products));
+            });
         });
     </script>
 </body>
