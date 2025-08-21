@@ -2186,7 +2186,6 @@ https://zero-rental.biz/product-image/51317"></textarea>
         async function loadProducts() {
             try {
                 console.log('Loading products from Supabase...');
-                showToast('제품 데이터를 로드하고 있습니다...', 'info');
                 
                 const { data, error } = await supabaseClient
                     .from('rental_products')
@@ -2225,7 +2224,6 @@ https://zero-rental.biz/product-image/51317"></textarea>
                 
                 updateProductSummary();
                 updateTaggedProductsList();
-                showToast(products.length + '개 제품 데이터 로드 완료!', 'success');
                 
             } catch (error) {
                 console.error('Error loading products:', error);
@@ -2693,7 +2691,7 @@ https://zero-rental.biz/product-image/51317"></textarea>
             
             navigator.clipboard.writeText(output.trim()).then(() => {
                 showToast(selectedItems.size + '개 항목이 복사되었습니다!', 'success');
-                loadProducts();
+                // loadProducts를 직접 호출하지 않고 카운트만 업데이트
             });
         }
         
@@ -3065,6 +3063,7 @@ https://zero-rental.biz/product-image/51317"></textarea>
                 
                 pasteArea.value = '';
                 await loadProducts();
+                showToast(products.length + '개 제품 데이터가 업데이트되었습니다!', 'success');
                 
             } catch (error) {
                 console.error('Error saving product:', error);
@@ -3303,7 +3302,20 @@ https://zero-rental.biz/product-image/51317"></textarea>
             };
             
             try {
-                localStorage.setItem('brandNotes', JSON.stringify(notes));
+                // 각 브랜드별로 Supabase에 저장
+                for (const [brand, content] of Object.entries(notes)) {
+                    const { error } = await supabaseClient
+                        .from('brand_notes')
+                        .upsert({
+                            brand_key: brand,
+                            content: content,
+                            updated_at: new Date().toISOString()
+                        }, {
+                            onConflict: 'brand_key'
+                        });
+                    
+                    if (error) throw error;
+                }
                 
                 const now = new Date().toLocaleString('ko-KR');
                 Object.keys(notes).forEach(brand => {
@@ -3323,20 +3335,34 @@ https://zero-rental.biz/product-image/51317"></textarea>
         // 타사보상 규정 저장 함수
         async function saveCompetitorRules() {
             const rules = {
-                sk: document.getElementById('competitor-sk').value,
-                lg: document.getElementById('competitor-lg').value,
-                coway: document.getElementById('competitor-coway').value,
-                cuckoo: document.getElementById('competitor-cuckoo').value,
-                kyowon: document.getElementById('competitor-kyowon').value,
-                chungho: document.getElementById('competitor-chungho').value
+                'competitor-sk': document.getElementById('competitor-sk').value,
+                'competitor-lg': document.getElementById('competitor-lg').value,
+                'competitor-coway': document.getElementById('competitor-coway').value,
+                'competitor-cuckoo': document.getElementById('competitor-cuckoo').value,
+                'competitor-kyowon': document.getElementById('competitor-kyowon').value,
+                'competitor-chungho': document.getElementById('competitor-chungho').value
             };
             
             try {
-                localStorage.setItem('competitorRules', JSON.stringify(rules));
+                // 각 브랜드별로 Supabase에 저장 (competitor- prefix 포함)
+                for (const [brand, content] of Object.entries(rules)) {
+                    const { error } = await supabaseClient
+                        .from('brand_notes')
+                        .upsert({
+                            brand_key: brand,
+                            content: content,
+                            updated_at: new Date().toISOString()
+                        }, {
+                            onConflict: 'brand_key'
+                        });
+                    
+                    if (error) throw error;
+                }
                 
                 const now = new Date().toLocaleString('ko-KR');
                 Object.keys(rules).forEach(brand => {
-                    const updatedElement = document.getElementById('competitor-' + brand + '-updated');
+                    const elementId = brand.replace('competitor-', 'competitor-');
+                    const updatedElement = document.getElementById(elementId + '-updated');
                     if (updatedElement) {
                         updatedElement.textContent = '수정: ' + now;
                     }
@@ -3350,15 +3376,26 @@ https://zero-rental.biz/product-image/51317"></textarea>
         }
         
         // 저장된 데이터 로드 함수들
-        function loadSavedNotes() {
+        async function loadSavedNotes() {
             try {
-                const savedNotes = localStorage.getItem('brandNotes');
-                if (savedNotes) {
-                    const notes = JSON.parse(savedNotes);
-                    Object.keys(notes).forEach(brand => {
-                        const textarea = document.getElementById('note-' + brand);
-                        if (textarea && notes[brand]) {
-                            textarea.value = notes[brand];
+                const { data, error } = await supabaseClient
+                    .from('brand_notes')
+                    .select('*')
+                    .not('brand_key', 'like', 'competitor-%');
+                
+                if (error) throw error;
+                
+                if (data) {
+                    data.forEach(note => {
+                        const textarea = document.getElementById('note-' + note.brand_key);
+                        if (textarea && note.content) {
+                            textarea.value = note.content;
+                        }
+                        
+                        const updatedElement = document.getElementById('note-' + note.brand_key + '-updated');
+                        if (updatedElement && note.updated_at) {
+                            const updateDate = new Date(note.updated_at);
+                            updatedElement.textContent = '수정: ' + updateDate.toLocaleString('ko-KR');
                         }
                     });
                 }
@@ -3367,15 +3404,28 @@ https://zero-rental.biz/product-image/51317"></textarea>
             }
         }
         
-        function loadSavedCompetitorRules() {
+        async function loadSavedCompetitorRules() {
             try {
-                const savedRules = localStorage.getItem('competitorRules');
-                if (savedRules) {
-                    const rules = JSON.parse(savedRules);
-                    Object.keys(rules).forEach(brand => {
-                        const textarea = document.getElementById('competitor-' + brand);
-                        if (textarea && rules[brand]) {
-                            textarea.value = rules[brand];
+                const { data, error } = await supabaseClient
+                    .from('brand_notes')
+                    .select('*')
+                    .like('brand_key', 'competitor-%');
+                
+                if (error) throw error;
+                
+                if (data) {
+                    data.forEach(rule => {
+                        // competitor- prefix를 유지하면서 element ID 생성
+                        const elementId = rule.brand_key.replace('competitor-', 'competitor-');
+                        const textarea = document.getElementById(elementId);
+                        if (textarea && rule.content) {
+                            textarea.value = rule.content;
+                        }
+                        
+                        const updatedElement = document.getElementById(elementId + '-updated');
+                        if (updatedElement && rule.updated_at) {
+                            const updateDate = new Date(rule.updated_at);
+                            updatedElement.textContent = '수정: ' + updateDate.toLocaleString('ko-KR');
                         }
                     });
                 }
@@ -3401,9 +3451,22 @@ https://zero-rental.biz/product-image/51317"></textarea>
             console.log('DOM Content Loaded');
             
             loadFilterSettings();
-            loadSavedNotes();
-            loadSavedCompetitorRules();
-            loadProducts();
+            
+            // 초기 로딩 메시지
+            showToast('데이터를 로드하고 있습니다...', 'info');
+            
+            // Supabase에서 데이터 로드
+            Promise.all([
+                loadProducts(),
+                loadSavedNotes(),
+                loadSavedCompetitorRules()
+            ]).then(() => {
+                console.log('All data loaded successfully');
+                showToast(products.length + '개 제품 데이터 로드 완료!', 'success');
+            }).catch(error => {
+                console.error('Error loading data:', error);
+                showToast('데이터 로드 중 오류가 발생했습니다.', 'error');
+            });
             
             // 엔터 키 이벤트 핸들러
             const tagInput = document.getElementById('tagInput');
