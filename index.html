@@ -75,7 +75,7 @@
             padding: 8px 16px;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             font-size: 14px;
             font-weight: 500;
             letter-spacing: -0.2px;
@@ -1951,10 +1951,26 @@
             <div class="favorites-container">
                 <div class="favorites-header">
                     <h2>⭐ 자주쓰는 조합</h2>
-                    <div style="margin-top: 15px;">
+                    <div id="currentFilterDisplay" style="margin-top: 10px; padding: 10px; background: rgba(0, 102, 255, 0.1); border-radius: 8px; border: 1px solid var(--primary-blue);">
+                        <span id="currentFilterLabel" style="font-size: 16px; color: var(--primary-blue); font-weight: 600;">
+                            현재 필터: <span id="currentFilterText" style="font-size: 18px; color: var(--primary-blue);">📊 전체보기</span>
+                        </span>
+                    </div>
+                    <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
                         <button class="header-btn ice-toggle-btn off" id="favIceToggleBtn" onclick="toggleIceMode()" style="display: inline-block;">
                             ❄️ 얼음 OFF
                         </button>
+                        <div style="display: flex; gap: 5px; background: rgba(0, 0, 0, 0.5); padding: 3px; border-radius: 10px;">
+                            <button class="header-btn" id="favManageVisit" onclick="setFavManagement('visit')" style="background: rgba(50, 50, 50, 0.3); border-color: #444; color: #666; opacity: 0.6;">
+                                🚐 방문관리
+                            </button>
+                            <button class="header-btn" id="favManageSelf" onclick="setFavManagement('self')" style="background: rgba(50, 50, 50, 0.3); border-color: #444; color: #666; opacity: 0.6;">
+                                🏠 자가관리
+                            </button>
+                            <button class="header-btn" id="favManageAll" onclick="setFavManagement('all')" style="background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-hover)); border-color: var(--primary-blue); color: #fff; font-weight: 700; transform: scale(1.05); box-shadow: 0 0 20px rgba(0, 102, 255, 0.6);">
+                                ✅ 📊 전체보기
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div id="favoritesList">
@@ -2210,6 +2226,7 @@ https://zero-rental.biz/product-image/51317"></textarea>
         let isAdminMode = false;
         let favoriteCombinations = [];
         let isIceMode = false; // 얼음 모드 기본 OFF
+        let favManagementFilter = 'all'; // 자주쓰는 조합 관리방식 필터 (기본값: 전체보기)
         
         // 브랜드별 로고 매핑
         const brandLogos = {
@@ -2290,6 +2307,108 @@ https://zero-rental.biz/product-image/51317"></textarea>
             }
             localStorage.setItem('iceMode', isIceMode);
             updateFavoritesList(); // 자주쓰는 조합 목록 갱신
+        }
+        
+        // 자주쓰는 조합 관리방식 필터 설정
+        function setFavManagement(type) {
+            favManagementFilter = type;
+            
+            // 버튼 스타일 업데이트
+            const allBtn = document.getElementById('favManageAll');
+            const visitBtn = document.getElementById('favManageVisit');
+            const selfBtn = document.getElementById('favManageSelf');
+            
+            // 현재 필터 표시 업데이트
+            const filterDisplay = document.getElementById('currentFilterDisplay');
+            const filterText = document.getElementById('currentFilterText');
+            const filterLabel = document.getElementById('currentFilterLabel');
+            
+            // 모든 버튼 초기화 (흐리게)
+            [allBtn, visitBtn, selfBtn].forEach(btn => {
+                if (btn) {
+                    btn.style.background = 'rgba(50, 50, 50, 0.3)';
+                    btn.style.borderColor = '#444';
+                    btn.style.color = '#666';
+                    btn.style.transform = 'scale(0.95)';
+                    btn.style.boxShadow = 'none';
+                    btn.style.fontWeight = '500';
+                    btn.style.opacity = '0.6';
+                }
+            });
+            
+            // 선택된 버튼 강조 (밝게) 및 현재 필터 표시
+            if (type === 'visit' && visitBtn) {
+                visitBtn.style.background = 'linear-gradient(135deg, #a855f7, #9333ea)';
+                visitBtn.style.borderColor = '#a855f7';
+                visitBtn.style.color = '#fff';
+                visitBtn.style.transform = 'scale(1.05)';
+                visitBtn.style.boxShadow = '0 0 20px rgba(168, 85, 247, 0.6)';
+                visitBtn.style.fontWeight = '700';
+                visitBtn.style.opacity = '1';
+                visitBtn.innerHTML = '✅ 🚐 방문관리';
+                
+                if (filterDisplay) {
+                    filterDisplay.style.background = 'rgba(168, 85, 247, 0.1)';
+                    filterDisplay.style.borderColor = '#a855f7';
+                }
+                if (filterText) {
+                    filterText.textContent = '🚐 방문관리';
+                    filterText.style.color = '#a855f7';
+                }
+                if (filterLabel) {
+                    filterLabel.style.color = '#a855f7';
+                }
+            } else if (type === 'self' && selfBtn) {
+                selfBtn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
+                selfBtn.style.borderColor = '#22c55e';
+                selfBtn.style.color = '#fff';
+                selfBtn.style.transform = 'scale(1.05)';
+                selfBtn.style.boxShadow = '0 0 20px rgba(34, 197, 94, 0.6)';
+                selfBtn.style.fontWeight = '700';
+                selfBtn.style.opacity = '1';
+                selfBtn.innerHTML = '✅ 🏠 자가관리';
+                
+                if (filterDisplay) {
+                    filterDisplay.style.background = 'rgba(34, 197, 94, 0.1)';
+                    filterDisplay.style.borderColor = '#22c55e';
+                }
+                if (filterText) {
+                    filterText.textContent = '🏠 자가관리';
+                    filterText.style.color = '#22c55e';
+                }
+                if (filterLabel) {
+                    filterLabel.style.color = '#22c55e';
+                }
+            } else if (type === 'all' && allBtn) {
+                allBtn.style.background = 'linear-gradient(135deg, var(--primary-blue), var(--primary-blue-hover))';
+                allBtn.style.borderColor = 'var(--primary-blue)';
+                allBtn.style.color = '#fff';
+                allBtn.style.transform = 'scale(1.05)';
+                allBtn.style.boxShadow = '0 0 20px rgba(0, 102, 255, 0.6)';
+                allBtn.style.fontWeight = '700';
+                allBtn.style.opacity = '1';
+                allBtn.innerHTML = '✅ 📊 전체보기';
+                
+                if (filterDisplay) {
+                    filterDisplay.style.background = 'rgba(0, 102, 255, 0.1)';
+                    filterDisplay.style.borderColor = 'var(--primary-blue)';
+                }
+                if (filterText) {
+                    filterText.textContent = '📊 전체보기';
+                    filterText.style.color = 'var(--primary-blue)';
+                }
+                if (filterLabel) {
+                    filterLabel.style.color = 'var(--primary-blue)';
+                }
+            }
+            
+            // 선택되지 않은 버튼들 원래 텍스트로 복원
+            if (type !== 'visit' && visitBtn) visitBtn.innerHTML = '🚐 방문관리';
+            if (type !== 'self' && selfBtn) selfBtn.innerHTML = '🏠 자가관리';
+            if (type !== 'all' && allBtn) allBtn.innerHTML = '📊 전체보기';
+            
+            localStorage.setItem('favManagementFilter', type);
+            updateFavoritesList(); // 목록 즉시 업데이트
         }
         
         // 자주쓰는 조합 관련 함수들
@@ -2419,6 +2538,39 @@ https://zero-rental.biz/product-image/51317"></textarea>
                         if (match) productFeature = match[1];
                     }
                     
+                    // 관리방식별 옵션 확인
+                    const hasVisitOptions = fav.priceOptions.some(opt => 
+                        !opt.detail.includes('타사보상') && 
+                        !opt.detail.includes('패키지') &&
+                        opt.detail.includes('관리') &&
+                        (opt.term.includes('3년') || opt.term.includes('4년') || opt.term.includes('5년'))
+                    );
+                    
+                    const hasSelfOptions = fav.priceOptions.some(opt => 
+                        !opt.detail.includes('타사보상') && 
+                        !opt.detail.includes('패키지') &&
+                        opt.detail.includes('필터발송') &&
+                        (opt.term.includes('3년') || opt.term.includes('4년') || opt.term.includes('5년'))
+                    );
+                    
+                    const hasVisitCompetitor = fav.priceOptions.some(opt => 
+                        opt.detail.includes('타사보상') &&
+                        opt.detail.includes('관리') &&
+                        (opt.term.includes('3년') || opt.term.includes('4년') || opt.term.includes('5년'))
+                    );
+                    
+                    const hasSelfCompetitor = fav.priceOptions.some(opt => 
+                        opt.detail.includes('타사보상') &&
+                        opt.detail.includes('필터발송') &&
+                        (opt.term.includes('3년') || opt.term.includes('4년') || opt.term.includes('5년'))
+                    );
+                    
+                    // 현재 필터에 따른 버튼 표시 결정
+                    let showNormalVisit = hasVisitOptions && (favManagementFilter === 'all' || favManagementFilter === 'visit');
+                    let showNormalSelf = hasSelfOptions && (favManagementFilter === 'all' || favManagementFilter === 'self');
+                    let showCompetitorVisit = hasVisitCompetitor && (favManagementFilter === 'all' || favManagementFilter === 'visit');
+                    let showCompetitorSelf = hasSelfCompetitor && (favManagementFilter === 'all' || favManagementFilter === 'self');
+                    
                     html += `
                         <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(255, 215, 0, 0.03); border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 8px; margin-bottom: 12px;">
                             <div style="flex: 1;">
@@ -2429,17 +2581,33 @@ https://zero-rental.biz/product-image/51317"></textarea>
                                     ${fav.productName.split('(')[0].trim()}
                                     ${productFeature ? `<span style="color: #00bcd4; margin-left: 8px;">(${productFeature})</span>` : ''}
                                 </div>
+                                <div style="margin-top: 8px; display: flex; gap: 8px;">
+                                    ${hasVisitOptions ? '<span style="background: rgba(168, 85, 247, 0.15); color: #a855f7; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">🚐 방문</span>' : ''}
+                                    ${hasSelfOptions ? '<span style="background: rgba(34, 197, 94, 0.15); color: #22c55e; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">🏠 자가</span>' : ''}
+                                </div>
                             </div>
-                            <div style="display: flex; gap: 10px; align-items: center;">
-                                <button class="favorite-copy-btn" style="background: #4CAF50; padding: 8px 20px;" 
-                                        onclick="copyFavoriteNormal('${fav.productId}')">
-                                    신규가입
-                                </button>
-                                <button class="favorite-copy-btn" style="background: #FF9800; padding: 8px 20px;" 
-                                        onclick="copyFavoriteCompetitor('${fav.productId}')">
-                                    타사보상
-                                </button>
-                                ${isAdminMode ? `<button class="favorite-remove-btn" onclick="removeFavoriteProduct('${fav.productId}')">제거</button>` : ''}
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; min-width: 240px;">
+                                ${showNormalVisit || showNormalSelf ? `
+                                    ${showNormalVisit ? `<button class="favorite-copy-btn" style="background: #4CAF50; padding: 8px 16px; font-size: 13px;" 
+                                            onclick="copyFavoriteNormalWithManagement('${fav.productId}', 'visit')">
+                                        🚐 신규
+                                    </button>` : ''}
+                                    ${showNormalSelf ? `<button class="favorite-copy-btn" style="background: #4CAF50; padding: 8px 16px; font-size: 13px;" 
+                                            onclick="copyFavoriteNormalWithManagement('${fav.productId}', 'self')">
+                                        🏠 신규
+                                    </button>` : ''}
+                                ` : ''}
+                                ${showCompetitorVisit || showCompetitorSelf ? `
+                                    ${showCompetitorVisit ? `<button class="favorite-copy-btn" style="background: #FF9800; padding: 8px 16px; font-size: 13px;" 
+                                            onclick="copyFavoriteCompetitorWithManagement('${fav.productId}', 'visit')">
+                                        🚐 타사
+                                    </button>` : ''}
+                                    ${showCompetitorSelf ? `<button class="favorite-copy-btn" style="background: #FF9800; padding: 8px 16px; font-size: 13px;" 
+                                            onclick="copyFavoriteCompetitorWithManagement('${fav.productId}', 'self')">
+                                        🏠 타사
+                                    </button>` : ''}
+                                ` : ''}
+                                ${isAdminMode ? `<button class="favorite-remove-btn" onclick="removeFavoriteProduct('${fav.productId}')" style="grid-column: span 2;">제거</button>` : ''}
                             </div>
                         </div>
                     `;
@@ -2451,19 +2619,117 @@ https://zero-rental.biz/product-image/51317"></textarea>
             container.innerHTML = html;
         }
         
+        function copyFavoriteNormalWithManagement(productId, managementType) {
+            const favorite = favoriteCombinations.find(f => f.productId === parseInt(productId));
+            if (!favorite) return;
+            
+            // 3~5년, 신규가입(타사보상/패키지 제외), 특정 관리방식 옵션만 필터링
+            let options = favorite.priceOptions.filter(opt => {
+                if (opt.detail.includes('타사보상') || opt.detail.includes('패키지')) return false;
+                if (!opt.term.includes('3년') && !opt.term.includes('4년') && !opt.term.includes('5년')) return false;
+                
+                const optManagement = getManagementType(opt.detail);
+                return optManagement === managementType;
+            });
+            
+            if (options.length === 0) {
+                showToast('해당 조건의 신규가입 옵션이 없습니다.', 'warning');
+                return;
+            }
+            
+            let output = '* 브랜드 : ' + favorite.brand + '\n';
+            output += '* 모델명 : ' + favorite.modelNumber + '\n';
+            output += '* 제품명 : ' + favorite.productName + '\n';
+            if (favorite.color) {
+                output += '* 색상 : ' + favorite.color + '\n';
+            }
+            output += '\n';
+            
+            options.forEach(option => {
+                output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
+            });
+            
+            if (additionalGifts[favorite.productId]) {
+                output += '* 추가사은품 : ' + additionalGifts[favorite.productId] + '\n';
+            }
+            
+            if (favorite.imageUrl) {
+                output += '\n상품 안내페이지 : ' + favorite.imageUrl;
+            }
+            
+            navigator.clipboard.writeText(output.trim()).then(() => {
+                const typeText = managementType === 'visit' ? '방문관리' : '자가관리';
+                showToast(`신규가입(${typeText}) 견적이 복사되었습니다!`, 'success');
+            });
+        }
+        
+        function copyFavoriteCompetitorWithManagement(productId, managementType) {
+            const favorite = favoriteCombinations.find(f => f.productId === parseInt(productId));
+            if (!favorite) return;
+            
+            // 3~5년, 타사보상, 특정 관리방식 옵션만 필터링
+            let options = favorite.priceOptions.filter(opt => {
+                if (!opt.detail.includes('타사보상')) return false;
+                if (!opt.term.includes('3년') && !opt.term.includes('4년') && !opt.term.includes('5년')) return false;
+                
+                const optManagement = getManagementType(opt.detail);
+                return optManagement === managementType;
+            });
+            
+            if (options.length === 0) {
+                showToast('해당 조건의 타사보상 옵션이 없습니다.', 'warning');
+                return;
+            }
+            
+            let output = '* 브랜드 : ' + favorite.brand + '\n';
+            output += '* 모델명 : ' + favorite.modelNumber + '\n';
+            output += '* 제품명 : ' + favorite.productName + '\n';
+            if (favorite.color) {
+                output += '* 색상 : ' + favorite.color + '\n';
+            }
+            output += '\n';
+            
+            options.forEach(option => {
+                output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
+            });
+            
+            if (additionalGifts[favorite.productId]) {
+                output += '* 추가사은품 : ' + additionalGifts[favorite.productId] + '\n';
+            }
+            
+            if (favorite.imageUrl) {
+                output += '\n상품 안내페이지 : ' + favorite.imageUrl;
+            }
+            
+            navigator.clipboard.writeText(output.trim()).then(() => {
+                const typeText = managementType === 'visit' ? '방문관리' : '자가관리';
+                showToast(`타사보상(${typeText}) 견적이 복사되었습니다!`, 'success');
+            });
+        }
+        
         function copyFavoriteNormal(productId) {
             const favorite = favoriteCombinations.find(f => f.productId === parseInt(productId));
             if (!favorite) return;
             
             // 3~5년, 신규가입(타사보상/패키지 제외) 옵션만 필터링
-            const options = favorite.priceOptions.filter(opt => 
+            let options = favorite.priceOptions.filter(opt => 
                 !opt.detail.includes('타사보상') && 
                 !opt.detail.includes('패키지') &&
                 (opt.term.includes('3년') || opt.term.includes('4년') || opt.term.includes('5년'))
             );
             
+            // 관리방식 필터 적용
+            if (favManagementFilter !== 'all') {
+                options = options.filter(opt => {
+                    const managementType = getManagementType(opt.detail);
+                    if (favManagementFilter === 'self') return managementType === 'self';
+                    if (favManagementFilter === 'visit') return managementType === 'visit';
+                    return true;
+                });
+            }
+            
             if (options.length === 0) {
-                showToast('신규가입 옵션이 없습니다.', 'warning');
+                showToast('해당 조건의 신규가입 옵션이 없습니다.', 'warning');
                 return;
             }
             
@@ -2497,13 +2763,23 @@ https://zero-rental.biz/product-image/51317"></textarea>
             if (!favorite) return;
             
             // 3~5년, 타사보상 옵션만 필터링
-            const options = favorite.priceOptions.filter(opt => 
+            let options = favorite.priceOptions.filter(opt => 
                 opt.detail.includes('타사보상') &&
                 (opt.term.includes('3년') || opt.term.includes('4년') || opt.term.includes('5년'))
             );
             
+            // 관리방식 필터 적용
+            if (favManagementFilter !== 'all') {
+                options = options.filter(opt => {
+                    const managementType = getManagementType(opt.detail);
+                    if (favManagementFilter === 'self') return managementType === 'self';
+                    if (favManagementFilter === 'visit') return managementType === 'visit';
+                    return true;
+                });
+            }
+            
             if (options.length === 0) {
-                showToast('타사보상 옵션이 없습니다.', 'warning');
+                showToast('해당 조건의 타사보상 옵션이 없습니다.', 'warning');
                 return;
             }
             
@@ -2586,6 +2862,10 @@ https://zero-rental.biz/product-image/51317"></textarea>
                         btn.classList.add('off');
                     }
                 }
+                // 관리방식 필터 상태 복원
+                const savedManagement = localStorage.getItem('favManagementFilter') || 'all';
+                favManagementFilter = savedManagement;
+                setFavManagement(savedManagement);
             }
         }
         
@@ -4154,6 +4434,12 @@ https://zero-rental.biz/product-image/51317"></textarea>
             const savedIceMode = localStorage.getItem('iceMode');
             if (savedIceMode !== null) {
                 isIceMode = savedIceMode === 'true';
+            }
+            
+            // 관리방식 필터 설정 로드
+            const savedManagement = localStorage.getItem('favManagementFilter');
+            if (savedManagement) {
+                favManagementFilter = savedManagement;
             }
             
             showToast('데이터를 로드하고 있습니다...', 'info');
