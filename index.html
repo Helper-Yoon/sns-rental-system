@@ -108,23 +108,6 @@
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
         }
         
-        .header-btn.admin-btn {
-            background: rgba(156, 39, 176, 0.1);
-            border-color: #9C27B0;
-            color: #9C27B0;
-        }
-        
-        .header-btn.admin-btn:hover {
-            background: rgba(156, 39, 176, 0.2);
-            box-shadow: 0 0 15px rgba(156, 39, 176, 0.3);
-        }
-        
-        .header-btn.admin-btn.active {
-            background: #9C27B0;
-            color: white;
-            animation: pulse 2s infinite;
-        }
-        
         @keyframes pulse {
             0% {
                 box-shadow: 0 0 0 0 rgba(156, 39, 176, 0.7);
@@ -1737,6 +1720,56 @@
             box-shadow: 0 8px 30px rgba(255, 152, 0, 0.6);
         }
         
+        /* 플로팅 관리자 버튼 스타일 */
+        .floating-admin-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: rgba(50, 50, 50, 0.6);
+            border: 1px solid rgba(100, 100, 100, 0.3);
+            border-radius: 50%;
+            color: #666;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.5;
+        }
+        
+        .floating-admin-btn:hover {
+            background: rgba(60, 60, 60, 0.8);
+            opacity: 0.8;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            color: #999;
+        }
+        
+        .floating-admin-btn.active {
+            background: rgba(76, 175, 80, 0.8);
+            border-color: rgba(76, 175, 80, 0.5);
+            color: white;
+            opacity: 0.9;
+        }
+        
+        .floating-admin-btn.active:hover {
+            background: rgba(76, 175, 80, 1);
+            opacity: 1;
+        }
+        
+        .floating-admin-btn.active::before {
+            content: '🔓';
+        }
+        
+        .floating-admin-btn:not(.active)::before {
+            content: '🔒';
+        }
+        
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -1812,9 +1845,6 @@
             <div class="header-buttons">
                 <button class="header-btn favorite-btn" onclick="switchTab('favorites')">
                     ⭐ 자주쓰는 조합
-                </button>
-                <button class="header-btn admin-btn" id="adminBtn" onclick="toggleAdminMode()">
-                    🔐 관리자모드
                 </button>
                 <button class="header-btn clear-btn" onclick="resetFilters()">🔄 필터 초기화</button>
             </div>
@@ -2222,6 +2252,9 @@ https://zero-rental.biz/product-image/51317"></textarea>
             </div>
         </div>
     </div>
+    
+    <!-- 플로팅 관리자 버튼 -->
+    <button class="floating-admin-btn" id="adminBtn" onclick="toggleAdminMode()" title="관리자 모드"></button>
     
     <div class="toast" id="toast"></div>
     
