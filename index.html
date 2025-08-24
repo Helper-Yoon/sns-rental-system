@@ -2651,7 +2651,14 @@ https://zero-rental.biz/product-image/51317"></textarea>
             if (!favorite) return;
             
             let output = '';
-            let hasOptions = false;
+            
+            // 제품 정보 (한 번만 출력)
+            output += '* 브랜드 : ' + favorite.brand + '\n';
+            output += '* 모델명 : ' + favorite.modelNumber + '\n';
+            output += '* 제품명 : ' + favorite.productName + '\n';
+            if (favorite.color) {
+                output += '* 색상 : ' + favorite.color + '\n';
+            }
             
             // 신규가입 모드
             if (type === 'normal') {
@@ -2671,58 +2678,35 @@ https://zero-rental.biz/product-image/51317"></textarea>
                     return optManagement === 'self';
                 });
                 
+                if (visitOptions.length === 0 && selfOptions.length === 0) {
+                    showToast('신규가입 옵션이 없습니다.', 'warning');
+                    return;
+                }
+                
+                // 방문관리 섹션
                 if (visitOptions.length > 0) {
-                    output += '===== 방문관리 =====\n';
-                    output += '* 브랜드 : ' + favorite.brand + '\n';
-                    output += '* 모델명 : ' + favorite.modelNumber + '\n';
-                    output += '* 제품명 : ' + favorite.productName + '\n';
-                    if (favorite.color) {
-                        output += '* 색상 : ' + favorite.color + '\n';
-                    }
-                    output += '\n';
-                    
+                    output += '\n===== 방문관리 =====\n';
                     visitOptions.forEach(option => {
                         output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
                     });
-                    
-                    if (additionalGifts[favorite.productId]) {
-                        output += '* 추가사은품 : ' + additionalGifts[favorite.productId] + '\n';
-                    }
-                    
-                    if (favorite.imageUrl) {
-                        output += '\n상품 안내페이지 : ' + favorite.imageUrl;
-                    }
-                    hasOptions = true;
                 }
                 
+                // 자가관리 섹션
                 if (selfOptions.length > 0) {
-                    if (hasOptions) output += '\n\n';
-                    output += '===== 자가관리 =====\n';
-                    output += '* 브랜드 : ' + favorite.brand + '\n';
-                    output += '* 모델명 : ' + favorite.modelNumber + '\n';
-                    output += '* 제품명 : ' + favorite.productName + '\n';
-                    if (favorite.color) {
-                        output += '* 색상 : ' + favorite.color + '\n';
-                    }
-                    output += '\n';
-                    
+                    output += '\n===== 자가관리 =====\n';
                     selfOptions.forEach(option => {
                         output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
                     });
-                    
-                    if (additionalGifts[favorite.productId]) {
-                        output += '* 추가사은품 : ' + additionalGifts[favorite.productId] + '\n';
-                    }
-                    
-                    if (favorite.imageUrl) {
-                        output += '\n상품 안내페이지 : ' + favorite.imageUrl;
-                    }
-                    hasOptions = true;
                 }
                 
-                if (!hasOptions) {
-                    showToast('신규가입 옵션이 없습니다.', 'warning');
-                    return;
+                // 추가사은품
+                if (additionalGifts[favorite.productId]) {
+                    output += '\n* 추가사은품 : ' + additionalGifts[favorite.productId];
+                }
+                
+                // 상품 안내페이지
+                if (favorite.imageUrl) {
+                    output += '\n\n상품 안내페이지 : ' + favorite.imageUrl;
                 }
                 
                 navigator.clipboard.writeText(output.trim()).then(() => {
@@ -2747,58 +2731,35 @@ https://zero-rental.biz/product-image/51317"></textarea>
                     return optManagement === 'self';
                 });
                 
+                if (visitOptions.length === 0 && selfOptions.length === 0) {
+                    showToast('타사보상 옵션이 없습니다.', 'warning');
+                    return;
+                }
+                
+                // 방문관리 섹션
                 if (visitOptions.length > 0) {
-                    output += '===== 타사보상 방문관리 =====\n';
-                    output += '* 브랜드 : ' + favorite.brand + '\n';
-                    output += '* 모델명 : ' + favorite.modelNumber + '\n';
-                    output += '* 제품명 : ' + favorite.productName + '\n';
-                    if (favorite.color) {
-                        output += '* 색상 : ' + favorite.color + '\n';
-                    }
-                    output += '\n';
-                    
+                    output += '\n===== 타사보상 방문관리 =====\n';
                     visitOptions.forEach(option => {
                         output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
                     });
-                    
-                    if (additionalGifts[favorite.productId]) {
-                        output += '* 추가사은품 : ' + additionalGifts[favorite.productId] + '\n';
-                    }
-                    
-                    if (favorite.imageUrl) {
-                        output += '\n상품 안내페이지 : ' + favorite.imageUrl;
-                    }
-                    hasOptions = true;
                 }
                 
+                // 자가관리 섹션
                 if (selfOptions.length > 0) {
-                    if (hasOptions) output += '\n\n';
-                    output += '===== 타사보상 자가관리 =====\n';
-                    output += '* 브랜드 : ' + favorite.brand + '\n';
-                    output += '* 모델명 : ' + favorite.modelNumber + '\n';
-                    output += '* 제품명 : ' + favorite.productName + '\n';
-                    if (favorite.color) {
-                        output += '* 색상 : ' + favorite.color + '\n';
-                    }
-                    output += '\n';
-                    
+                    output += '\n===== 타사보상 자가관리 =====\n';
                     selfOptions.forEach(option => {
                         output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
                     });
-                    
-                    if (additionalGifts[favorite.productId]) {
-                        output += '* 추가사은품 : ' + additionalGifts[favorite.productId] + '\n';
-                    }
-                    
-                    if (favorite.imageUrl) {
-                        output += '\n상품 안내페이지 : ' + favorite.imageUrl;
-                    }
-                    hasOptions = true;
                 }
                 
-                if (!hasOptions) {
-                    showToast('타사보상 옵션이 없습니다.', 'warning');
-                    return;
+                // 추가사은품
+                if (additionalGifts[favorite.productId]) {
+                    output += '\n* 추가사은품 : ' + additionalGifts[favorite.productId];
+                }
+                
+                // 상품 안내페이지
+                if (favorite.imageUrl) {
+                    output += '\n\n상품 안내페이지 : ' + favorite.imageUrl;
                 }
                 
                 navigator.clipboard.writeText(output.trim()).then(() => {
