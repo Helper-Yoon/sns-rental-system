@@ -721,39 +721,6 @@
             border-left: 4px solid #4CAF50;
         }
         
-        .favorite-star-btn {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            padding: 5px;
-            transition: all 0.3s;
-            opacity: 0;
-            display: none;
-        }
-        
-        .admin-mode .favorite-star-btn {
-            display: block;
-        }
-        
-        .price-row:hover .favorite-star-btn {
-            opacity: 1;
-        }
-        
-        .favorite-star-btn.active {
-            color: var(--favorite-gold);
-            opacity: 1;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-        }
-        
-        .favorite-star-btn:hover {
-            transform: translateY(-50%) scale(1.2);
-        }
-        
         .price-checkbox {
             width: 20px;
             height: 20px;
@@ -1966,12 +1933,7 @@
         <div id="favorites-panel" class="tab-panel">
             <div class="favorites-container">
                 <div class="favorites-header">
-                    <h2>⭐ 자주쓰는 조합 관리</h2>
-                    <p>관리자 모드에서 각 제품 옵션의 별표를 클릭하여 자주쓰는 조합에 추가할 수 있습니다</p>
-                    <div style="display: flex; gap: 30px; justify-content: center; margin-top: 15px;">
-                        <span style="color: #4CAF50; font-size: 13px;">✅ 신규가입: 타사보상이 아닌 일반 옵션</span>
-                        <span style="color: #FF9800; font-size: 13px;">🔄 타사보상: 타사보상 프로모션 옵션</span>
-                    </div>
+                    <h2>⭐ 자주쓰는 조합</h2>
                 </div>
                 <div id="favoritesList">
                     <!-- 자주쓰는 조합 목록이 여기에 표시됩니다 -->
@@ -2291,42 +2253,37 @@ https://zero-rental.biz/product-image/51317"></textarea>
         }
         
         // 자주쓰는 조합 관련 함수들
-        async function toggleFavorite(productId, optionIndex, event) {
+        async function toggleFavoriteProduct(productId, event) {
             event.stopPropagation();
             
             if (!isAdminMode) return;
             
             const product = products.find(p => p.id === productId);
-            if (!product || !product.price_options[optionIndex]) return;
+            if (!product) return;
             
-            const favoriteId = `${productId}-${optionIndex}`;
-            const existingIndex = favoriteCombinations.findIndex(f => f.id === favoriteId);
+            const existingIndex = favoriteCombinations.findIndex(f => f.productId === productId);
             
             if (existingIndex !== -1) {
                 // 즐겨찾기 제거
                 favoriteCombinations.splice(existingIndex, 1);
-                event.target.classList.remove('active');
                 showToast('자주쓰는 조합에서 제거되었습니다.', 'info');
             } else {
                 // 즐겨찾기 추가
                 const favorite = {
-                    id: favoriteId,
                     productId: productId,
-                    optionIndex: optionIndex,
                     modelNumber: product.model_number,
                     productName: product.product_name,
                     brand: product.brand,
-                    option: product.price_options[optionIndex],
+                    priceOptions: product.price_options,
                     color: product.color,
                     imageUrl: product.image_url
                 };
                 favoriteCombinations.push(favorite);
-                event.target.classList.add('active');
                 showToast('자주쓰는 조합에 추가되었습니다.', 'success');
             }
             
             await saveFavoritesToSupabase();
-            updateFavoritesList();
+            filterProducts(); // 화면 새로고침
         }
         
         async function saveFavoritesToSupabase() {
@@ -2371,120 +2328,124 @@ https://zero-rental.biz/product-image/51317"></textarea>
             if (!container) return;
             
             if (favoriteCombinations.length === 0) {
-                container.innerHTML = '<div class="no-favorites">자주쓰는 조합이 없습니다.<br>관리자 모드에서 제품 옵션의 별표를 클릭하여 추가하세요.</div>';
+                container.innerHTML = '<div class="no-favorites">자주쓰는 조합이 없습니다.<br>관리자 모드에서 제품의 별표를 클릭하여 추가하세요.</div>';
                 return;
             }
             
-            // 브랜드별 및 타입별로 그룹화
+            // 브랜드별로 그룹화
             const groupedByBrand = {};
             favoriteCombinations.forEach(fav => {
                 if (!groupedByBrand[fav.brand]) {
-                    groupedByBrand[fav.brand] = {
-                        normal: [],
-                        competitor: []
-                    };
+                    groupedByBrand[fav.brand] = [];
                 }
-                
-                // 타사보상 여부 확인
-                if (fav.option.detail.includes('타사보상')) {
-                    groupedByBrand[fav.brand].competitor.push(fav);
-                } else {
-                    groupedByBrand[fav.brand].normal.push(fav);
-                }
+                groupedByBrand[fav.brand].push(fav);
             });
             
             let html = '';
             Object.keys(groupedByBrand).sort().forEach(brand => {
-                const brandData = groupedByBrand[brand];
+                const brandFavorites = groupedByBrand[brand];
                 const brandLogo = brandLogos[brand] || '📦';
-                const totalCount = brandData.normal.length + brandData.competitor.length;
                 
                 html += `
                     <div class="favorites-brand-section">
                         <div class="favorites-brand-header">
                             <div class="favorites-brand-title">
                                 ${brandLogo} ${brand}
-                                <span class="favorites-count">${totalCount}개</span>
+                                <span class="favorites-count">${brandFavorites.length}개</span>
                             </div>
                         </div>
                         <div class="favorites-brand-content">
                 `;
                 
-                // 신규가입 섹션
-                if (brandData.normal.length > 0) {
+                brandFavorites.forEach(fav => {
+                    // 패키지 제외하고 신규가입/타사보상 분리
+                    const normalOptions = fav.priceOptions.filter(opt => 
+                        !opt.detail.includes('패키지') && !opt.detail.includes('타사보상')
+                    );
+                    const competitorOptions = fav.priceOptions.filter(opt => 
+                        !opt.detail.includes('패키지') && opt.detail.includes('타사보상')
+                    );
+                    
                     html += `
-                        <div style="margin-bottom: 20px;">
-                            <div style="color: #4CAF50; font-size: 14px; font-weight: 600; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(76, 175, 80, 0.3);">
-                                ✅ 신규가입 (${brandData.normal.length}개)
+                        <div style="background: rgba(255, 215, 0, 0.03); border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 8px; padding: 15px; margin-bottom: 15px;">
+                            <div style="font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 15px;">
+                                ${fav.modelNumber} / ${fav.productName}
                             </div>
                     `;
                     
-                    brandData.normal.forEach(fav => {
-                        const termClass = fav.option.term.includes('3년') ? 'term-3year' :
-                                         fav.option.term.includes('4년') ? 'term-4year' :
-                                         fav.option.term.includes('5년') ? 'term-5year' :
-                                         fav.option.term.includes('6년') ? 'term-6year' :
-                                         fav.option.term.includes('7년') ? 'term-7year' : '';
-                        
+                    // 신규가입 섹션
+                    if (normalOptions.length > 0) {
                         html += `
-                            <div class="favorite-item" style="border-left: 3px solid #4CAF50;">
-                                <div class="favorite-item-info">
-                                    <div class="favorite-item-model">${fav.modelNumber} / ${fav.productName}</div>
-                                    <div class="favorite-item-detail">${fav.option.detail}</div>
-                                    <div class="favorite-item-price">
-                                        <span class="term ${termClass}">${fav.option.term}</span>
-                                        <span class="price">월 ${fav.option.price}</span>
-                                        <span class="gift">사은품 ${fav.option.gift}</span>
-                                    </div>
+                            <div style="margin-bottom: 15px;">
+                                <div style="color: #4CAF50; font-size: 13px; font-weight: 600; margin-bottom: 8px;">
+                                    ✅ 신규가입
                                 </div>
-                                <div class="favorite-item-actions">
-                                    <button class="favorite-copy-btn" onclick="copyFavorite('${fav.id}')">복사</button>
-                                    ${isAdminMode ? `<button class="favorite-remove-btn" onclick="removeFavorite('${fav.id}')">제거</button>` : ''}
-                                </div>
-                            </div>
                         `;
-                    });
+                        
+                        normalOptions.forEach(option => {
+                            const termClass = option.term.includes('3년') ? 'term-3year' :
+                                             option.term.includes('4년') ? 'term-4year' :
+                                             option.term.includes('5년') ? 'term-5year' :
+                                             option.term.includes('6년') ? 'term-6year' :
+                                             option.term.includes('7년') ? 'term-7year' : '';
+                            
+                            html += `
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; background: rgba(76, 175, 80, 0.05); border-radius: 6px; margin-bottom: 5px;">
+                                    <div style="display: flex; gap: 15px; align-items: center; flex: 1;">
+                                        <span class="term ${termClass}" style="font-size: 12px;">${option.term}</span>
+                                        <span style="color: #999; font-size: 12px;">${option.detail}</span>
+                                        <span style="color: #fff; font-weight: 600; font-size: 13px;">월 ${option.price}</span>
+                                        <span style="background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px;">사은품 ${option.gift}</span>
+                                    </div>
+                                    <button class="favorite-copy-btn" style="padding: 4px 12px; font-size: 11px;" 
+                                            onclick="copyFavoriteOption('${fav.productId}', '${option.term}', '${option.detail}', '${option.price}', '${option.gift}', '${fav.brand}', '${fav.modelNumber}', '${fav.productName}', '${fav.color || ''}', '${fav.imageUrl || ''}')">복사</button>
+                                </div>
+                            `;
+                        });
+                        
+                        html += '</div>';
+                    }
                     
-                    html += '</div>';
-                }
-                
-                // 타사보상 섹션
-                if (brandData.competitor.length > 0) {
+                    // 타사보상 섹션
+                    if (competitorOptions.length > 0) {
+                        html += `
+                            <div>
+                                <div style="color: #FF9800; font-size: 13px; font-weight: 600; margin-bottom: 8px;">
+                                    🔄 타사보상
+                                </div>
+                        `;
+                        
+                        competitorOptions.forEach(option => {
+                            const termClass = option.term.includes('3년') ? 'term-3year' :
+                                             option.term.includes('4년') ? 'term-4year' :
+                                             option.term.includes('5년') ? 'term-5year' :
+                                             option.term.includes('6년') ? 'term-6year' :
+                                             option.term.includes('7년') ? 'term-7year' : '';
+                            
+                            html += `
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; background: rgba(255, 152, 0, 0.05); border-radius: 6px; margin-bottom: 5px;">
+                                    <div style="display: flex; gap: 15px; align-items: center; flex: 1;">
+                                        <span class="term ${termClass}" style="font-size: 12px;">${option.term}</span>
+                                        <span style="color: #999; font-size: 12px;">${option.detail}</span>
+                                        <span style="color: #fff; font-weight: 600; font-size: 13px;">월 ${option.price}</span>
+                                        <span style="background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px;">사은품 ${option.gift}</span>
+                                    </div>
+                                    <button class="favorite-copy-btn" style="padding: 4px 12px; font-size: 11px;" 
+                                            onclick="copyFavoriteOption('${fav.productId}', '${option.term}', '${option.detail}', '${option.price}', '${option.gift}', '${fav.brand}', '${fav.modelNumber}', '${fav.productName}', '${fav.color || ''}', '${fav.imageUrl || ''}')">복사</button>
+                                </div>
+                            `;
+                        });
+                        
+                        html += '</div>';
+                    }
+                    
                     html += `
-                        <div>
-                            <div style="color: #FF9800; font-size: 14px; font-weight: 600; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(255, 152, 0, 0.3);">
-                                🔄 타사보상 (${brandData.competitor.length}개)
+                            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255, 215, 0, 0.1); display: flex; justify-content: flex-end;">
+                                ${isAdminMode ? `<button class="favorite-remove-btn" onclick="removeFavoriteProduct('${fav.productId}')">상품 제거</button>` : ''}
                             </div>
+                        </div>
                     `;
-                    
-                    brandData.competitor.forEach(fav => {
-                        const termClass = fav.option.term.includes('3년') ? 'term-3year' :
-                                         fav.option.term.includes('4년') ? 'term-4year' :
-                                         fav.option.term.includes('5년') ? 'term-5year' :
-                                         fav.option.term.includes('6년') ? 'term-6year' :
-                                         fav.option.term.includes('7년') ? 'term-7year' : '';
-                        
-                        html += `
-                            <div class="favorite-item" style="border-left: 3px solid #FF9800;">
-                                <div class="favorite-item-info">
-                                    <div class="favorite-item-model">${fav.modelNumber} / ${fav.productName}</div>
-                                    <div class="favorite-item-detail">${fav.option.detail}</div>
-                                    <div class="favorite-item-price">
-                                        <span class="term ${termClass}">${fav.option.term}</span>
-                                        <span class="price">월 ${fav.option.price}</span>
-                                        <span class="gift">사은품 ${fav.option.gift}</span>
-                                    </div>
-                                </div>
-                                <div class="favorite-item-actions">
-                                    <button class="favorite-copy-btn" onclick="copyFavorite('${fav.id}')">복사</button>
-                                    ${isAdminMode ? `<button class="favorite-remove-btn" onclick="removeFavorite('${fav.id}')">제거</button>` : ''}
-                                </div>
-                            </div>
-                        `;
-                    });
-                    
-                    html += '</div>';
-                }
+                });
                 
                 html += '</div></div>';
             });
@@ -2492,39 +2453,34 @@ https://zero-rental.biz/product-image/51317"></textarea>
             container.innerHTML = html;
         }
         
-        async function copyFavorite(favoriteId) {
-            const favorite = favoriteCombinations.find(f => f.id === favoriteId);
-            if (!favorite) return;
-            
-            let output = '* 브랜드 : ' + favorite.brand + '\n';
-            output += '* 모델명 : ' + favorite.modelNumber + '\n';
-            output += '* 제품명 : ' + favorite.productName + '\n';
-            if (favorite.color) {
-                output += '* 색상 : ' + favorite.color + '\n';
+        function copyFavoriteOption(productId, term, detail, price, gift, brand, modelNumber, productName, color, imageUrl) {
+            let output = '* 브랜드 : ' + brand + '\n';
+            output += '* 모델명 : ' + modelNumber + '\n';
+            output += '* 제품명 : ' + productName + '\n';
+            if (color && color !== 'null' && color !== 'undefined') {
+                output += '* 색상 : ' + color + '\n';
             }
             output += '\n';
-            output += '* ' + favorite.option.term.replace('약정', ' 약정') + ' : ' + 
-                     favorite.option.detail + ' / 월 ' + favorite.option.price + 
-                     ' / 사은품 ' + favorite.option.gift + '\n';
+            output += '* ' + term.replace('약정', ' 약정') + ' : ' + detail + ' / 월 ' + price + ' / 사은품 ' + gift + '\n';
             
-            if (favorite.imageUrl) {
-                output += '\n상품 안내페이지 : ' + favorite.imageUrl;
+            if (imageUrl && imageUrl !== 'null' && imageUrl !== 'undefined') {
+                output += '\n상품 안내페이지 : ' + imageUrl;
             }
             
             navigator.clipboard.writeText(output.trim()).then(() => {
-                showToast('자주쓰는 조합이 복사되었습니다!', 'success');
+                showToast('복사되었습니다!', 'success');
             });
         }
         
-        async function removeFavorite(favoriteId) {
+        async function removeFavoriteProduct(productId) {
             if (!isAdminMode) return;
             
-            const index = favoriteCombinations.findIndex(f => f.id === favoriteId);
+            const index = favoriteCombinations.findIndex(f => f.productId === parseInt(productId));
             if (index !== -1) {
                 favoriteCombinations.splice(index, 1);
                 await saveFavoritesToSupabase();
                 updateFavoritesList();
-                showToast('자주쓰는 조합이 제거되었습니다.', 'info');
+                showToast('자주쓰는 조합에서 제거되었습니다.', 'info');
             }
         }
         
@@ -3124,6 +3080,8 @@ https://zero-rental.biz/product-image/51317"></textarea>
                 card.className = 'product-card ' + (expandedProducts.has(product.id) ? 'expanded' : '') + ' ' + (isTop3 ? 'popular' : '');
                 card.id = 'product-' + product.id;
                 
+                const isFavorite = favoriteCombinations.some(f => f.productId === product.id);
+                
                 let priceRowsHtml = '';
                 filteredOptions.forEach((option, index) => {
                     const originalIndex = product.price_options.indexOf(option);
@@ -3132,8 +3090,6 @@ https://zero-rental.biz/product-image/51317"></textarea>
                     const optionId = product.id + '-' + originalIndex;
                     const isSelected = selectedItems.has(optionId);
                     const managementType = getManagementType(option.detail);
-                    const favoriteId = `${product.id}-${originalIndex}`;
-                    const isFavorite = favoriteCombinations.some(f => f.id === favoriteId);
                     
                     let termClass = '';
                     if (option.term.includes('3년')) termClass = 'term-3year';
@@ -3168,8 +3124,6 @@ https://zero-rental.biz/product-image/51317"></textarea>
                                      '<div class="price">월 ' + Number(option.price.replace(/,/g, '')).toLocaleString() + '</div>' +
                                      '<div class="gift">사은품 ' + Number(option.gift.replace(/,/g, '')).toLocaleString() + '</div>' +
                                      '<button class="quick-copy-btn" onclick="quickCopy(' + product.id + ', ' + originalIndex + ', event)">복사</button>' +
-                                     (isAdminMode ? '<button class="favorite-star-btn' + (isFavorite ? ' active' : '') + '" ' +
-                                                    'onclick="toggleFavorite(' + product.id + ', ' + originalIndex + ', event)">⭐</button>' : '') +
                                      '</div>';
                 });
                 
@@ -3194,6 +3148,10 @@ https://zero-rental.biz/product-image/51317"></textarea>
                         '</div>' +
                         '<div class="product-actions">' +
                             '<button class="select-copy-btn" onclick="copySelectedInProduct(' + product.id + ', event)">선택복사</button>' +
+                            (isAdminMode ? '<button class="favorite-star-btn' + (isFavorite ? ' active' : '') + '" ' +
+                                          'onclick="toggleFavoriteProduct(' + product.id + ', event)" ' +
+                                          'style="background: none; border: none; font-size: 20px; cursor: pointer; color: ' + 
+                                          (isFavorite ? 'var(--favorite-gold)' : '#666') + ';">⭐</button>' : '') +
                             '<button class="copy-all-btn" onclick="copyAllOptions(' + product.id + ', event)">전체복사</button>' +
                             '<div class="copy-count">📋 ' + (product.copy_count || 0) + '회</div>' +
                             '<div class="update-date">업데이트: ' + dateStr + '</div>' +
