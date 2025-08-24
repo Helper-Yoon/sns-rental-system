@@ -137,37 +137,6 @@
             }
         }
         
-        .header-btn.ice-toggle-btn {
-            background: rgba(0, 188, 212, 0.1);
-            border-color: #00bcd4;
-            color: #00bcd4;
-        }
-        
-        .header-btn.ice-toggle-btn:hover {
-            background: rgba(0, 188, 212, 0.2);
-            box-shadow: 0 0 15px rgba(0, 188, 212, 0.3);
-        }
-        
-        .header-btn.ice-toggle-btn.off {
-            background: rgba(100, 100, 100, 0.1);
-            border-color: #666;
-            color: #666;
-        }
-        
-        #copySelectedBtn {
-            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-hover));
-            color: white;
-            font-weight: 600;
-            padding: 10px 20px;
-            box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3);
-        }
-        
-        #copySelectedBtn:hover {
-            background: linear-gradient(135deg, var(--primary-blue-hover), #0044AA);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 102, 255, 0.5);
-        }
-        
         .tabs {
             background: #111;
             border-bottom: 1px solid #222;
@@ -678,13 +647,83 @@
             overflow: visible;
         }
         
-        .price-table {
+        /* 새로운 스타일: 관리방식별 섹션 */
+        .price-sections-container {
             padding: 20px;
+        }
+        
+        .management-section {
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid #222;
+        }
+        
+        .management-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .management-section-title {
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .management-section-title.visit {
+            color: #a855f7;
+        }
+        
+        .management-section-title.self {
+            color: #22c55e;
+        }
+        
+        .management-copy-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .management-copy-btn {
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            letter-spacing: -0.2px;
+        }
+        
+        .management-copy-btn.normal {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .management-copy-btn.normal:hover {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+        
+        .management-copy-btn.competitor {
+            background: #FF9800;
+            color: white;
+        }
+        
+        .management-copy-btn.competitor:hover {
+            background: #f57c00;
+            transform: scale(1.05);
         }
         
         .price-row {
             display: grid;
-            grid-template-columns: 40px 110px 80px 1fr 130px 140px 80px;
+            grid-template-columns: 40px 110px 1fr 130px 140px 80px;
             align-items: center;
             padding: 12px;
             border-radius: 8px;
@@ -744,25 +783,6 @@
             accent-color: var(--primary-blue);
             cursor: pointer;
             margin-right: 8px;
-        }
-        
-        .management-badge {
-            font-size: 11px;
-            padding: 3px 6px;
-            border-radius: 4px;
-            white-space: nowrap;
-            font-weight: 500;
-            letter-spacing: -0.1px;
-        }
-        
-        .management-self {
-            background: rgba(34, 197, 94, 0.15);
-            color: #22c55e;
-        }
-        
-        .management-visit {
-            background: rgba(168, 85, 247, 0.15);
-            color: #a855f7;
         }
         
         .term {
@@ -2607,31 +2627,31 @@ https://zero-rental.biz/product-image/51317"></textarea>
                                 ${favManagementFilter === 'all' ? `
                                     ${hasNormalOptions ? `<button class="favorite-copy-btn" style="background: #4CAF50; padding: 8px 16px; font-size: 13px;" 
                                             onclick="copyFavoriteAllManagement('${fav.productId}', 'normal')">
-                                        📋 신규 전체
+                                        📋 신규가입 전체
                                     </button>` : ''}
                                     ${hasCompetitorOptions ? `<button class="favorite-copy-btn" style="background: #FF9800; padding: 8px 16px; font-size: 13px;" 
                                             onclick="copyFavoriteAllManagement('${fav.productId}', 'competitor')">
-                                        📋 타사 전체
+                                        📋 타사보상 전체
                                     </button>` : ''}
                                 ` : ''}
                                 ${showNormalVisit || showNormalSelf ? `
                                     ${showNormalVisit ? `<button class="favorite-copy-btn" style="background: #4CAF50; padding: 8px 16px; font-size: 13px;" 
                                             onclick="copyFavoriteNormalWithManagement('${fav.productId}', 'visit')">
-                                        🚐 신규
+                                        🚐 신규가입
                                     </button>` : ''}
                                     ${showNormalSelf ? `<button class="favorite-copy-btn" style="background: #4CAF50; padding: 8px 16px; font-size: 13px;" 
                                             onclick="copyFavoriteNormalWithManagement('${fav.productId}', 'self')">
-                                        🏠 신규
+                                        🏠 신규가입
                                     </button>` : ''}
                                 ` : ''}
                                 ${showCompetitorVisit || showCompetitorSelf ? `
                                     ${showCompetitorVisit ? `<button class="favorite-copy-btn" style="background: #FF9800; padding: 8px 16px; font-size: 13px;" 
                                             onclick="copyFavoriteCompetitorWithManagement('${fav.productId}', 'visit')">
-                                        🚐 타사
+                                        🚐 타사보상
                                     </button>` : ''}
                                     ${showCompetitorSelf ? `<button class="favorite-copy-btn" style="background: #FF9800; padding: 8px 16px; font-size: 13px;" 
                                             onclick="copyFavoriteCompetitorWithManagement('${fav.productId}', 'self')">
-                                        🏠 타사
+                                        🏠 타사보상
                                     </button>` : ''}
                                 ` : ''}
                                 ${isAdminMode ? `<button class="favorite-remove-btn" onclick="removeFavoriteProduct('${fav.productId}')" style="grid-column: span 2;">제거</button>` : ''}
@@ -2853,107 +2873,6 @@ https://zero-rental.biz/product-image/51317"></textarea>
             navigator.clipboard.writeText(output.trim()).then(() => {
                 const typeText = managementType === 'visit' ? '방문관리' : '자가관리';
                 showToast(`타사보상(${typeText}) 견적이 복사되었습니다!`, 'success');
-            });
-        }
-        
-        function copyFavoriteNormal(productId) {
-            const favorite = favoriteCombinations.find(f => f.productId === parseInt(productId));
-            if (!favorite) return;
-            
-            // 3~5년, 신규가입(타사보상/패키지 제외) 옵션만 필터링
-            let options = favorite.priceOptions.filter(opt => 
-                !opt.detail.includes('타사보상') && 
-                !opt.detail.includes('패키지') &&
-                (opt.term.includes('3년') || opt.term.includes('4년') || opt.term.includes('5년'))
-            );
-            
-            // 관리방식 필터 적용
-            if (favManagementFilter !== 'all') {
-                options = options.filter(opt => {
-                    const managementType = getManagementType(opt.detail);
-                    if (favManagementFilter === 'self') return managementType === 'self';
-                    if (favManagementFilter === 'visit') return managementType === 'visit';
-                    return true;
-                });
-            }
-            
-            if (options.length === 0) {
-                showToast('해당 조건의 신규가입 옵션이 없습니다.', 'warning');
-                return;
-            }
-            
-            let output = '* 브랜드 : ' + favorite.brand + '\n';
-            output += '* 모델명 : ' + favorite.modelNumber + '\n';
-            output += '* 제품명 : ' + favorite.productName + '\n';
-            if (favorite.color) {
-                output += '* 색상 : ' + favorite.color + '\n';
-            }
-            output += '\n';
-            
-            options.forEach(option => {
-                output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
-            });
-            
-            if (additionalGifts[favorite.productId]) {
-                output += '* 추가사은품 : ' + additionalGifts[favorite.productId] + '\n';
-            }
-            
-            if (favorite.imageUrl) {
-                output += '\n상품 안내페이지 : ' + favorite.imageUrl;
-            }
-            
-            navigator.clipboard.writeText(output.trim()).then(() => {
-                showToast('신규가입 견적이 복사되었습니다!', 'success');
-            });
-        }
-        
-        function copyFavoriteCompetitor(productId) {
-            const favorite = favoriteCombinations.find(f => f.productId === parseInt(productId));
-            if (!favorite) return;
-            
-            // 3~5년, 타사보상 옵션만 필터링
-            let options = favorite.priceOptions.filter(opt => 
-                opt.detail.includes('타사보상') &&
-                (opt.term.includes('3년') || opt.term.includes('4년') || opt.term.includes('5년'))
-            );
-            
-            // 관리방식 필터 적용
-            if (favManagementFilter !== 'all') {
-                options = options.filter(opt => {
-                    const managementType = getManagementType(opt.detail);
-                    if (favManagementFilter === 'self') return managementType === 'self';
-                    if (favManagementFilter === 'visit') return managementType === 'visit';
-                    return true;
-                });
-            }
-            
-            if (options.length === 0) {
-                showToast('해당 조건의 타사보상 옵션이 없습니다.', 'warning');
-                return;
-            }
-            
-            let output = '* 브랜드 : ' + favorite.brand + '\n';
-            output += '* 모델명 : ' + favorite.modelNumber + '\n';
-            output += '* 제품명 : ' + favorite.productName + '\n';
-            if (favorite.color) {
-                output += '* 색상 : ' + favorite.color + '\n';
-            }
-            output += '\n';
-            
-            options.forEach(option => {
-                output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
-            });
-            
-            if (additionalGifts[favorite.productId]) {
-                output += '* 추가사은품 : ' + additionalGifts[favorite.productId] + '\n';
-            }
-            
-            if (favorite.imageUrl) {
-                output += '\n상품 안내페이지 : ' + favorite.imageUrl;
-            }
-            
-            navigator.clipboard.writeText(output.trim()).then(() => {
-                showToast('타사보상 견적이 복사되었습니다!', 'success');
             });
         }
         
@@ -3479,7 +3398,7 @@ https://zero-rental.biz/product-image/51317"></textarea>
             renderProducts(sorted);
         }
         
-        // 제품 렌더링 함수
+        // 제품 렌더링 함수 - 관리방식별 섹션으로 수정
         function renderProducts(productsToRender) {
             if (!productsToRender) productsToRender = products;
             
@@ -3529,26 +3448,39 @@ https://zero-rental.biz/product-image/51317"></textarea>
                     return;
                 }
                 
-                let filteredOptions = product.price_options.filter(option => {
-                    if (option.term.includes('3년') && !showYear3) return false;
-                    if (option.term.includes('4년') && !showYear4) return false;
-                    if (option.term.includes('5년') && !showYear5) return false;
-                    if (option.term.includes('6년') && !showYear6) return false;
-                    if (option.term.includes('7년') && !showYear7) return false;
+                // 방문관리와 자가관리 옵션 분리
+                let visitOptions = [];
+                let selfOptions = [];
+                
+                product.price_options.forEach(option => {
+                    // 년도 필터링
+                    if (option.term.includes('3년') && !showYear3) return;
+                    if (option.term.includes('4년') && !showYear4) return;
+                    if (option.term.includes('5년') && !showYear5) return;
+                    if (option.term.includes('6년') && !showYear6) return;
+                    if (option.term.includes('7년') && !showYear7) return;
                     
-                    if (managementFilter !== 'all') {
-                        const optionManagementType = getManagementType(option.detail);
-                        if (managementFilter === 'self' && optionManagementType !== 'self') return false;
-                        if (managementFilter === 'visit' && optionManagementType !== 'visit') return false;
+                    // 옵션 타입 필터링
+                    if (newSignupHide && !option.detail.includes('타사보상')) return;
+                    if (hideCompetitor && option.detail.includes('타사보상')) return;
+                    if (hidePackage && option.detail.includes('패키지')) return;
+                    
+                    const optionManagementType = getManagementType(option.detail);
+                    
+                    if (managementFilter === 'all') {
+                        if (optionManagementType === 'visit') {
+                            visitOptions.push(option);
+                        } else if (optionManagementType === 'self') {
+                            selfOptions.push(option);
+                        }
+                    } else if (managementFilter === 'visit' && optionManagementType === 'visit') {
+                        visitOptions.push(option);
+                    } else if (managementFilter === 'self' && optionManagementType === 'self') {
+                        selfOptions.push(option);
                     }
-                    
-                    if (newSignupHide && !option.detail.includes('타사보상')) return false;
-                    if (hideCompetitor && option.detail.includes('타사보상')) return false;
-                    if (hidePackage && option.detail.includes('패키지')) return false;
-                    return true;
                 });
                 
-                if (filteredOptions.length === 0) return;
+                if (visitOptions.length === 0 && selfOptions.length === 0) return;
                 
                 const updateDate = new Date(product.updated_at);
                 const dateStr = (updateDate.getMonth() + 1) + '/' + updateDate.getDate();
@@ -3582,50 +3514,119 @@ https://zero-rental.biz/product-image/51317"></textarea>
                 
                 const isFavorite = favoriteCombinations.some(f => f.productId === product.id);
                 
-                let priceRowsHtml = '';
-                filteredOptions.forEach((option, index) => {
-                    const originalIndex = product.price_options.indexOf(option);
-                    const isCompetitor = option.detail.includes('타사보상');
-                    const isPackage = option.detail.includes('패키지');
-                    const optionId = product.id + '-' + originalIndex;
-                    const isSelected = selectedItems.has(optionId);
-                    const managementType = getManagementType(option.detail);
+                // 방문관리 섹션 HTML 생성
+                let visitSectionHtml = '';
+                if (visitOptions.length > 0) {
+                    let visitNormalOptions = visitOptions.filter(opt => !opt.detail.includes('타사보상'));
+                    let visitCompetitorOptions = visitOptions.filter(opt => opt.detail.includes('타사보상'));
                     
-                    let termClass = '';
-                    if (option.term.includes('3년')) termClass = 'term-3year';
-                    else if (option.term.includes('4년')) termClass = 'term-4year';
-                    else if (option.term.includes('5년')) termClass = 'term-5year';
-                    else if (option.term.includes('6년')) termClass = 'term-6year';
-                    else if (option.term.includes('7년')) termClass = 'term-7year';
+                    visitSectionHtml = `
+                        <div class="management-section">
+                            <div class="management-section-header">
+                                <div class="management-section-title visit">
+                                    🚐 방문관리
+                                </div>
+                                <div class="management-copy-buttons">
+                                    ${visitNormalOptions.length > 0 ? `<button class="management-copy-btn normal" onclick="copyManagementOptions(${product.id}, 'visit', 'normal', event)">신규가입</button>` : ''}
+                                    ${visitCompetitorOptions.length > 0 ? `<button class="management-copy-btn competitor" onclick="copyManagementOptions(${product.id}, 'visit', 'competitor', event)">타사보상</button>` : ''}
+                                </div>
+                            </div>
+                            <div class="management-options">`;
                     
-                    let rowClass = '';
-                    if (isCompetitor) rowClass = 'competitor-option';
-                    else if (isPackage) rowClass = 'package-option';
+                    visitOptions.forEach((option, index) => {
+                        const originalIndex = product.price_options.indexOf(option);
+                        const isCompetitor = option.detail.includes('타사보상');
+                        const isPackage = option.detail.includes('패키지');
+                        const optionId = product.id + '-' + originalIndex;
+                        const isSelected = selectedItems.has(optionId);
+                        
+                        let termClass = '';
+                        if (option.term.includes('3년')) termClass = 'term-3year';
+                        else if (option.term.includes('4년')) termClass = 'term-4year';
+                        else if (option.term.includes('5년')) termClass = 'term-5year';
+                        else if (option.term.includes('6년')) termClass = 'term-6year';
+                        else if (option.term.includes('7년')) termClass = 'term-7year';
+                        
+                        let rowClass = '';
+                        if (isCompetitor) rowClass = 'competitor-option';
+                        else if (isPackage) rowClass = 'package-option';
+                        
+                        visitSectionHtml += '<div class="price-row ' + rowClass + (isSelected ? ' selected' : '') + '" ' +
+                                         'id="option-' + optionId + '" ' +
+                                         'onclick="toggleOptionByRow(\'' + optionId + '\', event)" ' +
+                                         'style="cursor: pointer;">' +
+                                         '<input type="checkbox" class="price-checkbox" ' +
+                                               'id="check-' + optionId + '" ' +
+                                               (isSelected ? 'checked' : '') + ' ' +
+                                               'onchange="toggleOption(\'' + optionId + '\')" ' +
+                                               'onclick="event.stopPropagation()">' +
+                                         '<div class="term ' + termClass + '">' + option.term.replace('약정', ' 약정') + '</div>' +
+                                         '<div class="management">' + formatPriceDetail(option.detail) + '</div>' +
+                                         '<div class="price">월 ' + Number(option.price.replace(/,/g, '')).toLocaleString() + '</div>' +
+                                         '<div class="gift">사은품 ' + Number(option.gift.replace(/,/g, '')).toLocaleString() + '</div>' +
+                                         '<button class="quick-copy-btn" onclick="quickCopy(' + product.id + ', ' + originalIndex + ', event)">복사</button>' +
+                                         '</div>';
+                    });
                     
-                    let managementBadge = '';
-                    if (managementType === 'self') {
-                        managementBadge = '<div class="management-badge management-self">🏠 자가</div>';
-                    } else if (managementType === 'visit') {
-                        managementBadge = '<div class="management-badge management-visit">🚐 방문</div>';
-                    }
+                    visitSectionHtml += '</div></div>';
+                }
+                
+                // 자가관리 섹션 HTML 생성
+                let selfSectionHtml = '';
+                if (selfOptions.length > 0) {
+                    let selfNormalOptions = selfOptions.filter(opt => !opt.detail.includes('타사보상'));
+                    let selfCompetitorOptions = selfOptions.filter(opt => opt.detail.includes('타사보상'));
                     
-                    priceRowsHtml += '<div class="price-row ' + rowClass + (isSelected ? ' selected' : '') + '" ' +
-                                     'id="option-' + optionId + '" ' +
-                                     'onclick="toggleOptionByRow(\'' + optionId + '\', event)" ' +
-                                     'style="cursor: pointer;">' +
-                                     '<input type="checkbox" class="price-checkbox" ' +
-                                           'id="check-' + optionId + '" ' +
-                                           (isSelected ? 'checked' : '') + ' ' +
-                                           'onchange="toggleOption(\'' + optionId + '\')" ' +
-                                           'onclick="event.stopPropagation()">' +
-                                     '<div class="term ' + termClass + '">' + option.term.replace('약정', ' 약정') + '</div>' +
-                                     managementBadge +
-                                     '<div class="management">' + formatPriceDetail(option.detail) + '</div>' +
-                                     '<div class="price">월 ' + Number(option.price.replace(/,/g, '')).toLocaleString() + '</div>' +
-                                     '<div class="gift">사은품 ' + Number(option.gift.replace(/,/g, '')).toLocaleString() + '</div>' +
-                                     '<button class="quick-copy-btn" onclick="quickCopy(' + product.id + ', ' + originalIndex + ', event)">복사</button>' +
-                                     '</div>';
-                });
+                    selfSectionHtml = `
+                        <div class="management-section">
+                            <div class="management-section-header">
+                                <div class="management-section-title self">
+                                    🏠 자가관리
+                                </div>
+                                <div class="management-copy-buttons">
+                                    ${selfNormalOptions.length > 0 ? `<button class="management-copy-btn normal" onclick="copyManagementOptions(${product.id}, 'self', 'normal', event)">신규가입</button>` : ''}
+                                    ${selfCompetitorOptions.length > 0 ? `<button class="management-copy-btn competitor" onclick="copyManagementOptions(${product.id}, 'self', 'competitor', event)">타사보상</button>` : ''}
+                                </div>
+                            </div>
+                            <div class="management-options">`;
+                    
+                    selfOptions.forEach((option, index) => {
+                        const originalIndex = product.price_options.indexOf(option);
+                        const isCompetitor = option.detail.includes('타사보상');
+                        const isPackage = option.detail.includes('패키지');
+                        const optionId = product.id + '-' + originalIndex;
+                        const isSelected = selectedItems.has(optionId);
+                        
+                        let termClass = '';
+                        if (option.term.includes('3년')) termClass = 'term-3year';
+                        else if (option.term.includes('4년')) termClass = 'term-4year';
+                        else if (option.term.includes('5년')) termClass = 'term-5year';
+                        else if (option.term.includes('6년')) termClass = 'term-6year';
+                        else if (option.term.includes('7년')) termClass = 'term-7year';
+                        
+                        let rowClass = '';
+                        if (isCompetitor) rowClass = 'competitor-option';
+                        else if (isPackage) rowClass = 'package-option';
+                        
+                        selfSectionHtml += '<div class="price-row ' + rowClass + (isSelected ? ' selected' : '') + '" ' +
+                                         'id="option-' + optionId + '" ' +
+                                         'onclick="toggleOptionByRow(\'' + optionId + '\', event)" ' +
+                                         'style="cursor: pointer;">' +
+                                         '<input type="checkbox" class="price-checkbox" ' +
+                                               'id="check-' + optionId + '" ' +
+                                               (isSelected ? 'checked' : '') + ' ' +
+                                               'onchange="toggleOption(\'' + optionId + '\')" ' +
+                                               'onclick="event.stopPropagation()">' +
+                                         '<div class="term ' + termClass + '">' + option.term.replace('약정', ' 약정') + '</div>' +
+                                         '<div class="management">' + formatPriceDetail(option.detail) + '</div>' +
+                                         '<div class="price">월 ' + Number(option.price.replace(/,/g, '')).toLocaleString() + '</div>' +
+                                         '<div class="gift">사은품 ' + Number(option.gift.replace(/,/g, '')).toLocaleString() + '</div>' +
+                                         '<button class="quick-copy-btn" onclick="quickCopy(' + product.id + ', ' + originalIndex + ', event)">복사</button>' +
+                                         '</div>';
+                    });
+                    
+                    selfSectionHtml += '</div></div>';
+                }
                 
                 card.innerHTML = '<div class="product-header" onclick="toggleProductExpand(' + product.id + ', event)">' +
                         '<div class="product-left">' +
@@ -3659,11 +3660,12 @@ https://zero-rental.biz/product-image/51317"></textarea>
                         '</div>' +
                     '</div>' +
                     '<div class="product-content">' +
-                        '<div class="price-table">' +
+                        '<div class="price-sections-container">' +
                             (product.color ? '<div style="padding: 10px 12px; margin-bottom: 10px; background: rgba(218, 165, 32, 0.05); border-left: 3px solid #daa520; color: #e0e0e0; font-size: 13px;">' +
                                 '<strong style="color: #daa520;">🎨 색상:</strong> ' + product.color +
                             '</div>' : '') +
-                            priceRowsHtml +
+                            visitSectionHtml +
+                            selfSectionHtml +
                         '</div>' +
                         '<div class="additional-gift-section">' +
                             '<input type="text" id="additional-gift-' + product.id + '" ' +
@@ -3680,6 +3682,67 @@ https://zero-rental.biz/product-image/51317"></textarea>
             });
             
             updateSelectedCount();
+        }
+        
+        // 관리방식별 복사 함수 추가
+        function copyManagementOptions(productId, managementType, optionType, event) {
+            event.stopPropagation();
+            
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            let options = product.price_options.filter(opt => {
+                const optManagement = getManagementType(opt.detail);
+                if (optManagement !== managementType) return false;
+                
+                if (optionType === 'normal') {
+                    return !opt.detail.includes('타사보상');
+                } else if (optionType === 'competitor') {
+                    return opt.detail.includes('타사보상');
+                }
+                return false;
+            });
+            
+            if (options.length === 0) {
+                showToast('해당 조건의 옵션이 없습니다.', 'warning');
+                return;
+            }
+            
+            let output = '* 브랜드 : ' + product.brand + '\n';
+            output += '* 모델명 : ' + product.model_number + '\n';
+            output += '* 제품명 : ' + product.product_name + '\n';
+            if (product.color) {
+                output += '* 색상 : ' + product.color + '\n';
+            }
+            output += '\n';
+            
+            const managementTitle = managementType === 'visit' ? '방문관리' : '자가관리';
+            const optionTitle = optionType === 'normal' ? '신규가입' : '타사보상';
+            output += `===== ${optionTitle} ${managementTitle} =====\n`;
+            
+            options.forEach(option => {
+                output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
+            });
+            
+            if (additionalGifts[productId]) {
+                output += '\n* 추가사은품 : ' + additionalGifts[productId] + '\n';
+            }
+            
+            if (product.image_url) {
+                output += '\n상품 안내페이지 : ' + product.image_url;
+            }
+            
+            navigator.clipboard.writeText(output.trim()).then(async () => {
+                showToast(`${optionTitle} ${managementTitle} 견적이 복사되었습니다!`, 'success');
+                
+                product.copy_count = (product.copy_count || 0) + 1;
+                await updateProductCopyCount(product.model_number, product.copy_count);
+                
+                const countElement = document.querySelector('#product-' + productId + ' .copy-count');
+                if (countElement) {
+                    countElement.textContent = '📋 ' + product.copy_count + '회';
+                }
+            });
         }
         
         // 옵션 선택 함수들
@@ -3796,15 +3859,41 @@ https://zero-rental.biz/product-image/51317"></textarea>
                 }
                 output += '\n';
                 
+                // 관리방식별로 그룹화
+                let visitOptions = [];
+                let selfOptions = [];
+                
                 grouped[productId].sort((a, b) => a - b).forEach(optionIndex => {
                     const option = product.price_options[optionIndex];
                     if (option) {
-                        output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
+                        const managementType = getManagementType(option.detail);
+                        if (managementType === 'visit') {
+                            visitOptions.push(option);
+                        } else if (managementType === 'self') {
+                            selfOptions.push(option);
+                        }
                     }
                 });
                 
+                // 방문관리 섹션
+                if (visitOptions.length > 0) {
+                    output += '===== 방문관리 =====\n';
+                    visitOptions.forEach(option => {
+                        output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
+                    });
+                }
+                
+                // 자가관리 섹션
+                if (selfOptions.length > 0) {
+                    if (visitOptions.length > 0) output += '\n';
+                    output += '===== 자가관리 =====\n';
+                    selfOptions.forEach(option => {
+                        output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
+                    });
+                }
+                
                 if (additionalGifts[productId]) {
-                    output += '* 추가사은품 : ' + additionalGifts[productId] + '\n';
+                    output += '\n* 추가사은품 : ' + additionalGifts[productId] + '\n';
                 }
                 
                 if (product.image_url) {
@@ -3847,12 +3936,38 @@ https://zero-rental.biz/product-image/51317"></textarea>
             }
             output += '\n';
             
+            // 관리방식별로 그룹화
+            let visitOptions = [];
+            let selfOptions = [];
+            
             selectedOptions.forEach(option => {
-                output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
+                const managementType = getManagementType(option.detail);
+                if (managementType === 'visit') {
+                    visitOptions.push(option);
+                } else if (managementType === 'self') {
+                    selfOptions.push(option);
+                }
             });
             
+            // 방문관리 섹션
+            if (visitOptions.length > 0) {
+                output += '===== 방문관리 =====\n';
+                visitOptions.forEach(option => {
+                    output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
+                });
+            }
+            
+            // 자가관리 섹션
+            if (selfOptions.length > 0) {
+                if (visitOptions.length > 0) output += '\n';
+                output += '===== 자가관리 =====\n';
+                selfOptions.forEach(option => {
+                    output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
+                });
+            }
+            
             if (additionalGifts[productId]) {
-                output += '* 추가사은품 : ' + additionalGifts[productId] + '\n';
+                output += '\n* 추가사은품 : ' + additionalGifts[productId] + '\n';
             }
             
             if (product.image_url) {
@@ -3928,12 +4043,38 @@ https://zero-rental.biz/product-image/51317"></textarea>
             }
             output += '\n';
             
+            // 관리방식별로 그룹화
+            let visitOptions = [];
+            let selfOptions = [];
+            
             filteredOptions.forEach(option => {
-                output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
+                const managementType = getManagementType(option.detail);
+                if (managementType === 'visit') {
+                    visitOptions.push(option);
+                } else if (managementType === 'self') {
+                    selfOptions.push(option);
+                }
             });
             
+            // 방문관리 섹션
+            if (visitOptions.length > 0) {
+                output += '===== 방문관리 =====\n';
+                visitOptions.forEach(option => {
+                    output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
+                });
+            }
+            
+            // 자가관리 섹션
+            if (selfOptions.length > 0) {
+                if (visitOptions.length > 0) output += '\n';
+                output += '===== 자가관리 =====\n';
+                selfOptions.forEach(option => {
+                    output += '* ' + option.term.replace('약정', ' 약정') + ' : ' + option.detail + ' / 월 ' + option.price + ' / 사은품 ' + option.gift + '\n';
+                });
+            }
+            
             if (additionalGifts[productId]) {
-                output += '* 추가사은품 : ' + additionalGifts[productId] + '\n';
+                output += '\n* 추가사은품 : ' + additionalGifts[productId] + '\n';
             }
             
             if (product.image_url) {
