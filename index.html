@@ -3216,35 +3216,36 @@ https://zero-rental.biz/product-image/51317"></textarea>
         }
         
         // 색상 정보 파싱 함수
-        function parseColorInfo(colorText) {
-            if (!colorText) return null;
+// 색상 정보 파싱 함수 - 개선된 버전 (괄호 문제 해결)
+function parseColorInfo(colorText) {
+    if (!colorText) return null;
+    
+    // "선택안함" 텍스트 제거
+    colorText = colorText.replace(/선택안함/g, '').trim();
+    
+    // 전체 괄호 내용 추출 (마지막 괄호가 없어도 처리)
+    const parenthesisMatch = colorText.match(/\(([^)]+)\)?$/);
+    if (parenthesisMatch) {
+        let colorContent = parenthesisMatch[1];
+        
+        // 색상 목록이 있는 경우 (슬래시로 구분)
+        if (colorContent.includes('/')) {
+            // 각 색상 항목 분리하고 영문 코드 제거
+            const colors = colorContent.split('/').map(item => {
+                // 괄호와 영문 코드 제거 (예: "그레이스화이트(GWH" -> "그레이스화이트")
+                return item.replace(/\([A-Z]+\)?/g, '').trim();
+            }).filter(c => c.length > 0);
             
-            colorText = colorText.replace(/선택안함/g, '').trim();
-            
-            const parenthesisMatch = colorText.match(/\(([^)]+)\)/);
-            if (parenthesisMatch) {
-                const colorContent = parenthesisMatch[1];
-                
-                if (colorContent.includes('/')) {
-                    const cleanedColors = colorContent
-                        .replace(/\([^)]+\)/g, '')
-                        .split('/')
-                        .map(c => c.trim())
-                        .filter(c => c.length > 0)
-                        .join(' / ');
-                    
-                    return cleanedColors;
-                } else {
-                    const cleanedColor = colorContent
-                        .replace(/\([^)]+\)/g, '')
-                        .trim();
-                    
-                    return cleanedColor || colorContent.trim();
-                }
-            }
-            
-            return colorText.trim();
+            return colors.join(' / ');
+        } else {
+            // 단일 색상인 경우 영문 코드 제거
+            return colorContent.replace(/\([A-Z]+\)?/g, '').trim();
         }
+    }
+    
+    // 괄호가 없는 경우 그대로 반환
+    return colorText.trim();
+}
         
         // 약정 옵션 텍스트 포맷팅
         function formatPriceDetail(detail) {
